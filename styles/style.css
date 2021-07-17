@@ -1,0 +1,65 @@
+/* Box sizing reset best practice according to https://css-tricks.com/box-sizing/ */
+/*  browser font-size set to 16px so 62.5% = 10px; 1 rem = 10px */
+html {
+  box-sizing: border-box;
+  font-size: 62.5%;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  padding: 1.5rem;
+}
+
+.mapContainer {
+  height: 80vh;
+  display: flex;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  background-color: darkgray;
+  color: white;
+  flex-basis: 30%;
+}
+
+#map {
+  flex: 1;
+}
+
+.searchResultDiv {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
+  overflow-y: scroll;
+}
+
+.inputBoxDiv {
+  margin: 1rem;
+  font-size: 2rem;
+  text-align: center;
+}
+
+/* RESUABLE COMPONENTS */
+.inputBox {
+  padding: 1rem;
+  border-radius: 3px;
+  outline: none;
+}
+
+.btn {
+  width: 6rem;
+}
+
+.searchResult {
+  font-size: 1.5rem;
+}
