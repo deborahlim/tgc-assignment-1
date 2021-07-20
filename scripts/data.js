@@ -16,3 +16,19 @@ async function search(lat, lng, query) {
   );
   return response.data;
 }
+
+// Set up Taxi Availability API
+async function updateTaxiAvail() {
+  let response = await axios.get(
+    "https://api.data.gov.sg/v1/transport/taxi-availability",
+    {
+      params: {
+        query: "2021-07-17T16:58:48",
+      },
+    }
+  );
+  // console.log(response);
+  return response;
+
+  // return response.data.features[0].geometry.coordinates;
+}
