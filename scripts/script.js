@@ -11,25 +11,20 @@ let searchResults = document.createElement("div");
 let toggleTaxi = document.querySelector("#toggleTaxiBtn");
 
 // Add Mapbox tile layers variables
-let mapboxUrl =
-  "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}";
-let attribution =
-  'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
-let accessToken =
-  "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q";
+// let mapboxUrl =
+//   "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}";
+// let attribution =
+//   'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
+// let accessToken =
+//   "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q";
 
 async function main() {
   function init() {
     let mymap = initMap();
-    // mymap.addControl(
-    //   L.mapbox.geocoderControl("mapbox.places", {
-    //     accessToken: accessToken,
-    //   })
-    // );
-    taxiResultLayer = L.markerClusterGroup();
-    getMapLayers(mymap);
-    getDirections(mymap);
 
+    taxiResultLayer = L.markerClusterGroup();
+
+    getMapLayers(mymap);
     window.addEventListener("DOMContentLoaded", () => {
       toggleTaxi.addEventListener("click", () => {
         if (mymap.hasLayer(taxiResultLayer)) {
@@ -62,7 +57,9 @@ function initMap() {
   L.mapbox.accessToken =
     "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q";
   var mymap = L.mapbox
-    .map("map")
+    .map("map", null, {
+      minZoom: 11,
+    })
     .setView([1.3521, 103.8198], 12)
     .addLayer(L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11"));
 
@@ -151,7 +148,7 @@ async function getTaxiLayer() {
 async function getMapLayers(mymap) {
   // Taxi Layer
   getTaxiLayer(taxiResultLayer);
-
+  getDirections(mymap);
   //2 Objects storing map base and overlay layers
   // let streets = L.tileLayer(mapboxUrl, {
   //   attribution,
@@ -178,15 +175,13 @@ async function getMapLayers(mymap) {
   //   accessToken,
   //   minZoom: 12,
   // });
-  let streets = L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11");
-  let outdoors = L.mapbox.styleLayer("mapbox://styles/mapbox/outdoors-v11");
-
-  let satellite = L.mapbox.styleLayer("mapbox://styles/mapbox/satellite-v9");
 
   let baseLayers = {
-    "Street View": streets,
-    "Outdor View": outdoors,
-    "Sattelite View": satellite,
+    "Street View": L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11"),
+    "Outdoor View": L.mapbox.styleLayer("mapbox://styles/mapbox/outdoors-v11"),
+    "Satellite View": L.mapbox.styleLayer(
+      "mapbox://styles/mapbox/satellite-v9"
+    ),
   };
   let overlays = {
     Taxis: taxiResultLayer,
@@ -195,15 +190,14 @@ async function getMapLayers(mymap) {
 }
 
 function getDirections(mymap) {
+  mymap.attributionControl.setPosition("bottomleft");
   directions = L.mapbox.directions();
   L.mapbox.accessToken =
     "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q";
   // move the attribution control out of the way
-  mymap.attributionControl.setPosition("bottomleft");
 
   //create the initial directions object, from which the layer
   //and inputs will pull data.
-  var directions = L.mapbox.directions();
 
   var directionsLayer = L.mapbox.directions.layer(directions).addTo(mymap);
 
