@@ -10,20 +10,13 @@ let searchResultDiv = document.querySelector(".searchResultDiv");
 let searchResults = document.createElement("div");
 let toggleTaxi = document.querySelector("#toggleTaxiBtn");
 
-// Add Mapbox tile layers variables
-// let mapboxUrl =
-//   "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}";
-// let attribution =
-//   'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
-// let accessToken =
-//   "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q";
-
 async function main() {
   function init() {
     let mymap = initMap();
 
     taxiResultLayer = L.markerClusterGroup();
-
+    heritageLayer = L.mapbox.featureLayer();
+    mrtStationsLayer = L.mapbox.featureLayer();
     getMapLayers(mymap);
     window.addEventListener("DOMContentLoaded", () => {
       toggleTaxi.addEventListener("click", () => {
@@ -40,20 +33,6 @@ async function main() {
 
 // INIIALISE MAP AND GET USER LOCATION /////////////
 function initMap() {
-  // let streets = L.tileLayer(mapboxUrl, {
-  //   attribution,
-  //   minZoom: 12,
-  //   id: "mapbox/streets-v11",
-  //   tileSize: 512,
-  //   zoomOffset: -1,
-  //   accessToken,
-  // });
-
-  // let mymap = L.map("map", {
-  //   center: [1.3521, 103.8198],
-  //   zoom: 13,
-  //   layers: [streets],
-  // });
   L.mapbox.accessToken =
     "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q";
   var mymap = L.mapbox
@@ -64,7 +43,6 @@ function initMap() {
     .addLayer(L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11"));
 
   // Get user location
-
   // let userLocation = L.control
   //   .locate({
   //     flyTo: true,
@@ -79,6 +57,8 @@ function initMap() {
   //   })
   //   .addTo(mymap);
   // getUserLocation.start();
+
+  //// MAPBOX PLACES API ///////
   mymap.addControl(
     L.mapbox.geocoderControl("mapbox.places", {
       keepOpen: true,
@@ -123,8 +103,6 @@ function initMap() {
   return mymap;
 }
 
-////// BASE LAYERS //////
-
 // Add GeoJSON data to the taxi cluster group
 async function getTaxiLayer() {
   let response = await updateTaxiAvail();
@@ -132,73 +110,100 @@ async function getTaxiLayer() {
   taxiResultLayer.clearLayers();
 
   L.geoJSON(response.data, {
-    // onEachFeature: function (feature, layer) {
-    //   return L.marker(feature.geometry.coordinates).bindPopup("hi");
-    // },
     pointToLayer: function (geoJsonPoint, latlng) {
-      return L.marker(latlng).bindPopup(`${latlng}`);
+      return L.marker(latlng, {
+        icon: L.mapbox.marker.icon({
+          "marker-symbol": "car",
+          "marker-color": "#F1ee1e",
+        }),
+      }).addTo(taxiResultLayer);
     },
-  }).addTo(taxiResultLayer);
-  // results.setStyle({ color: red });
+    //setTimeout(getTaxiLayer, 60000);
+  });
+}
+// Add GeoJSON data to the heritage feature group
+async function getHeritageLayer() {
+  let response = await getData("data/historic-sites-geojson.geojson");
 
-  //setTimeout(getTaxiLayer, 60000);
+  let heritage = L.geoJSON(response.data, {
+    pointToLayer: function (geoJsonPoint, latlng) {
+      return L.marker(latlng, {
+        icon: L.mapbox.marker.icon({
+          "marker-symbol": "town-hall",
+          "marker-color": "0044FF",
+        }),
+      });
+    },
+    onEachFeature: function (feature, layer) {
+      layer.bindPopup(feature.properties.Description);
+      let e = document.createElement("div");
+      e.innerHTML = feature.properties.Description;
+      let tds = e.querySelectorAll("td");
+      let name = tds[4].innerHTML;
+      let description = tds[6].innerHTML;
+      let randomColor = Math.floor(Math.random() * 16777215).toString(16);
+      layer.bindPopup(`<div style="color: #${randomColor}">
+                  <p style="font-weight:600">
+                       Name: ${name}
+                  </p>
+                  <p>
+                       Description: ${description}
+                  </p>
+               </div>`);
+    },
+
+    // pointToLayer: function (geoJsonPoint, latlng) {
+    //   return L.marker(latlng).bindPopup(`${latlng}`);
+    // },
+  }).addTo(heritageLayer);
 }
 
-// Render layers on mymap
-async function getMapLayers(mymap) {
-  // Taxi Layer
-  getTaxiLayer(taxiResultLayer);
-  getDirections(mymap);
-  //2 Objects storing map base and overlay layers
-  // let streets = L.tileLayer(mapboxUrl, {
-  //   attribution,
-  //   maxZoom: 18,
-  //   minZoom: 12,
-  //   id: "mapbox/streets-v11",
-  //   tileSize: 512,
-  //   zoomOffset: -1,
-  //   accessToken,
-  // });
-  // let outdoors = L.tileLayer(mapboxUrl, {
-  //   id: "mapbox/outdoors-v11",
-  //   tileSize: 512,
-  //   zoomOffset: -1,
-  //   attribution,
-  //   accessToken,
-  //   minZoom: 12,
-  // });
-  // let satellite = L.tileLayer(mapboxUrl, {
-  //   id: "mapbox/satellite-v9",
-  //   tileSize: 512,
-  //   zoomOffset: -1,
-  //   attribution,
-  //   accessToken,
-  //   minZoom: 12,
-  // });
+async function getMrtStations() {
+  let response = await getData("data/lta-mrt-station-exit-geojson.geojson");
+  console.log(response.data);
+  let mrt = L.geoJSON(response.data, {
+    pointToLayer: function (geoJsonPoint, latlng) {
+      return L.marker(latlng, {
+        icon: L.mapbox.marker.icon({
+          "marker-symbol": "town-hall",
+          "marker-color": "0044FF",
+        }),
+      });
+    },
+    onEachFeature: function (feature, layer) {
+      console.log(feature);
+      layer.bindPopup(feature.properties.Description);
+      let e = document.createElement("div");
+      e.innerHTML = feature.properties.Description;
+      // let tds = e.querySelectorAll("td");
+      // let name = tds[4].innerHTML;
+      // let description = tds[6].innerHTML;
+      // let randomColor = Math.floor(Math.random() * 16777215).toString(16);
+      // layer.bindPopup(`<div style="color: #${randomColor}">
+      //             <p style="font-weight:600">
+      //                  Name: ${name}
+      //             </p>
+      //             <p>
+      //                  Description: ${description}
+      //             </p>
+      //          </div>`);
+    },
 
-  let baseLayers = {
-    "Street View": L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11"),
-    "Outdoor View": L.mapbox.styleLayer("mapbox://styles/mapbox/outdoors-v11"),
-    "Satellite View": L.mapbox.styleLayer(
-      "mapbox://styles/mapbox/satellite-v9"
-    ),
-  };
-  let overlays = {
-    Taxis: taxiResultLayer,
-  };
-  L.control.layers(baseLayers, overlays).addTo(mymap);
+    // pointToLayer: function (geoJsonPoint, latlng) {
+    //   return L.marker(latlng).bindPopup(`${latlng}`);
+    // },
+  }).addTo(mrtStationsLayer);
 }
 
 function getDirections(mymap) {
-  mymap.attributionControl.setPosition("bottomleft");
-  directions = L.mapbox.directions();
-  L.mapbox.accessToken =
-    "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q";
   // move the attribution control out of the way
+  mymap.attributionControl.setPosition("bottomright");
 
   //create the initial directions object, from which the layer
   //and inputs will pull data.
-
+  directions = L.mapbox.directions();
+  L.mapbox.accessToken =
+    "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q";
   var directionsLayer = L.mapbox.directions.layer(directions).addTo(mymap);
 
   var directionsInputControl = L.mapbox.directions
@@ -216,6 +221,29 @@ function getDirections(mymap) {
   var directionsInstructionsControl = L.mapbox.directions
     .instructionsControl("instructions", directions)
     .addTo(mymap);
+}
+
+// Render layers on mymap
+async function getMapLayers(mymap) {
+  // Taxi Layer
+  getTaxiLayer(taxiResultLayer);
+  getDirections(mymap);
+  getHeritageLayer(heritageLayer);
+  getMrtStations();
+
+  let baseLayers = {
+    "Street View": L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11"),
+    "Outdoor View": L.mapbox.styleLayer("mapbox://styles/mapbox/outdoors-v11"),
+    "Satellite View": L.mapbox.styleLayer(
+      "mapbox://styles/mapbox/satellite-v9"
+    ),
+  };
+  let overlays = {
+    Taxis: taxiResultLayer,
+    Heritage: heritageLayer,
+    "MRT Stations": mrtStationsLayer,
+  };
+  L.control.layers(baseLayers, overlays).addTo(mymap);
 }
 
 ////// MAIN THREAD ////////

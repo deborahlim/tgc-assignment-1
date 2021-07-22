@@ -29,6 +29,11 @@ async function updateTaxiAvail() {
   );
   // console.log(response);
   return response;
+}
 
-  // return response.data.features[0].geometry.coordinates;
+// get data
+async function getData(url) {
+  let response = await axios.get(url);
+  console.log(response);
+  return response;
 }
