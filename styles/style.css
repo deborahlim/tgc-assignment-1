@@ -15,7 +15,9 @@ html {
 }
 
 body {
-  padding: 1.5rem;
+  /* padding: 1.5rem; */
+  font-weight: 400;
+  font-family: sans-serif;
 }
 
 .mapContainer {
@@ -59,16 +61,22 @@ body {
 }
 
 .btn {
+  background-color: yellowgreen;
+  color: black;
   width: fit-content;
+  font-weight: 900;
 }
 
 .searchResult {
   font-size: 1.5rem;
 }
 
+/* DIRECTIONS */
+
 .directions-container {
   display: flex;
   flex-direction: column;
+  flex-basis: content;
 }
 
 #inputs,
@@ -104,3 +112,26 @@ body {
   top: 90px;
   left: 10px;
 }
+
+/* PLACES API GEOCODER QUERY STYLING */
+.searchQueryDiv {
+  display: block;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-size: 11px;
+  line-height: 18px;
+  border-radius: 3px;
+  /* max-height: 50%;
+  max-width: 25%; */
+  overflow: auto;
+}
+
+/* locate user btn
+.locateUserBtn {
+  color: black;
+}
+
+.locateUserBtn:hover {
+  color: orangered;
+} */

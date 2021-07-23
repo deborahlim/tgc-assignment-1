@@ -9,7 +9,8 @@ let selectedSearchInput = document.querySelector("#selectedSearch");
 let searchResultDiv = document.querySelector(".searchResultDiv");
 let searchResults = document.createElement("div");
 let toggleTaxi = document.querySelector("#toggleTaxiBtn");
-
+let searchQuery = document.getElementById("searchQuery");
+let userLocationBtn = document.getElementById("userLocation");
 async function main() {
   function init() {
     let mymap = initMap();
@@ -17,7 +18,11 @@ async function main() {
     taxiResultLayer = L.markerClusterGroup();
     heritageLayer = L.mapbox.featureLayer();
     mrtStationsLayer = L.mapbox.featureLayer();
+    searchQueryLayer = L.mapbox.featureLayer();
+    userLocationLayer = L.mapbox.featureLayer();
     getMapLayers(mymap);
+
+    // External button to toggle Taxi Availability
     window.addEventListener("DOMContentLoaded", () => {
       toggleTaxi.addEventListener("click", () => {
         if (mymap.hasLayer(taxiResultLayer)) {
@@ -26,12 +31,84 @@ async function main() {
           mymap.addLayer(taxiResultLayer);
         }
       });
+
+      //// MAPBOX PLACES API ///////
+      mymap.addControl(
+        L.mapbox
+          .geocoderControl("mapbox.places", {
+            position: "topright",
+            keepOpen: false,
+            autocomplete: false,
+            country: "singapore",
+            placeholder: "Search for places in Singapore",
+            queryOptions: {
+              // query: "chicken",
+              limit: "10",
+            },
+          })
+          .on("found", function (res) {
+            searchQuery.innerHTML = "";
+            res.results.features.forEach((el) => {
+              temp = JSON.stringify(el.place_name);
+              // ADD DESCRIPTION IN SIDEBAR
+              let p = document.createElement("p");
+              p.innerHTML = `<h1>Place: ${temp}</h1><br>`;
+              searchQuery.insertAdjacentElement("beforeend", p);
+              console.log(p.innerHTML);
+              console.log(el);
+              // ADD MARKERS
+              L.geoJSON(el, {
+                pointToLayer: function (geoJsonPoint, latlng) {
+                  return L.marker(latlng, {
+                    icon: L.mapbox.marker.icon({
+                      "marker-symbol": "car",
+                      "marker-color": "#F1ee1e",
+                    }),
+                  })
+                    .bindPopup(`${temp}`)
+                    .addTo(searchQueryLayer);
+                },
+              }).addTo(mymap);
+              console.log(searchQueryLayer);
+            });
+          })
+      );
+
+      // Get user location
+      userLocationBtn.addEventListener("click", function (e) {
+        if (!navigator.geolocation) {
+          userLocationBtn.textContent = "Please Enable Location";
+        } else {
+          e.preventDefault();
+          mymap.locate();
+        }
+
+        mymap.on("locationfound", function (e) {
+          mymap.fitBounds(e.bounds);
+
+          userLocationLayer
+            .setGeoJSON({
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: [e.latlng.lng, e.latlng.lat],
+              },
+              properties: {
+                title: "Here I am!",
+                "marker-size": "large",
+                "marker-color": "#000000",
+                "marker-symbol": "viewpoint",
+              },
+            })
+            .addTo(mymap);
+        });
+      });
     });
   }
   init();
 }
 
-// INIIALISE MAP AND GET USER LOCATION /////////////
+// INIIALISE MAP /////////////
 function initMap() {
   L.mapbox.accessToken =
     "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q";
@@ -42,32 +119,8 @@ function initMap() {
     .setView([1.3521, 103.8198], 12)
     .addLayer(L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11"));
 
-  // Get user location
-  // let userLocation = L.control
-  //   .locate({
-  //     flyTo: true,
-  //     locateOptions: {
-  //       maxZoom: 15,
-  //     },
-  //     position: "topright",
-  //     strings: {
-  //       title: "Click to toggle current location on/off",
-  //       popup: `You are at `,
-  //     },
-  //   })
-  //   .addTo(mymap);
-  // getUserLocation.start();
-
-  //// MAPBOX PLACES API ///////
-  mymap.addControl(
-    L.mapbox.geocoderControl("mapbox.places", {
-      keepOpen: true,
-    })
-  );
-
   // Adds button to enable fullscreen toggle
   let toggleFullScreen = mymap.addControl(new L.Control.Fullscreen());
-  ////////// MAP LAYERS ///////////
 
   // Add marker when user clicks on map
   // Create pop up for each marker and display the location
@@ -118,6 +171,7 @@ async function getTaxiLayer() {
         }),
       }).addTo(taxiResultLayer);
     },
+    // To get updated taxi data every minute
     //setTimeout(getTaxiLayer, 60000);
   });
 }
@@ -171,7 +225,7 @@ async function getMrtStations() {
       });
     },
     onEachFeature: function (feature, layer) {
-      console.log(feature);
+      // console.log(feature);
       layer.bindPopup(feature.properties.Description);
       let e = document.createElement("div");
       e.innerHTML = feature.properties.Description;
@@ -242,6 +296,7 @@ async function getMapLayers(mymap) {
     Taxis: taxiResultLayer,
     Heritage: heritageLayer,
     "MRT Stations": mrtStationsLayer,
+    //Search: searchQueryLayer,
   };
   L.control.layers(baseLayers, overlays).addTo(mymap);
 }
