@@ -1,20 +1,7 @@
-///// GLOBAL VARIABLES /////
-
-let markers = [];
-let results = [];
-let names = [];
-let searchInputBox = document.querySelector("#setBtn");
-let searchBtn = document.querySelector("#searchBtn");
-let selectedSearchInput = document.querySelector("#selectedSearch");
-let searchResultDiv = document.querySelector(".searchResultDiv");
-let searchResults = document.createElement("div");
-let toggleTaxi = document.querySelector("#toggleTaxiBtn");
-let searchQuery = document.getElementById("searchQuery");
-let userLocationBtn = document.getElementById("userLocation");
 async function main() {
   function init() {
     let mymap = initMap();
-
+    let userLocationBtn = document.getElementById("userLocation");
     taxiResultLayer = L.markerClusterGroup();
     heritageLayer = L.mapbox.featureLayer();
     mrtStationsLayer = L.mapbox.featureLayer();
@@ -24,6 +11,7 @@ async function main() {
 
     // External button to toggle Taxi Availability
     window.addEventListener("DOMContentLoaded", () => {
+      let toggleTaxi = document.getElementById("toggleTaxiBtn");
       toggleTaxi.addEventListener("click", () => {
         if (mymap.hasLayer(taxiResultLayer)) {
           mymap.removeLayer(taxiResultLayer);
@@ -52,6 +40,7 @@ async function main() {
               temp = JSON.stringify(el.place_name);
               // ADD DESCRIPTION IN SIDEBAR
               let p = document.createElement("p");
+              let searchQuery = document.getElementById("searchQuery");
               p.innerHTML = `<h1>Place: ${temp}</h1><br>`;
               searchQuery.insertAdjacentElement("beforeend", p);
               console.log(p.innerHTML);
@@ -120,38 +109,46 @@ function initMap() {
     .addLayer(L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11"));
 
   // Adds button to enable fullscreen toggle
-  let toggleFullScreen = mymap.addControl(new L.Control.Fullscreen());
+  mymap.addControl(new L.Control.Fullscreen());
 
   // Add marker when user clicks on map
   // Create pop up for each marker and display the location
-  // mymap.on("click", async function (ev) {
-  //   // if there is no marker on the map, do the following
-  //   let result = await search(ev.latlng.lat, ev.latlng.lng);
-  //   results.push(result);
-  //   let currentMarker = L.marker([ev.latlng.lat, ev.latlng.lng])
-  //     .bindPopup(`${ev.latlng.lat}, ${ev.latlng.lng}`)
-  //     .addTo(mymap);
-  //   markers.push(currentMarker);
+  mymap.on("click", async function (ev) {
+    let markers = [];
+    let results = [];
+    let names = [];
+    let searchBtn = document.getElementById("searchBtn");
+    let searchResultDiv = document.querySelector(".searchResultDiv");
+    let searchResults = document.createElement("div");
+    let selectedSearchInput = document.getElementById("selectedSearch");
 
-  //   // input lat lng of marker into search input box and display results
-  //   selectedSearchInput.value = `${ev.latlng.lat}, ${ev.latlng.lng}`;
-  //   searchBtn.addEventListener("click", () => {
-  //     for (let rec of result.response.groups[0].items) {
-  //       names.push(rec.venue.name);
-  //     }
+    // if there is no marker on the map, do the following
+    let result = await search(ev.latlng.lat, ev.latlng.lng);
+    results.push(result);
+    let currentMarker = L.marker([ev.latlng.lat, ev.latlng.lng])
+      .bindPopup(`${ev.latlng.lat}, ${ev.latlng.lng}`)
+      .addTo(mymap);
+    markers.push(currentMarker);
 
-  //     searchResultDiv.appendChild(searchResults);
-  //     searchResults.innerHTML = "";
-  //     for (let i of names) {
-  //       let p = document.createElement("p");
-  //       p.innerHTML = `${i}`;
-  //       p.className = "searchResult";
-  //       searchResults.appendChild(p);
-  //     }
+    // input lat lng of marker into search input box and display results
+    selectedSearchInput.value = `${ev.latlng.lat}, ${ev.latlng.lng}`;
+    searchBtn.addEventListener("click", () => {
+      for (let rec of result.response.groups[0].items) {
+        names.push(rec.venue.name);
+      }
 
-  //     names = [];
-  //   });
-  // });
+      searchResultDiv.appendChild(searchResults);
+      searchResults.innerHTML = "";
+      for (let i of names) {
+        let p = document.createElement("p");
+        p.innerHTML = `${i}`;
+        p.className = "searchResult";
+        searchResults.appendChild(p);
+      }
+
+      names = [];
+    });
+  });
 
   return mymap;
 }
