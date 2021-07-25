@@ -11,7 +11,7 @@ async function main() {
     getMapLayers(mymap);
 
     window.addEventListener("DOMContentLoaded", () => {
-      // Get user location
+      // GET USER LOCATION BUTTON
       userLocationBtn.addEventListener("click", function (e) {
         if (!navigator.geolocation) {
           userLocationBtn.textContent = "Please Enable Location";
@@ -38,12 +38,12 @@ async function main() {
               },
             })
             .addTo(mymap);
-          console.log(userLocationLayer);
-          let userLocationCoord =
-            userLocationLayer._geojson.geometry.coordinates;
-          userLocationLayer;
+          // console.log(userLocationLayer);
+          // let userLocationCoord =
+          //   userLocationLayer._geojson.geometry.coordinates;
+          // userLocationLayer;
 
-          console.log(userLocationCoord);
+          // console.log(userLocationCoord);
         });
       });
 
@@ -81,6 +81,7 @@ async function main() {
             queryOptions: {
               autocomplete: false,
               country: "sg",
+              limit: 10,
             },
           })
           .on("found", function (res) {
@@ -124,6 +125,35 @@ async function main() {
       } else {
         mymap.addLayer(searchQueryLayer);
       }
+
+      // BUTTON TO SEARCH HERITAGE SITES
+
+      // FILTER HERITAGE SITES
+      let filterParks = document.getElementById("parks");
+      let filterReservior = document.getElementById("reservior");
+      filterParks.onclick = function (e) {
+        mymap.removeLayer(heritageLayer);
+        console.log(e.layers);
+        console.log(this);
+        console.log(heritageLayer);
+        heritageLayer.setFilter(function () {});
+        console.log(e);
+        return L.marker([1.3521, 103.8198])
+          .addTo(heritageLayer)
+          .addTo(mymap)
+          .bindPopup("hi");
+      };
+
+      filterReservior.onclick = function (e) {
+        console.log(e);
+        console.log(this);
+        heritageLayer.setFilter(function () {
+          console.log(hi);
+          return true;
+        });
+        console.log(this);
+        return false;
+      };
     });
   }
   init();
@@ -184,152 +214,6 @@ function initMap() {
   });
 
   return mymap;
-}
-
-// Add GeoJSON data to the taxi cluster group
-async function getTaxiLayer() {
-  let response = await updateTaxiAvail();
-  taxiResultLayer.clearLayers();
-
-  /// ADD MARKERS TO TAXI LAYER /////
-  L.geoJSON(response.data, {
-    pointToLayer: function (geoJsonPoint, latlng) {
-      let test = L.marker(latlng, {
-        icon: L.mapbox.marker.icon({
-          "marker-symbol": "car",
-          "marker-color": "#F1ee1e",
-        }),
-      });
-      return test;
-    },
-  }).addTo(taxiResultLayer);
-
-  // To get updated taxi data every minute
-  //setTimeout(getTaxiLayer, 6000);
-}
-// Add GeoJSON data to the heritage feature group
-async function getHeritageLayer() {
-  let response = await getData("data/historic-sites-geojson.geojson");
-
-  let heritage = L.geoJSON(response.data, {
-    pointToLayer: function (geoJsonPoint, latlng) {
-      return L.marker(latlng, {
-        icon: L.mapbox.marker.icon({
-          "marker-symbol": "town-hall",
-          "marker-color": "0044FF",
-        }),
-      });
-    },
-    onEachFeature: function (feature, layer) {
-      layer.bindPopup(feature.properties.Description);
-      let e = document.createElement("div");
-      e.innerHTML = feature.properties.Description;
-      let tds = e.querySelectorAll("td");
-      let name = tds[4].innerHTML;
-      let description = tds[6].innerHTML;
-      let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-      layer.bindPopup(`<div style="color: #${randomColor}">
-                  <p style="font-weight:600">
-                       Name: ${name}
-                  </p>
-                  <p>
-                       Description: ${description}
-                  </p>
-               </div>`);
-    },
-
-    // pointToLayer: function (geoJsonPoint, latlng) {
-    //   return L.marker(latlng).bindPopup(`${latlng}`);
-    // },
-  }).addTo(heritageLayer);
-}
-
-async function getMrtStations() {
-  let response = await getData("data/lta-mrt-station-exit-geojson.geojson");
-  let mrt = L.geoJSON(response.data, {
-    pointToLayer: function (geoJsonPoint, latlng) {
-      return L.marker(latlng, {
-        icon: L.mapbox.marker.icon({
-          "marker-symbol": "town-hall",
-          "marker-color": "0044FF",
-        }),
-      });
-    },
-    onEachFeature: function (feature, layer) {
-      // console.log(feature);
-      layer.bindPopup(feature.properties.Description);
-      let e = document.createElement("div");
-      e.innerHTML = feature.properties.Description;
-      // let tds = e.querySelectorAll("td");
-      // let name = tds[4].innerHTML;
-      // let description = tds[6].innerHTML;
-      // let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-      // layer.bindPopup(`<div style="color: #${randomColor}">
-      //             <p style="font-weight:600">
-      //                  Name: ${name}
-      //             </p>
-      //             <p>
-      //                  Description: ${description}
-      //             </p>
-      //          </div>`);
-    },
-
-    // pointToLayer: function (geoJsonPoint, latlng) {
-    //   return L.marker(latlng).bindPopup(`${latlng}`);
-    // },
-  }).addTo(mrtStationsLayer);
-}
-
-function getDirections(mymap) {
-  // move the attribution control out of the way
-  mymap.attributionControl.setPosition("bottomright");
-
-  //create the initial directions object, from which the layer
-  //and inputs will pull data.
-  directions = L.mapbox.directions();
-  L.mapbox.accessToken =
-    "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q";
-  var directionsLayer = L.mapbox.directions.layer(directions).addTo(mymap);
-
-  var directionsInputControl = L.mapbox.directions
-    .inputControl("inputs", directions)
-    .addTo(mymap);
-
-  var directionsErrorsControl = L.mapbox.directions
-    .errorsControl("errors", directions)
-    .addTo(mymap);
-
-  var directionsRoutesControl = L.mapbox.directions
-    .routesControl("routes", directions)
-    .addTo(mymap);
-
-  var directionsInstructionsControl = L.mapbox.directions
-    .instructionsControl("instructions", directions)
-    .addTo(mymap);
-}
-
-// Render layers on mymap
-async function getMapLayers(mymap) {
-  // Taxi Layer
-  getTaxiLayer(taxiResultLayer);
-  getDirections(mymap);
-  getHeritageLayer(heritageLayer);
-  getMrtStations();
-
-  let baseLayers = {
-    "Street View": L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11"),
-    "Outdoor View": L.mapbox.styleLayer("mapbox://styles/mapbox/outdoors-v11"),
-    "Satellite View": L.mapbox.styleLayer(
-      "mapbox://styles/mapbox/satellite-v9"
-    ),
-  };
-  let overlays = {
-    Taxis: taxiResultLayer,
-    Heritage: heritageLayer,
-    "MRT Stations": mrtStationsLayer,
-    //Search: searchQueryLayer,
-  };
-  L.control.layers(baseLayers, overlays).addTo(mymap);
 }
 
 ////// MAIN THREAD ////////
