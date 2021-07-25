@@ -19,22 +19,33 @@ async function main() {
           mymap.addLayer(taxiResultLayer);
         }
       });
+      // GET TAXI LOCATION USING MAPBOX API REVERSE GEOCODING
+      taxiResultLayer.on("click", function (e) {
+        let { lat, lng } = e.latlng;
+        let geocoder = L.mapbox.geocoder("mapbox.places");
+        let func = (err, data) => {
+          let t = data.features[0].place_name;
+          taxiResultLayer.bindPopup(t);
+        };
+        geocoder.reverseQuery([lng, lat], func);
+      });
 
-      //// MAPBOX PLACES API ///////
+      //// ADD SEARCH BOX USING MAPBOX PLACES API ///////
+
       mymap.addControl(
         L.mapbox
           .geocoderControl("mapbox.places", {
             position: "topright",
             keepOpen: false,
             autocomplete: false,
-            country: "singapore",
-            placeholder: "Search for places in Singapore",
+            accessToken:
+              "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q",
             queryOptions: {
-              // query: "chicken",
-              limit: "10",
+              country: "sg",
             },
           })
           .on("found", function (res) {
+            searchQueryLayer.clearLayers();
             searchQuery.innerHTML = "";
             res.results.features.forEach((el) => {
               temp = JSON.stringify(el.place_name);
@@ -50,18 +61,24 @@ async function main() {
                 pointToLayer: function (geoJsonPoint, latlng) {
                   return L.marker(latlng, {
                     icon: L.mapbox.marker.icon({
-                      "marker-symbol": "car",
-                      "marker-color": "#F1ee1e",
+                      "marker-symbol": "attraction",
+                      "marker-color": "#800080",
                     }),
                   })
                     .bindPopup(`${temp}`)
                     .addTo(searchQueryLayer);
                 },
               }).addTo(mymap);
-              console.log(searchQueryLayer);
             });
           })
       );
+
+      // SO THAT PREVIOUS SEARCH MARKERS ARE REMOVED
+      if (mymap.hasLayer(searchQueryLayer)) {
+        mymap.removeLayer(searchQueryLayer);
+      } else {
+        mymap.addLayer(searchQueryLayer);
+      }
 
       // Get user location
       userLocationBtn.addEventListener("click", function (e) {
@@ -124,6 +141,7 @@ function initMap() {
 
     // if there is no marker on the map, do the following
     let result = await search(ev.latlng.lat, ev.latlng.lng);
+    console.log(result);
     results.push(result);
     let currentMarker = L.marker([ev.latlng.lat, ev.latlng.lng])
       .bindPopup(`${ev.latlng.lat}, ${ev.latlng.lng}`)
@@ -159,18 +177,31 @@ async function getTaxiLayer() {
   console.log(response.data);
   taxiResultLayer.clearLayers();
 
+  /// ADD MARKERS TO TAXI LAYER /////
   L.geoJSON(response.data, {
     pointToLayer: function (geoJsonPoint, latlng) {
-      return L.marker(latlng, {
+      let test = L.marker(latlng, {
         icon: L.mapbox.marker.icon({
           "marker-symbol": "car",
           "marker-color": "#F1ee1e",
         }),
-      }).addTo(taxiResultLayer);
+      });
+      return test;
     },
-    // To get updated taxi data every minute
-    //setTimeout(getTaxiLayer, 60000);
-  });
+    // onEachFeature: function (feature, layer) {
+    //   let geocoder = L.mapbox.geocoder("mapbox.places");
+    //   console.log(feature.geometry.coordinates);
+    //   console.log(layer);
+    //   // GEOCODING ////
+    //   // let t = geocoder.query("Singapore", pri, {
+    //   //   query: "Ang Mo Kio",
+    //   //   proximity: feature.geometry.coordinates,
+    //   // });
+    //   // console.log(t);
+  }).addTo(taxiResultLayer);
+
+  // To get updated taxi data every minute
+  //setTimeout(getTaxiLayer, 6000);
 }
 // Add GeoJSON data to the heritage feature group
 async function getHeritageLayer() {

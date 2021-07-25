@@ -23,11 +23,11 @@ async function updateTaxiAvail() {
     "https://api.data.gov.sg/v1/transport/taxi-availability",
     {
       params: {
-        query: "2021-07-17T16:58:48",
+        query: "2021-07-25T16:58:48",
       },
     }
   );
-  // console.log(response);
+  console.log(response);
   return response;
 }
 
@@ -37,3 +37,25 @@ async function getData(url) {
   console.log(response);
   return response;
 }
+
+L.mapbox.accessToken =
+  "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q";
+// let response = L.mapbox.geocoder("mapbox.places");
+// console.log(response);
+
+// response.query(
+//   "Singapore",
+//   // {
+//   //   query: "Ang Mo Kio",
+//   //   proximity: L.latLng(1.3691, 103.8454),
+//   // },
+//   pri
+// );
+
+// function pri(err, data) {
+//   if (data.lbounds) {
+//     mymap.fitBounds(data.lbounds);
+//   } else if (data.latlng) {
+//     mymap.setView([data.latlng[0], data.latlng[1]], 13);
+//   }
+// }
