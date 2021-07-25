@@ -27,14 +27,12 @@ async function updateTaxiAvail() {
       },
     }
   );
-  console.log(response);
   return response;
 }
 
 // get data
 async function getData(url) {
   let response = await axios.get(url);
-  console.log(response);
   return response;
 }
 
@@ -59,3 +57,13 @@ L.mapbox.accessToken =
 //     mymap.setView([data.latlng[0], data.latlng[1]], 13);
 //   }
 // }
+// onEachFeature: function (feature, layer) {
+//   let geocoder = L.mapbox.geocoder("mapbox.places");
+//   console.log(feature.geometry.coordinates);
+//   console.log(layer);
+//   // GEOCODING ////
+//   // let t = geocoder.query("Singapore", pri, {
+//   //   query: "Ang Mo Kio",
+//   //   proximity: feature.geometry.coordinates,
+//   // });
+//   // console.log(t);

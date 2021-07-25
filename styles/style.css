@@ -28,7 +28,7 @@ body {
 .sidebar {
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  /* padding: 2rem; */
   background-color: darkgray;
   color: white;
   flex-basis: 30%;
@@ -44,7 +44,7 @@ body {
   display: flex;
   flex-direction: column;
   margin: 1rem;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
 }
 
 .inputBoxDiv {
