@@ -91,13 +91,14 @@ async function main() {
               placeName = JSON.stringify(el.text).slice(1, -1);
               console.log(placeName);
               // ADD DESCRIPTION IN SIDEBAR
-              let p = document.createElement("p");
+              let content = document.createElement("div");
               let searchQuery = document.getElementById("searchQuery");
-              p.innerHTML = `<a href="https://foursquare.com/v/${el.properties.foursquare}/photos"><h1>${el.text}</h1>
+              content.className = "searchQueryBox";
+              content.innerHTML = `<a class="searchQueryLink" href="https://foursquare.com/v/${el.properties.foursquare}/photos"><h1>${el.text}</h1>
               </a><p>Category: ${el.properties.category}</p><p>${el.properties.address}, ${el.context[2].text}, 
               Singapore ${el.context[0].text} </p> `;
-              searchQuery.insertAdjacentElement("beforeend", p);
-              console.log(p.innerHTML);
+              searchQuery.insertAdjacentElement("beforeend", content);
+              console.log(content.innerHTML);
               console.log(el);
               // ADD MARKERS
               L.geoJSON(el, {

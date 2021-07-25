@@ -21,7 +21,7 @@ body {
 }
 
 .mapContainer {
-  height: 80vh;
+  height: 100vh;
   display: flex;
 }
 
@@ -29,9 +29,9 @@ body {
   display: flex;
   flex-direction: column;
   /* padding: 2rem; */
-  background-color: darkgray;
-  color: white;
-  flex-basis: 30%;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: black;
+  flex-basis: content;
   z-index: 0;
 }
 
@@ -61,7 +61,7 @@ body {
 }
 
 .btn {
-  background-color: yellowgreen;
+  background-color: #3bb2d0;
   color: black;
   width: fit-content;
   font-weight: 900;
@@ -116,15 +116,39 @@ body {
 /* PLACES API GEOCODER QUERY STYLING */
 .searchQueryDiv {
   display: block;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.5);
+  padding: 10px 0;
+  /* background: rgba(0, 0, 0, 0.5); */
+  background: transparent;
   color: #fff;
   font-size: 11px;
   line-height: 18px;
   border-radius: 3px;
   /* max-height: 50%;
   max-width: 25%; */
-  overflow: auto;
+  overflow-y: scroll;
+}
+
+.searchQueryBox {
+  margin: 1rem;
+  color: #757575;
+  font-size: 1.2rem;
+  /* box-shadow: 3px 3px 5px rgba(144, 194, 45, 0.2); */
+  border-bottom: 1px solid;
+}
+
+/* LINKS */
+.searchQueryLink {
+  margin: 0.1rem;
+  font-size: 1rem;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.75);
+  font-family: sans-serif;
+  cursor: pointer;
+}
+
+.searchQueryBox p {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 /* locate user btn
