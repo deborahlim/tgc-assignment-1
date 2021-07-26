@@ -17,16 +17,15 @@ async function getTaxiLayer() {
   }).addTo(taxiResultLayer);
 
   // To get updated taxi data every minute
-  //setTimeout(getTaxiLayer, 6000);
+  // setTimeout(getTaxiLayer, 6000);
 }
 // Add GeoJSON data to the heritage feature group
-async function getHeritageLayer() {
-  let searchByKeywordInput = document.getElementById("keyWord").value;
-  console.log(searchByKeywordInput);
-  let searchByKeywordBtn = document.getElementById("keyWordBtn");
+async function getHeritageLayer(heritageLayer) {
+  let searchByKeywordInput = document.getElementById("keyWord");
   let response = await getData("data/historic-sites-geojson.geojson");
   console.log(response.data);
-  let heritage = L.geoJSON(response.data, {
+
+  L.geoJSON(response.data, {
     pointToLayer: function (geoJsonPoint, latlng) {
       return L.marker(latlng, {
         icon: L.mapbox.marker.icon({
@@ -40,31 +39,109 @@ async function getHeritageLayer() {
       let e = document.createElement("div");
       e.innerHTML = feature.properties.Description;
       let tds = e.querySelectorAll("td");
-      console.log(tds);
+      //console.log(tds);
       let photo = tds[3].innerHTML;
       let name = tds[4].innerHTML;
       let link = tds[5].innerHTML;
       let description = tds[6].innerHTML;
+      let address = `${tds[9].innerHTML}, ${tds[10].innerHTML}`;
+      if (!tds[9].innerHTML) address = tds[10].innerHTML;
+      if (!tds[10].innerHTML) address = tds[9].innerHTML;
+
       let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-      layer.bindPopup(`<div style="color: #${randomColor}"; width:100%>
-                    <div style="width:100%"><img src="${photo} alt="Photo of ${name}" style="width:100%"></div>
+      layer.bindPopup(`<div style=" color: #${randomColor}"; width:100%>
+                    <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
                     <a href=${link} target="_blank" style="text-decoration:none; color:inherit;"><p style="font-weight:800">
                          ${name}
                     </p></a>
                     <p>
                          Description: ${description}
                     </p>
+                    <p>
+                         Address: ${address}
+                    </p>
                  </div>`);
     },
     filter: function (feature) {
-      //   searchByKeywordBtn.addEventListener("click", function () {
-      return feature.properties.Description.includes(
-        "park" //`${searchByKeywordInput.value}`
-      );
+      let searchByKeywordInput = document
+        .getElementById("keyWord")
+        .value.toLowerCase()
+        .trim()
+        .replace(".", "");
+      let lowercaseDescription = feature.properties.Description.toLowerCase();
 
-      //   });
+      if (lowercaseDescription.search(searchByKeywordInput) !== -1) {
+        return true;
+      }
+    },
+    popupOptions: {
+      //className: "heritagePopup",
+      keepInView: true,
     },
   }).addTo(heritageLayer);
+}
+
+async function getTreesLayer(treesLayer) {
+  let searchByKeywordInput = document.getElementById("keyWord");
+  let response = await getData("data/heritage-trees-geojson.geojson");
+  console.log(response.data);
+
+  L.geoJSON(response.data, {
+    pointToLayer: function (geoJsonPoint, latlng) {
+      return L.marker(latlng, {
+        icon: L.mapbox.marker.icon({
+          "marker-size": "small",
+          "marker-symbol": "park",
+          "marker-color": "#228B22",
+        }),
+      });
+    },
+    onEachFeature: function (feature, layer) {
+      layer.bindPopup(feature.properties.Description);
+      let e = document.createElement("div");
+      e.innerHTML = feature.properties.Description;
+      let tds = e.querySelectorAll("td");
+      //console.log(tds);
+      let photo = tds[3].innerHTML;
+      let name = tds[4].innerHTML;
+      let link = tds[5].innerHTML;
+      let description = tds[6].innerHTML;
+      let address = `${tds[9].innerHTML}, ${tds[10].innerHTML}`;
+      if (!tds[9].innerHTML) address = tds[10].innerHTML;
+      if (!tds[10].innerHTML) address = tds[9].innerHTML;
+
+      let randomColor = Math.floor(Math.random() * 16777215).toString(16);
+      layer.bindPopup(`<div style=" color: #${randomColor}"; width:100%>
+                    <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
+                    <a href=${link} target="_blank" style="text-decoration:none; color:inherit;"><p style="font-weight:800">
+                         ${name}
+                    </p></a>
+                    <p>
+                         Description: ${description}
+                    </p>
+                    <p>
+                         Address: ${address}
+                    </p>
+                 </div>`);
+    },
+    filter: function (feature) {
+      let searchByKeywordInput = document
+        .getElementById("keyWord")
+        .value.toLowerCase()
+        .trim()
+        .replace(".", "");
+      let lowercaseDescription = feature.properties.Description.toLowerCase();
+
+      if (lowercaseDescription.search(searchByKeywordInput) !== -1) {
+        console.log(feature);
+        return true;
+      }
+    },
+    popupOptions: {
+      //className: "heritagePopup",
+      keepInView: true,
+    },
+  }).addTo(treesLayer);
 }
 
 async function getMrtStations() {
@@ -137,6 +214,7 @@ async function getMapLayers(mymap) {
   getTaxiLayer(taxiResultLayer);
   getDirections(mymap);
   getHeritageLayer(heritageLayer);
+  getTreesLayer(treesLayer);
   getMrtStations();
 
   let baseLayers = {
@@ -149,6 +227,8 @@ async function getMapLayers(mymap) {
   let overlays = {
     Taxis: taxiResultLayer,
     Heritage: heritageLayer,
+    "Heritage Trees": treesLayer,
+
     "MRT Stations": mrtStationsLayer,
     //Search: searchQueryLayer,
   };

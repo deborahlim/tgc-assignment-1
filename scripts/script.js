@@ -4,6 +4,7 @@ async function main() {
     let userLocationBtn = document.getElementById("userLocation");
     taxiResultLayer = L.markerClusterGroup();
     heritageLayer = L.mapbox.featureLayer();
+    treesLayer = L.mapbox.featureLayer();
     mrtStationsLayer = L.mapbox.featureLayer();
     searchQueryLayer = L.mapbox.featureLayer();
     userLocationLayer = L.mapbox.featureLayer();
@@ -11,7 +12,24 @@ async function main() {
     getMapLayers(mymap);
 
     window.addEventListener("DOMContentLoaded", () => {
-      // GET USER LOCATION BUTTON
+      //  BUTTON TO FILTER HERITAGE MARKERS BY KEYWORD
+      let searchByKeywordBtn = document.getElementById("keyWordBtn");
+      searchByKeywordBtn.addEventListener("click", function (e) {
+        heritageLayer.clearLayers();
+        getHeritageLayer(heritageLayer);
+      });
+
+      // FILTER HERITAGE MARKERS BY PRESSING ENTER BUTTON
+      document
+        .querySelector("#keyWord")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            // code for enter
+            heritageLayer.clearLayers();
+            getHeritageLayer(heritageLayer);
+          }
+        });
+      // BUTTON TO GET USER LOCATION
       userLocationBtn.addEventListener("click", function (e) {
         if (!navigator.geolocation) {
           userLocationBtn.textContent = "Please Enable Location";
@@ -38,16 +56,10 @@ async function main() {
               },
             })
             .addTo(mymap);
-          // console.log(userLocationLayer);
-          // let userLocationCoord =
-          //   userLocationLayer._geojson.geometry.coordinates;
-          // userLocationLayer;
-
-          // console.log(userLocationCoord);
         });
       });
 
-      // External button to toggle Taxi Availability
+      // BUTTON TO TOGGLE TAXI AVAILABILITY LAYER
       let toggleTaxi = document.getElementById("toggleTaxiBtn");
       toggleTaxi.addEventListener("click", () => {
         if (mymap.hasLayer(taxiResultLayer)) {
@@ -62,15 +74,12 @@ async function main() {
         let geocoder = L.mapbox.geocoder("mapbox.places");
         let func = (err, data) => {
           let t = data.features[0].place_name;
-          taxiResultLayer.bindPopup(t);
+          taxiResultLayer.bindPopup(`<h1 style="text-align: center">${t}</h1>`);
         };
         geocoder.reverseQuery([lng, lat], func);
       });
 
-      //// ADD SEARCH BOX USING MAPBOX PLACES API ///////
-      let keyWordBtn = document.getElementById("keyWordBtn");
-      let keyWord = document.getElementById("keyWord");
-
+      //// ADD SEARCH BOX USING MAPBOX PLACES API //////
       mymap.addControl(
         L.mapbox
           .geocoderControl("mapbox.places", {
@@ -111,7 +120,7 @@ async function main() {
                       "marker-color": "#800080",
                     }),
                   })
-                    .bindPopup(`${el.text}`)
+                    .bindPopup(`<h1>${el.text}</h1>`)
                     .addTo(searchQueryLayer);
                 },
               }).addTo(mymap);
@@ -125,35 +134,6 @@ async function main() {
       } else {
         mymap.addLayer(searchQueryLayer);
       }
-
-      // BUTTON TO SEARCH HERITAGE SITES
-
-      // FILTER HERITAGE SITES
-      let filterParks = document.getElementById("parks");
-      let filterReservior = document.getElementById("reservior");
-      filterParks.onclick = function (e) {
-        mymap.removeLayer(heritageLayer);
-        console.log(e.layers);
-        console.log(this);
-        console.log(heritageLayer);
-        heritageLayer.setFilter(function () {});
-        console.log(e);
-        return L.marker([1.3521, 103.8198])
-          .addTo(heritageLayer)
-          .addTo(mymap)
-          .bindPopup("hi");
-      };
-
-      filterReservior.onclick = function (e) {
-        console.log(e);
-        console.log(this);
-        heritageLayer.setFilter(function () {
-          console.log(hi);
-          return true;
-        });
-        console.log(this);
-        return false;
-      };
     });
   }
   init();

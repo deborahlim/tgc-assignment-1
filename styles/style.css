@@ -159,3 +159,11 @@ body {
 .locateUserBtn:hover {
   color: orangered;
 } */
+
+.heritagePopup {
+  background-color: black !important;
+}
+
+.taxiPopup {
+  font-weight: 500;
+}
