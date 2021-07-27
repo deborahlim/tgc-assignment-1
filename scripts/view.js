@@ -48,8 +48,7 @@ async function getHeritageLayer(heritageLayer) {
       if (!tds[9].innerHTML) address = tds[10].innerHTML;
       if (!tds[10].innerHTML) address = tds[9].innerHTML;
 
-      let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-      layer.bindPopup(`<div style=" color: #${randomColor}"; width:100%>
+      layer.bindPopup(`<div style=" color: ${randDarkColor()}"; width:100%>
                     <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
                     <a href=${link} target="_blank" style="text-decoration:none; color:inherit;"><p style="font-weight:800">
                          ${name}
@@ -210,7 +209,6 @@ function getDirections(mymap) {
 
 // Render layers on mymap
 async function getMapLayers(mymap) {
-  // Taxi Layer
   getTaxiLayer(taxiResultLayer);
   getDirections(mymap);
   getHeritageLayer(heritageLayer);
@@ -225,12 +223,16 @@ async function getMapLayers(mymap) {
     ),
   };
   let overlays = {
-    Taxis: taxiResultLayer,
-    Heritage: heritageLayer,
+    //Taxis: taxiResultLayer,
+    "Historic Sites": heritageLayer,
     "Heritage Trees": treesLayer,
 
-    "MRT Stations": mrtStationsLayer,
+    // "MRT Stations": mrtStationsLayer,
     //Search: searchQueryLayer,
   };
-  L.control.layers(baseLayers, overlays).addTo(mymap);
+  L.control
+    .layers(baseLayers, overlays, {
+      // collapsed: false,
+    })
+    .addTo(mymap);
 }

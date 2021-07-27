@@ -20,26 +20,62 @@ body {
   font-family: sans-serif;
 }
 
+/* OVERALL MAP */
+
 .mapContainer {
   height: 100vh;
   display: flex;
 }
 
-.sidebar {
+.box {
   display: flex;
   flex-direction: column;
-  /* padding: 2rem; */
-  background-color: rgba(0, 0, 0, 0.8);
-  color: black;
-  flex-basis: content;
-  z-index: 0;
+  flex-basis: 25%;
 }
 
+/* MAP COMPONENT */
 #map {
   flex: 1;
   z-index: 0;
 }
 
+/* SIDE PANEL */
+
+.side-panel {
+  flex-basis: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 3px 5px 5px rgba(255, 255, 255, 0.753);
+}
+
+/* SIDEBAR COMPONENT */
+.sidebar-container {
+  flex-basis: 100%;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* padding: 2rem; */
+  background-color: rgba(0, 0, 0, 0.8);
+  color: black;
+
+  z-index: 0;
+  /* display: none; */
+}
+
+.sidebar-container-hidden {
+  display: flex;
+  flex-direction: column;
+  /* padding: 2rem; */
+  background-color: rgba(0, 0, 0, 0.8);
+  color: black;
+  flex-basis: 100%;
+  z-index: 0;
+  display: none;
+}
+
+/* SIDEBAR CONTENT */
 .searchResultDiv {
   display: flex;
   flex-direction: column;
@@ -55,8 +91,8 @@ body {
 
 /* RESUABLE COMPONENTS */
 .inputBox {
-  padding: 1rem;
-  border-radius: 3px;
+  padding: 1.5rem;
+  border-radius: 50px;
   outline: none;
 }
 
@@ -71,12 +107,46 @@ body {
   font-size: 1.5rem;
 }
 
-/* DIRECTIONS */
+/* DIRECTIONS COMPONENT */
+.directions-container-hidden {
+  /* display: flex;
+  flex-direction: column;
+  flex-basis: content;
+  padding-right: 1rem; */
+
+  display: none;
+  /* background-color: rgba(0, 0, 0, 0.8); */
+}
 
 .directions-container {
   display: flex;
   flex-direction: column;
-  flex-basis: content;
+  flex-basis: 100%;
+  overflow-y: overlay;
+  /* padding-right: 1rem; */
+
+  /* display: none; */
+  /* background-color: rgba(0, 0, 0, 0.8); */
+}
+
+.directions-control {
+  display: flex;
+  justify-content: center;
+}
+
+.directions-btn {
+  /* position: absolute;
+  left: 280px;
+  top: 21px; */
+  z-index: 10000;
+}
+
+.mapbox-directions-inputs input {
+  font-size: 1.5rem !important;
+}
+
+.mapbox-directions-profile label {
+  font-size: 1.5rem !important;
 }
 
 #inputs,
@@ -84,17 +154,21 @@ body {
 #directions {
   /* position: absolute; */
   width: 100%;
-  max-width: 300px;
+  /* max-width: 300px; */
   min-width: 200px;
 }
 
 #inputs {
   z-index: 10;
-  /* top: 10px;
-  left: 10px; */
+  top: 15px;
+  left: 10px;
+  font-size: 5rem !important;
 }
 
 #directions {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   z-index: 99;
   background: rgba(0, 0, 0, 0.8);
   top: 0;
@@ -113,6 +187,15 @@ body {
   left: 10px;
 }
 
+.mapbox-directions-reverse-input {
+  position: absolute;
+  z-index: 10;
+  background: white;
+  left: 50px;
+  top: 35px !important;
+  cursor: pointer;
+}
+
 /* PLACES API GEOCODER QUERY STYLING */
 .searchQueryDiv {
   display: block;
@@ -125,7 +208,7 @@ body {
   border-radius: 3px;
   /* max-height: 50%;
   max-width: 25%; */
-  overflow-y: scroll;
+  overflow-y: overlay;
 }
 
 .searchQueryBox {

@@ -97,9 +97,9 @@ async function main() {
             searchQueryLayer.clearLayers();
             searchQuery.innerHTML = "";
             res.results.features.forEach((el) => {
-              console.log(el);
+              // console.log(el);
               placeName = JSON.stringify(el.text).slice(1, -1);
-              console.log(placeName);
+              // console.log(placeName);
               // ADD DESCRIPTION IN SIDEBAR
               let content = document.createElement("div");
               let searchQuery = document.getElementById("searchQuery");
@@ -108,7 +108,7 @@ async function main() {
               </a><p>Category: ${el.properties.category}</p><p>${el.properties.address}, ${el.context[2].text}, 
               Singapore ${el.context[0].text} </p> `;
               searchQuery.insertAdjacentElement("beforeend", content);
-              console.log(content.innerHTML);
+              // console.log(content.innerHTML);
               console.log(el);
               // ADD MARKERS
               L.geoJSON(el, {
@@ -139,62 +139,112 @@ async function main() {
   init();
 }
 
-// INIIALISE MAP /////////////
+// INIIALISE MAP //
 function initMap() {
   L.mapbox.accessToken =
     "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q";
-  var mymap = L.mapbox
+  let mymap = L.mapbox
     .map("map", null, {
       minZoom: 11,
     })
-    .setView([1.3521, 103.8198], 12)
+    .setView([1.3521, 103.8198], 11)
     .addLayer(L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11"));
 
-  // Adds button to enable fullscreen toggle
+  mymap.setMaxBounds(mymap.getBounds());
+
+  // BUTTON TO TOGGLE FULL SCREEN
   mymap.addControl(new L.Control.Fullscreen());
 
   // Add marker when user clicks on map
   // Create pop up for each marker and display the location
-  mymap.on("click", async function (ev) {
-    let markers = [];
-    let results = [];
-    let names = [];
-    let searchBtn = document.getElementById("searchBtn");
-    let searchResultDiv = document.querySelector(".searchResultDiv");
-    let searchResults = document.createElement("div");
-    let selectedSearchInput = document.getElementById("selectedSearch");
+  // mymap.on("click", async function (ev) {
+  //   let markers = [];
+  //   let results = [];
+  //   let names = [];
+  //   let searchBtn = document.getElementById("searchBtn");
+  //   let searchResultDiv = document.querySelector(".searchResultDiv");
+  //   let searchResults = document.createElement("div");
+  //   let selectedSearchInput = document.getElementById("selectedSearch");
 
-    // if there is no marker on the map, do the following
-    let result = await search(ev.latlng.lat, ev.latlng.lng);
-    console.log(result);
-    results.push(result);
-    let currentMarker = L.marker([ev.latlng.lat, ev.latlng.lng])
-      .bindPopup(`${ev.latlng.lat}, ${ev.latlng.lng}`)
-      .addTo(mymap);
-    markers.push(currentMarker);
+  //   // if there is no marker on the map, do the following
+  //   let result = await search(ev.latlng.lat, ev.latlng.lng);
+  //   console.log(result);
+  //   results.push(result);
+  //   let currentMarker = L.marker([ev.latlng.lat, ev.latlng.lng])
+  //     .bindPopup(`${ev.latlng.lat}, ${ev.latlng.lng}`)
+  //     .addTo(mymap);
+  //   markers.push(currentMarker);
 
-    // input lat lng of marker into search input box and display results
-    selectedSearchInput.value = `${ev.latlng.lat}, ${ev.latlng.lng}`;
-    searchBtn.addEventListener("click", () => {
-      for (let rec of result.response.groups[0].items) {
-        names.push(rec.venue.name);
-      }
+  //   // input lat lng of marker into search input box and display results
+  //   selectedSearchInput.value = `${ev.latlng.lat}, ${ev.latlng.lng}`;
+  //   searchBtn.addEventListener("click", () => {
+  //     for (let rec of result.response.groups[0].items) {
+  //       names.push(rec.venue.name);
+  //     }
 
-      searchResultDiv.appendChild(searchResults);
-      searchResults.innerHTML = "";
-      for (let i of names) {
-        let p = document.createElement("p");
-        p.innerHTML = `${i}`;
-        p.className = "searchResult";
-        searchResults.appendChild(p);
-      }
+  //     searchResultDiv.appendChild(searchResults);
+  //     searchResults.innerHTML = "";
+  //     for (let i of names) {
+  //       let p = document.createElement("p");
+  //       p.innerHTML = `${i}`;
+  //       p.className = "searchResult";
+  //       searchResults.appendChild(p);
+  //     }
 
-      names = [];
-    });
-  });
+  //     names = [];
+  //   });
+  // });
+
+  // WHEN CLICK ON MAP TOGGLE SIDE PANEL
+  mymap.on("click", toggleSidePanel);
 
   return mymap;
 }
 
+// WHEN CLICK ON DIRECTIONS BUTTON SIDE PANEL
+let directionsBtn = document.getElementById("directionsBtn");
+directionsBtn.addEventListener("click", toggleSidePanel);
+
+// TOGGLE SIDEBAR VIEW AND DIRECTIONS VIEW
+
 ////// MAIN THREAD ////////
 main();
+
+// TO TOGGLE BETWEEN DIRECTIONS CONTAINER AND SIDEBAR CONTAINER
+function toggleSidePanel() {
+  let directionsContainerHidden = document.querySelector(
+    ".directions-container-hidden"
+  );
+  let sidebarContainer = document.querySelector(".sidebar-container");
+
+  if (
+    directionsContainerHidden.classList.contains("directions-container-hidden")
+  )
+    if (directionsContainerHidden.classList.contains("directions-container")) {
+      directionsContainerHidden.classList.remove("directions-container");
+      sidebarContainer.classList.remove("sidebar-container-hidden");
+    } else {
+      directionsContainerHidden.classList.add("directions-container");
+      sidebarContainer.classList.add("sidebar-container-hidden");
+    }
+}
+
+// https://gist.github.com/Chak10/dc24c61c9bf2f651cb6d290eeef864c1
+function randDarkColor() {
+  var lum = -0.25;
+  var hex = String(
+    "#" + Math.random().toString(16).slice(2, 8).toUpperCase()
+  ).replace(/[^0-9a-f]/gi, "");
+  if (hex.length < 6) {
+    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+  }
+  var rgb = "#",
+    c,
+    i;
+  for (i = 0; i < 3; i++) {
+    c = parseInt(hex.substr(i * 2, 2), 16);
+    c = Math.round(Math.min(Math.max(0, c + c * lum), 255)).toString(16);
+    rgb += ("00" + c).substr(c.length);
+  }
+  return rgb;
+}

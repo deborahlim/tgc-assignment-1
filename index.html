@@ -25,63 +25,84 @@
       href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.Default.css"
       rel="stylesheet"
     />
+    <script
+      src="https://kit.fontawesome.com/4512c92067.js"
+      crossorigin="anonymous"
+    ></script>
     <link rel="stylesheet" href="styles/style.css" />
     <title>Document</title>
   </head>
   <body>
     <div class="mapContainer">
-      <div class="directions-container">
-        <div id="inputs"></div>
-        <div id="errors"></div>
-        <div id="directions">
-          <div id="routes"></div>
-          <div id="instructions"></div>
-        </div>
-      </div>
-
-      <div class="sidebar">
-        <div class="searchResultDiv">
+      <div class="box">
+        <div class="directions-control">
           <div class="inputBoxDiv">
-            <input
-              type="text"
-              placeholder="Search Radius"
-              class="inputBox"
-              id="selectedRadius"
-            />
-            <button class="btn inputBox" id="setBtn">Set</button>
-          </div>
-          <div class="inputBoxDiv">
-            <input
-              type="text"
-              placeholder="Search Places"
-              class="inputBox"
-              id="selectedSearch"
-            />
-            <button class="btn inputBox" id="searchBtn">Search</button>
+            <button class="btn inputBox directions-btn" id="directionsBtn">
+              <i class="fas fa-directions fa-2x" id="directionsBtn"></i>
+            </button>
           </div>
           <div class="inputBoxDiv">
             <button class="btn inputBox" id="toggleTaxiBtn">
-              Taxi Availability
+              <i class="fas fa-taxi fa-2x"></i>
             </button>
           </div>
           <div class="inputBoxDiv">
             <button class="btn inputBox" id="userLocation">
-              Get Current Location
+              <i class="fas fa-location-arrow fa-2x"></i>
             </button>
           </div>
-          <div class="inputBoxDiv">
-            <input class="inputBox" type="search" id="keyWord" />
-            <button class="btn inputBox" id="keyWordBtn">
-              Search Heritage Site By Keyword
-            </button>
+        </div>
+        <div class="side-panel">
+          <div class="directions-container-hidden">
+            <div id="inputs"></div>
+            <div id="errors"></div>
+            <div id="directions">
+              <div id="routes"></div>
+              <div id="instructions"></div>
+            </div>
           </div>
-          <div class="inputBoxDiv filter">
-            <button class="inputBox" id="parks">Parks</button>
-            <button class="inputBox" id="reservior">Reservior</button>
+
+          <div class="sidebar-container">
+            <div class="searchResultDiv">
+              <div class="inputBoxDiv">
+                <input
+                  class="inputBox"
+                  type="search"
+                  id="keyWord"
+                  placeholder="Search Historic Sites"
+                />
+                <button class="btn inputBox" id="keyWordBtn">Search</button>
+              </div>
+
+              <div class="inputBoxDiv">
+                <input
+                  type="text"
+                  placeholder="Search Radius"
+                  class="inputBox"
+                  id="selectedRadius"
+                />
+                <button class="btn inputBox" id="setBtn">Set</button>
+              </div>
+              <div class="inputBoxDiv">
+                <input
+                  type="text"
+                  placeholder="Search Places"
+                  class="inputBox"
+                  id="selectedSearch"
+                />
+                <button class="btn inputBox" id="searchBtn">Search</button>
+              </div>
+
+              <div class="inputBoxDiv filter">
+                <button class="inputBox" id="parks">Parks</button>
+                <button class="inputBox" id="reservior">Reservior</button>
+              </div>
+              <div class="searchQueryDiv" id="searchQuery"></div>
+            </div>
           </div>
-          <div class="searchQueryDiv" id="searchQuery"></div>
         </div>
       </div>
+
       <div id="map"></div>
     </div>
 
