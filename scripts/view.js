@@ -23,7 +23,7 @@ async function getTaxiLayer() {
 async function getHeritageLayer(heritageLayer) {
   let searchByKeywordInput = document.getElementById("keyWord");
   let response = await getData("data/historic-sites-geojson.geojson");
-  console.log(response.data);
+  console.log(response);
 
   L.geoJSON(response.data, {
     pointToLayer: function (geoJsonPoint, latlng) {
@@ -80,18 +80,79 @@ async function getHeritageLayer(heritageLayer) {
   }).addTo(heritageLayer);
 }
 
-async function getTreesLayer(treesLayer) {
+async function getTouristAttractionLayer(touristAttractionLayer) {
   let searchByKeywordInput = document.getElementById("keyWord");
-  let response = await getData("data/heritage-trees-geojson.geojson");
-  console.log(response.data);
+  let convertedData = omnivore.kml("data/TOURISM.kml");
+  console.log(convertedData);
+  // let response = await getData(convertedData);
+
+  L.geoJSON(convertedData, {
+    pointToLayer: function (geoJsonPoint, latlng) {
+      return L.marker(latlng, {
+        icon: L.mapbox.marker.icon({
+          "marker-symbol": "town-hall",
+          "marker-color": "0044FF",
+        }),
+      });
+    },
+    // onEachFeature: function (feature, layer) {
+    //   console.log(feature);
+    //   layer.bindPopup(feature.properties.Description);
+    //   let e = document.createElement("div");
+    //   e.innerHTML = feature.properties.Description;
+    //   let tds = e.querySelectorAll("td");
+    //   //console.log(tds);
+    //   let photo = tds[3].innerHTML;
+    //   let name = tds[4].innerHTML;
+    //   let link = tds[5].innerHTML;
+    //   let description = tds[6].innerHTML;
+    //   let address = `${tds[9].innerHTML}, ${tds[10].innerHTML}`;
+    //   if (!tds[9].innerHTML) address = tds[10].innerHTML;
+    //   if (!tds[10].innerHTML) address = tds[9].innerHTML;
+
+    //   layer.bindPopup(`<div style=" color: ${randDarkColor()}"; width:100%>
+    //                 <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
+    //                 <a href=${link} target="_blank" style="text-decoration:none; color:inherit;"><p style="font-weight:800">
+    //                      ${name}
+    //                 </p></a>
+    //                 <p>
+    //                      Description: ${description}
+    //                 </p>
+    //                 <p>
+    //                      Address: ${address}
+    //                 </p>
+    //              </div>`);
+    // },
+    // filter: function (feature) {
+    //   let searchByKeywordInput = document
+    //     .getElementById("keyWord")
+    //     .value.toLowerCase()
+    //     .trim()
+    //     .replace(".", "");
+    //   let lowercaseDescription = feature.properties.Description.toLowerCase();
+
+    //   if (lowercaseDescription.search(searchByKeywordInput) !== -1) {
+    //     return true;
+    //   }
+    // },
+    // popupOptions: {
+    //   //className: "touristAttractionPopup",
+    //   keepInView: true,
+    // },
+  }).addTo(touristAttractionLayer);
+}
+
+async function getMuseumLayer(museumLayer) {
+  let searchByKeywordInput = document.getElementById("keyWord");
+  let response = await getData("data/museums-geojson.geojson");
+  // console.log(response.data);
 
   L.geoJSON(response.data, {
     pointToLayer: function (geoJsonPoint, latlng) {
       return L.marker(latlng, {
         icon: L.mapbox.marker.icon({
-          "marker-size": "small",
-          "marker-symbol": "park",
-          "marker-color": "#228B22",
+          "marker-symbol": "museum",
+          "marker-color": "#ff4500 ",
         }),
       });
     },
@@ -101,16 +162,17 @@ async function getTreesLayer(treesLayer) {
       e.innerHTML = feature.properties.Description;
       let tds = e.querySelectorAll("td");
       //console.log(tds);
-      let photo = tds[3].innerHTML;
-      let name = tds[4].innerHTML;
-      let link = tds[5].innerHTML;
-      let description = tds[6].innerHTML;
-      let address = `${tds[9].innerHTML}, ${tds[10].innerHTML}`;
-      if (!tds[9].innerHTML) address = tds[10].innerHTML;
-      if (!tds[10].innerHTML) address = tds[9].innerHTML;
+      let photo = tds[10].innerHTML;
+      let name = tds[9].innerHTML;
+      let link = tds[6].innerHTML;
+      let description = tds[5].innerHTML;
+      let address = `${tds[1].innerHTML}, ${tds[0].innerHTML} ${tds[3].innerHTML}, Singapore ${tds[2].innerHTML}`;
+      if (!tds[1].innerHTML)
+        address = `${tds[0].innerHTML} ${tds[3].innerHTML}, Singapore ${tds[2].innerHTML}`;
+      if (!tds[3].innerHTML)
+        address = `${tds[1].innerHTML}, , Singapore ${tds[2].innerHTML}`;
 
-      let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-      layer.bindPopup(`<div style=" color: #${randomColor}"; width:100%>
+      layer.bindPopup(`<div style=" color: ${randDarkColor()}"; width:100%>
                     <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
                     <a href=${link} target="_blank" style="text-decoration:none; color:inherit;"><p style="font-weight:800">
                          ${name}
@@ -132,7 +194,61 @@ async function getTreesLayer(treesLayer) {
       let lowercaseDescription = feature.properties.Description.toLowerCase();
 
       if (lowercaseDescription.search(searchByKeywordInput) !== -1) {
-        console.log(feature);
+        return true;
+      }
+    },
+    popupOptions: {
+      //className: "museumPopup",
+      keepInView: true,
+    },
+  }).addTo(museumLayer);
+}
+
+async function getTreesLayer(treesLayer) {
+  let searchByKeywordInput = document.getElementById("keyWord");
+  let response = await getData("data/heritage-trees-geojson.geojson");
+  console.log(response.data);
+
+  L.geoJSON(response.data, {
+    pointToLayer: function (geoJsonPoint, latlng) {
+      return L.marker(latlng, {
+        icon: L.mapbox.marker.icon({
+          "marker-size": "small",
+          "marker-symbol": "park",
+          "marker-color": "#228B22",
+        }),
+      });
+    },
+    onEachFeature: function (feature, layer) {
+      layer.bindPopup(feature.properties.Description);
+      let e = document.createElement("div");
+      e.innerHTML = feature.properties.Description;
+      let tds = e.querySelectorAll("td");
+      //console.log(tds);
+      let name = tds[4].innerHTML;
+      let link = tds[5].innerHTML;
+      let description = tds[6].innerHTML;
+
+      let randomColor = Math.floor(Math.random() * 16777215).toString(16);
+      layer.bindPopup(`<div style=" color: #${randomColor}"; width:100%>
+                    <a href=${link} target="_blank" style="text-decoration:none; color:inherit;"><p style="font-weight:800">
+                         ${name}
+                    </p></a>
+                    <p>
+                         ${description}
+                    </p>
+                 </div>`);
+    },
+    filter: function (feature) {
+      let searchByKeywordInput = document
+        .getElementById("keyWord")
+        .value.toLowerCase()
+        .trim()
+        .replace(".", "");
+      let lowercaseDescription = feature.properties.Description.toLowerCase();
+
+      if (lowercaseDescription.search(searchByKeywordInput) !== -1) {
+        // console.log(feature);
         return true;
       }
     },
@@ -213,7 +329,9 @@ async function getMapLayers(mymap) {
   getDirections(mymap);
   getHeritageLayer(heritageLayer);
   getTreesLayer(treesLayer);
+  getMuseumLayer(museumLayer);
   getMrtStations();
+  getTouristAttractionLayer(touristAttractionLayer);
 
   let baseLayers = {
     "Street View": L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11"),
@@ -226,6 +344,8 @@ async function getMapLayers(mymap) {
     //Taxis: taxiResultLayer,
     "Historic Sites": heritageLayer,
     "Heritage Trees": treesLayer,
+    "Tourist Attractions": touristAttractionLayer,
+    Museums: museumLayer,
 
     // "MRT Stations": mrtStationsLayer,
     //Search: searchQueryLayer,

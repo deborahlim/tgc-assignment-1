@@ -5,9 +5,11 @@ async function main() {
     taxiResultLayer = L.markerClusterGroup();
     heritageLayer = L.mapbox.featureLayer();
     treesLayer = L.mapbox.featureLayer();
+    museumLayer = L.mapbox.featureLayer();
     mrtStationsLayer = L.mapbox.featureLayer();
     searchQueryLayer = L.mapbox.featureLayer();
     userLocationLayer = L.mapbox.featureLayer();
+    touristAttractionLayer = L.mapbox.featureLayer();
 
     getMapLayers(mymap);
 
