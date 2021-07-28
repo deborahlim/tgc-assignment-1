@@ -1,5 +1,8 @@
 /* Box sizing reset best practice according to https://css-tricks.com/box-sizing/ */
 /*  browser font-size set to 16px so 62.5% = 10px; 1 rem = 10px */
+
+/* #3bb2d0 */
+
 html {
   box-sizing: border-box;
   font-size: 62.5%;
@@ -12,6 +15,15 @@ html {
   border: 0;
   margin: 0;
   padding: 0;
+}
+
+body,
+.mapContainer,
+.box,
+.side-panel,
+.sidebar-container,
+.searchResultDiv {
+  overflow-y: hidden;
 }
 
 body {
@@ -42,8 +54,7 @@ body {
 /* SIDE PANEL */
 
 .side-panel {
-  flex-basis: 100%;
-  height: 100vh;
+  flex-basis: 90%;
   display: flex;
   flex-direction: column;
   box-shadow: 3px 5px 5px rgba(255, 255, 255, 0.753);
@@ -59,7 +70,6 @@ body {
   /* padding: 2rem; */
   background-color: rgba(0, 0, 0, 0.8);
   color: black;
-
   z-index: 0;
   /* display: none; */
 }
@@ -79,8 +89,7 @@ body {
 .searchResultDiv {
   display: flex;
   flex-direction: column;
-  margin: 1rem;
-  /* overflow-y: scroll; */
+  /* margin: 1rem; */
 }
 
 .inputBoxDiv {
@@ -122,16 +131,17 @@ body {
   display: flex;
   flex-direction: column;
   flex-basis: 100%;
-  overflow-y: overlay;
   /* padding-right: 1rem; */
-
+  overflow-y: overlay;
   /* display: none; */
   /* background-color: rgba(0, 0, 0, 0.8); */
 }
 
 .directions-control {
   display: flex;
+  flex-basis: 10%;
   justify-content: center;
+  align-items: center;
 }
 
 .directions-btn {
@@ -152,7 +162,6 @@ body {
 #inputs,
 #errors,
 #directions {
-  /* position: absolute; */
   width: 100%;
   /* max-width: 300px; */
   min-width: 200px;
@@ -168,13 +177,10 @@ body {
 #directions {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
   z-index: 99;
   background: rgba(0, 0, 0, 0.8);
-  top: 0;
-  right: 0;
-  bottom: 0;
-  overflow: auto;
+  overflow-y: overlay !important;
 }
 
 #errors {
@@ -192,23 +198,37 @@ body {
   z-index: 10;
   background: white;
   left: 50px;
-  top: 35px !important;
+  top: 131px !important;
   cursor: pointer;
 }
 
 /* PLACES API GEOCODER QUERY STYLING */
 .searchQueryDiv {
-  display: block;
-  padding: 10px 0;
+  /* display: block; */
+  padding: 10px;
   /* background: rgba(0, 0, 0, 0.5); */
   background: transparent;
-  color: #fff;
+  color: rgba(255, 255, 255, 0.8);
   font-size: 11px;
   line-height: 18px;
   border-radius: 3px;
-  /* max-height: 50%;
-  max-width: 25%; */
   overflow-y: overlay;
+}
+
+/* SCROLLBAR STYLING */
+
+.searchQueryDiv::-webkit-scrollbar,
+#directions::-webkit-scrollbar {
+  border-radius: 7px;
+  z-index: 0;
+  width: 1rem;
+}
+
+.searchQueryDiv::-webkit-scrollbar-thumb,
+#directions::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.8);
+  /* border-radius: 7px; */
+  z-index: 10101001;
 }
 
 .searchQueryBox {
@@ -251,9 +271,16 @@ body {
   font-weight: 500;
 }
 
-/* LEAFLET POP STYLE CHANGES */
+/* LEAFLET POPUP STYLE CHANGES */
+
+.leaflet-popup-content-wrapper {
+  background-color: rgba(255, 255, 255, 0.863);
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.794);
+  border-radius: 10px;
+}
+
 .leaflet-popup-content {
   /* width: 32rem !important; */
   width: 100% !important;
-  height: 100%;
+  /* height: 100%; */
 }

@@ -1,4 +1,4 @@
-// Add GeoJSON data to the taxi cluster group
+// TAXI AVAILABILTY LAYER
 async function getTaxiLayer() {
   let response = await updateTaxiAvail();
   taxiResultLayer.clearLayers();
@@ -19,7 +19,8 @@ async function getTaxiLayer() {
   // To get updated taxi data every minute
   // setTimeout(getTaxiLayer, 6000);
 }
-// Add GeoJSON data to the heritage feature group
+
+// HISTORIC SITE LAYER
 async function getHeritageLayer(heritageLayer) {
   let searchByKeywordInput = document.getElementById("keyWord");
   let response = await getData("data/historic-sites-geojson.geojson");
@@ -48,13 +49,13 @@ async function getHeritageLayer(heritageLayer) {
       if (!tds[9].innerHTML) address = tds[10].innerHTML;
       if (!tds[10].innerHTML) address = tds[9].innerHTML;
 
-      layer.bindPopup(`<div style=" color: ${randDarkColor()}"; width:100%>
+      layer.bindPopup(`<div style=" color: ${randDarkColor()}; width:300px">
                     <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
-                    <a href=${link} target="_blank" style="text-decoration:none; color:inherit;"><p style="font-weight:800">
+                    <p style="font-weight:900">
                          ${name}
-                    </p></a>
+                    </p>
                     <p>
-                         Description: ${description}
+                         ${description}
                     </p>
                     <p>
                          Address: ${address}
@@ -80,6 +81,7 @@ async function getHeritageLayer(heritageLayer) {
   }).addTo(heritageLayer);
 }
 
+// TOURIST ATTRACTION LAYER
 async function getTouristAttractionLayer(touristAttractionLayer) {
   let searchByKeywordInput = document.getElementById("keyWord");
 
@@ -140,6 +142,7 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
   omnivore.kml("data/TOURISM.kml", null, custom).addTo(touristAttractionLayer);
 }
 
+// MUSUEM LAYER
 async function getMuseumLayer(museumLayer) {
   let searchByKeywordInput = document.getElementById("keyWord");
   let response = await getData("data/museums-geojson.geojson");
@@ -170,7 +173,7 @@ async function getMuseumLayer(museumLayer) {
       if (!tds[3].innerHTML)
         address = `${tds[1].innerHTML}, , Singapore ${tds[2].innerHTML}`;
 
-      layer.bindPopup(`<div style=" color: ${randDarkColor()}"; width:100%>
+      layer.bindPopup(`<div style=" color: ${randDarkColor()}; width:300px">
                     <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
                     <a href=${link} target="_blank" style="text-decoration:none; color:inherit;"><p style="font-weight:800">
                          ${name}
@@ -181,8 +184,8 @@ async function getMuseumLayer(museumLayer) {
                     <p>
                          Address: ${address}
                     </p>
-                 </div>`),
-        { minWidth: 300 };
+                 </div>`);
+      // { minWidth: 300 };
     },
     filter: function (feature) {
       let searchByKeywordInput = document
@@ -203,6 +206,7 @@ async function getMuseumLayer(museumLayer) {
   }).addTo(museumLayer);
 }
 
+// HERITAGE TREES LAYER
 async function getTreesLayer(treesLayer) {
   let searchByKeywordInput = document.getElementById("keyWord");
   let response = await getData("data/heritage-trees-geojson.geojson");
@@ -227,8 +231,7 @@ async function getTreesLayer(treesLayer) {
       let link = tds[5].innerHTML;
       let description = tds[6].innerHTML;
 
-      let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-      layer.bindPopup(`<div style=" color: #${randomColor}"; width:100%>
+      layer.bindPopup(`<div style=" color: ${randDarkColor()}; width:300px">
                     <a href=${link} target="_blank" style="text-decoration:none; color:inherit;"><p style="font-weight:800">
                          ${name}
                     </p></a>
@@ -236,6 +239,14 @@ async function getTreesLayer(treesLayer) {
                          ${description}
                     </p>
                  </div>`);
+
+      layer.on("mouseover", function (e) {
+        this.openPopup();
+      });
+
+      layer.on("mouseout", function (e) {
+        this.closePopup();
+      });
     },
     filter: function (feature) {
       let searchByKeywordInput = document
