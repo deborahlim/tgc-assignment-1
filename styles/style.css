@@ -250,3 +250,10 @@ body {
 .taxiPopup {
   font-weight: 500;
 }
+
+/* LEAFLET POP STYLE CHANGES */
+.leaflet-popup-content {
+  /* width: 32rem !important; */
+  width: 100% !important;
+  height: 100%;
+}

@@ -82,64 +82,62 @@ async function getHeritageLayer(heritageLayer) {
 
 async function getTouristAttractionLayer(touristAttractionLayer) {
   let searchByKeywordInput = document.getElementById("keyWord");
-  let convertedData = omnivore.kml("data/TOURISM.kml");
-  console.log(convertedData);
-  // let response = await getData(convertedData);
 
-  L.geoJSON(convertedData, {
+  let custom = L.geoJSON(null, {
     pointToLayer: function (geoJsonPoint, latlng) {
       return L.marker(latlng, {
         icon: L.mapbox.marker.icon({
-          "marker-symbol": "town-hall",
-          "marker-color": "0044FF",
+          "marker-symbol": "attraction",
+          "marker-color": "#C45bc4",
         }),
       });
     },
-    // onEachFeature: function (feature, layer) {
-    //   console.log(feature);
-    //   layer.bindPopup(feature.properties.Description);
-    //   let e = document.createElement("div");
-    //   e.innerHTML = feature.properties.Description;
-    //   let tds = e.querySelectorAll("td");
-    //   //console.log(tds);
-    //   let photo = tds[3].innerHTML;
-    //   let name = tds[4].innerHTML;
-    //   let link = tds[5].innerHTML;
-    //   let description = tds[6].innerHTML;
-    //   let address = `${tds[9].innerHTML}, ${tds[10].innerHTML}`;
-    //   if (!tds[9].innerHTML) address = tds[10].innerHTML;
-    //   if (!tds[10].innerHTML) address = tds[9].innerHTML;
+    onEachFeature: function (feature, layer) {
+      console.log(layer);
+      let e = document.createElement("div");
+      e.innerHTML = feature.properties.description;
+      let tds = e.querySelectorAll("td");
+      console.log(tds);
+      let photo = "https://www.visitsingapore" + tds[7].innerText.slice(17);
+      console.log(photo);
+      let name = tds[13].innerText;
+      let link = tds[27].innerText ? tds[27].innerText : "#";
+      //   let description = tds[6].innerHTML;
+      //   let address = `${tds[9].innerHTML}, ${tds[10].innerHTML}`;
+      //   if (!tds[9].innerHTML) address = tds[10].innerHTML;
+      //   if (!tds[10].innerHTML) address = tds[9].innerHTML;
+      layer.bindPopup(
+        `<div style=" color: ${randDarkColor()}; width:300px">
+                    <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%; height:100%"></div>
+                    <a href="${link}" target="_blank" style="text-decoration:none; color:inherit"><p style="font-weight:800">
+                         ${name}
+                    </p></a>
+                 </div>`,
+        {
+          _offset: L.Point(0, 7),
+        }
+      );
+    },
+  });
 
-    //   layer.bindPopup(`<div style=" color: ${randDarkColor()}"; width:100%>
-    //                 <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
-    //                 <a href=${link} target="_blank" style="text-decoration:none; color:inherit;"><p style="font-weight:800">
-    //                      ${name}
-    //                 </p></a>
-    //                 <p>
-    //                      Description: ${description}
-    //                 </p>
-    //                 <p>
-    //                      Address: ${address}
-    //                 </p>
-    //              </div>`);
-    // },
-    // filter: function (feature) {
-    //   let searchByKeywordInput = document
-    //     .getElementById("keyWord")
-    //     .value.toLowerCase()
-    //     .trim()
-    //     .replace(".", "");
-    //   let lowercaseDescription = feature.properties.Description.toLowerCase();
+  // filter: function (feature) {
+  //   let searchByKeywordInput = document
+  //     .getElementById("keyWord")
+  //     .value.toLowerCase()
+  //     .trim()
+  //     .replace(".", "");
+  //   let lowercaseDescription = feature.properties.Description.toLowerCase();
 
-    //   if (lowercaseDescription.search(searchByKeywordInput) !== -1) {
-    //     return true;
-    //   }
-    // },
-    // popupOptions: {
-    //   //className: "touristAttractionPopup",
-    //   keepInView: true,
-    // },
-  }).addTo(touristAttractionLayer);
+  //   if (lowercaseDescription.search(searchByKeywordInput) !== -1) {
+  //     return true;
+  //   }
+  // },
+  // popupOptions: {
+  //   //className: "touristAttractionPopup",
+  //   keepInView: true,
+  // },
+
+  omnivore.kml("data/TOURISM.kml", null, custom).addTo(touristAttractionLayer);
 }
 
 async function getMuseumLayer(museumLayer) {
@@ -183,7 +181,8 @@ async function getMuseumLayer(museumLayer) {
                     <p>
                          Address: ${address}
                     </p>
-                 </div>`);
+                 </div>`),
+        { minWidth: 300 };
     },
     filter: function (feature) {
       let searchByKeywordInput = document
@@ -220,7 +219,6 @@ async function getTreesLayer(treesLayer) {
       });
     },
     onEachFeature: function (feature, layer) {
-      layer.bindPopup(feature.properties.Description);
       let e = document.createElement("div");
       e.innerHTML = feature.properties.Description;
       let tds = e.querySelectorAll("td");
