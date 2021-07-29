@@ -36,34 +36,58 @@ async function getHeritageLayer(heritageLayer) {
       });
     },
     onEachFeature: function (feature, layer) {
-      layer.bindPopup(feature.properties.Description);
       let e = document.createElement("div");
       e.innerHTML = feature.properties.Description;
       let tds = e.querySelectorAll("td");
-      //console.log(tds);
+      // console.log(tds);
       let photo = tds[3].innerHTML;
       let name = tds[4].innerHTML;
-      let link = tds[5].innerHTML;
+      let postalCode = tds[11].innerHTML;
       let description = tds[6].innerHTML;
       let address = `${tds[9].innerHTML}, ${tds[10].innerHTML}`;
       if (!tds[9].innerHTML) address = tds[10].innerHTML;
       if (!tds[10].innerHTML) address = tds[9].innerHTML;
 
-      layer.bindPopup(`<div style=" color: ${randDarkColor()}; width:300px">
-                    <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
-                    <p style="font-weight:900">
-                         ${name}
-                    </p>
-                    <p>
-                         ${description}
-                    </p>
-                    <p>
-                         Address: ${address}
-                    </p>
-                    <br>
-                   <p><i class="fas fa-directions fa-2x" style="float: right;"></i></p>
-                   <br>
-                 </div>`);
+      let container = $("<div />");
+      container.on("click", ".directionsPopupBtn", function (e) {
+        let directionInput = document.querySelector(
+          "#mapbox-directions-origin-input"
+        );
+        directionInput.value = postalCode;
+        console.log(directionInput);
+      });
+
+      container.html(`<div style=" color: ${randDarkColor()}; width:300px">
+      <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
+      <p style="font-weight:900">
+           ${name}
+      </p>
+      <p>
+           ${description}
+      </p>
+      <p>
+           Address: ${address}
+      </p>
+      <br>
+     <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right;" ></i></div>
+     <br>
+   </div>`);
+      // layer.bindPopup(`<div style=" color: ${randDarkColor()}; width:300px">
+      //             <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
+      //             <p style="font-weight:900">
+      //                  ${name}
+      //             </p>
+      //             <p>
+      //                  ${description}
+      //             </p>
+      //             <p>
+      //                  Address: ${address}
+      //             </p>
+      //             <br>
+      //            <p class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right;" ></i></p>
+      //            <br>
+      //          </div>`);
+      layer.bindPopup(container[0]);
     },
     filter: function (feature) {
       let searchByKeywordInput = document
@@ -87,7 +111,6 @@ async function getHeritageLayer(heritageLayer) {
       }
     },
     popupOptions: {
-      //className: "heritagePopup",
       keepInView: true,
     },
   }).addTo(heritageLayer);
@@ -148,7 +171,7 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
       if (lowercaseDescription.search(searchByKeywordInput) !== -1) {
         return true;
       }
-      console.log(lowercaseDescription);
+      // console.log(lowercaseDescription);
     },
     popupOptions: {
       //className: "touristAttractionPopup",

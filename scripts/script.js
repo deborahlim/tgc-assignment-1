@@ -140,6 +140,11 @@ async function main() {
       }
 
       // GET LOCATION OF CLICKED DIRECTIONS ICON AND INPUT IT INTO THE DIRECTIONS API
+      // let smallDirectionsBtn = document.querySelector(".directionsPopupBtn");
+      // console.log(smallDirectionsBtn);
+      // smallDirectionsBtn.addEventListener("click", function (e) {
+      //   console.log(e);
+      // });
     });
   }
   init();
