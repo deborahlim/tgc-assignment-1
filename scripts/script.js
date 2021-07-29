@@ -10,27 +10,63 @@ async function main() {
     searchQueryLayer = L.mapbox.featureLayer();
     userLocationLayer = L.mapbox.featureLayer();
     touristAttractionLayer = L.mapbox.featureLayer();
-
+    initialLayer = L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11");
     getMapLayers(mymap);
 
+    // STYLE CONTROL BOX
+    let layerControl = document.querySelector(
+      ".leaflet-control-layers-expanded .leaflet-control-layers-list"
+    );
+
+    let baseLayerControl = document.querySelector(
+      ".leaflet-control-layers-base"
+    );
+
+    let overlaysControl = document.querySelector(
+      ".leaflet-control-layers-overlays "
+    );
+
+    baseLayerControl.insertAdjacentHTML(
+      "afterbegin",
+      "<div><h1>Base Maps</h1></div>"
+    );
+
+    overlaysControl.insertAdjacentHTML(
+      "afterbegin",
+      "<div><h1>Markers</h1></div>"
+    );
+
+    document.querySelector(".leaflet-top.leaflet-right").hidden = false;
     window.addEventListener("DOMContentLoaded", () => {
-      //  BUTTON TO FILTER HERITAGE MARKERS BY KEYWORD
+      //  FILTER ALL MARKERS BY KEYWORD USING CLICK BUTTON
       let searchByKeywordBtn = document.getElementById("keyWordBtn");
       searchByKeywordBtn.addEventListener("click", function (e) {
         heritageLayer.clearLayers();
+        museumLayer.clearLayers();
+        treesLayer.clearLayers();
+        touristAttractionLayer.clearLayers();
         getHeritageLayer(heritageLayer);
+        getMuseumLayer(museumLayer);
+        getTreesLayer(treesLayer);
+        getTouristAttractionLayer(touristAttractionLayer);
       });
 
-      // FILTER HERITAGE MARKERS BY PRESSING ENTER BUTTON
+      // FILTER ALL MARKERS BY BY KEYWORD USING ENTER BUTTON
       document
         .querySelector("#keyWord")
         .addEventListener("keypress", function (e) {
           if (e.key === "Enter") {
-            // code for enter
             heritageLayer.clearLayers();
+            museumLayer.clearLayers();
+            treesLayer.clearLayers();
+            touristAttractionLayer.clearLayers();
             getHeritageLayer(heritageLayer);
+            getMuseumLayer(museumLayer);
+            getTreesLayer(treesLayer);
+            getTouristAttractionLayer(touristAttractionLayer);
           }
         });
+
       // BUTTON TO GET USER LOCATION
       userLocationBtn.addEventListener("click", function (e) {
         if (!navigator.geolocation) {
@@ -70,6 +106,7 @@ async function main() {
           mymap.addLayer(taxiResultLayer);
         }
       });
+
       // GET TAXI LOCATION USING MAPBOX API REVERSE GEOCODING
       taxiResultLayer.on("click", function (e) {
         let { lat, lng } = e.latlng;
@@ -142,7 +179,7 @@ async function main() {
 }
 
 // INIIALISE MAP //
-function initMap() {
+function initMap(initialLayer) {
   L.mapbox.accessToken =
     "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q";
   let mymap = L.mapbox

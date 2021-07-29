@@ -67,10 +67,19 @@ async function getHeritageLayer(heritageLayer) {
         .getElementById("keyWord")
         .value.toLowerCase()
         .trim()
-        .replace(".", "");
-      let lowercaseDescription = feature.properties.Description.toLowerCase();
+        .replaceAll(".", "")
+        .replaceAll(",", "")
+        .replaceAll(" ", "");
+      let lowercaseDescription =
+        feature.properties.Description.toLowerCase().replaceAll(" ", "");
+      console.log(lowercaseDescription);
+      // if (lowercaseDescription.search(searchByKeywordInput) !== -1) {
+      //   console.log(lowercaseDescription.search(searchByKeywordInput));
+      //   return true;
+      // }
+      // console.log(lowercaseDescription.search(searchByKeywordInput));
 
-      if (lowercaseDescription.search(searchByKeywordInput) !== -1) {
+      if (lowercaseDescription.includes(searchByKeywordInput)) {
         return true;
       }
     },
@@ -95,13 +104,13 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
       });
     },
     onEachFeature: function (feature, layer) {
-      console.log(layer);
+      // console.log(layer);
       let e = document.createElement("div");
       e.innerHTML = feature.properties.description;
       let tds = e.querySelectorAll("td");
-      console.log(tds);
+      // console.log(tds);
       let photo = "https://www.visitsingapore" + tds[7].innerText.slice(17);
-      console.log(photo);
+      // console.log(photo);
       let name = tds[13].innerText;
       let link = tds[27].innerText ? tds[27].innerText : "#";
       //   let description = tds[6].innerHTML;
@@ -120,25 +129,29 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
         }
       );
     },
+
+    filter: function (feature) {
+      let searchByKeywordInput = document
+        .getElementById("keyWord")
+        .value.toLowerCase()
+        .trim()
+        .replaceAll(".", "")
+        .replaceAll(",", "")
+        .replaceAll(" ", "");
+      let lowercaseDescription = feature.properties.description
+        .toLowerCase()
+        .replaceAll(" ", "");
+
+      if (lowercaseDescription.search(searchByKeywordInput) !== -1) {
+        return true;
+      }
+      console.log(lowercaseDescription);
+    },
+    popupOptions: {
+      //className: "touristAttractionPopup",
+      keepInView: true,
+    },
   });
-
-  // filter: function (feature) {
-  //   let searchByKeywordInput = document
-  //     .getElementById("keyWord")
-  //     .value.toLowerCase()
-  //     .trim()
-  //     .replace(".", "");
-  //   let lowercaseDescription = feature.properties.Description.toLowerCase();
-
-  //   if (lowercaseDescription.search(searchByKeywordInput) !== -1) {
-  //     return true;
-  //   }
-  // },
-  // popupOptions: {
-  //   //className: "touristAttractionPopup",
-  //   keepInView: true,
-  // },
-
   omnivore.kml("data/TOURISM.kml", null, custom).addTo(touristAttractionLayer);
 }
 
@@ -343,7 +356,9 @@ async function getMapLayers(mymap) {
   getTouristAttractionLayer(touristAttractionLayer);
 
   let baseLayers = {
-    "Street View": L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11"),
+    "Street View": L.mapbox
+      .styleLayer("mapbox://styles/mapbox/streets-v11")
+      .addTo(mymap),
     "Outdoor View": L.mapbox.styleLayer("mapbox://styles/mapbox/outdoors-v11"),
     "Satellite View": L.mapbox.styleLayer(
       "mapbox://styles/mapbox/satellite-v9"
@@ -351,6 +366,7 @@ async function getMapLayers(mymap) {
   };
   let overlays = {
     //Taxis: taxiResultLayer,
+
     "Historic Sites": heritageLayer,
     "Heritage Trees": treesLayer,
     "Tourist Attractions": touristAttractionLayer,
@@ -359,9 +375,9 @@ async function getMapLayers(mymap) {
     // "MRT Stations": mrtStationsLayer,
     //Search: searchQueryLayer,
   };
-  L.control
-    .layers(baseLayers, overlays, {
-      // collapsed: false,
-    })
-    .addTo(mymap);
+
+  let c = L.control.layers(baseLayers, overlays, {
+    // collapsed: false,
+  });
+  c.addTo(mymap);
 }
