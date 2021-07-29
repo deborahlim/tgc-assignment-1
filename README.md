@@ -11,10 +11,6 @@ Project 1 SG Attractions & Heritage Map
    - External User Goals: To find interesting places to visit in Singapore and learn about Singapore’s heritage/roots
    - Organisation Goals: To give Singapore a distinctive and favourable identity in the map of the world and promote greater community ownership over Singaporeans’ shared heritage (according to SG Heritage Board & Centre for Liveable Cities)
 
-   - Shows the taxi stands in singapore (get the json file data.gov.sg)
-   - Shows the number of taxis ( get endpoint of API)
-   - Map Layers (taxi, taxi stands, shopping malls, mrts, supermarkets,
-
 2. Demo
 
    - A live website can be found here <LINK>
