@@ -12,58 +12,23 @@ async function main() {
     touristAttractionLayer = L.mapbox.featureLayer();
     initialLayer = L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11");
     getMapLayers(mymap);
-
-    // STYLE CONTROL BOX
-    let layerControl = document.querySelector(
-      ".leaflet-control-layers-expanded .leaflet-control-layers-list"
-    );
-
-    let baseLayerControl = document.querySelector(
-      ".leaflet-control-layers-base"
-    );
-
-    let overlaysControl = document.querySelector(
-      ".leaflet-control-layers-overlays "
-    );
-
-    baseLayerControl.insertAdjacentHTML(
-      "afterbegin",
-      "<div><h1>Base Maps</h1></div>"
-    );
-
-    overlaysControl.insertAdjacentHTML(
-      "afterbegin",
-      "<div><h1>Markers</h1></div>"
-    );
-
-    document.querySelector(".leaflet-top.leaflet-right").hidden = false;
+    addControlHeader();
     window.addEventListener("DOMContentLoaded", () => {
       //  FILTER ALL MARKERS BY KEYWORD USING CLICK BUTTON
       let searchByKeywordBtn = document.getElementById("keyWordBtn");
+
       searchByKeywordBtn.addEventListener("click", function (e) {
-        heritageLayer.clearLayers();
-        museumLayer.clearLayers();
-        treesLayer.clearLayers();
-        touristAttractionLayer.clearLayers();
-        getHeritageLayer(heritageLayer);
-        getMuseumLayer(museumLayer);
-        getTreesLayer(treesLayer);
-        getTouristAttractionLayer(touristAttractionLayer);
+        resetMarkers(mymap);
+        addControlHeader(mymap);
       });
 
-      // FILTER ALL MARKERS BY BY KEYWORD USING ENTER BUTTON
+      // FILTER ALL MARKERS BY KEYWORD USING ENTER BUTTON
       document
         .querySelector("#keyWord")
         .addEventListener("keypress", function (e) {
           if (e.key === "Enter") {
-            heritageLayer.clearLayers();
-            museumLayer.clearLayers();
-            treesLayer.clearLayers();
-            touristAttractionLayer.clearLayers();
-            getHeritageLayer(heritageLayer);
-            getMuseumLayer(museumLayer);
-            getTreesLayer(treesLayer);
-            getTouristAttractionLayer(touristAttractionLayer);
+            resetMarkers(mymap);
+            addControlHeader(mymap);
           }
         });
 
@@ -173,6 +138,8 @@ async function main() {
       } else {
         mymap.addLayer(searchQueryLayer);
       }
+
+      // GET LOCATION OF CLICKED DIRECTIONS ICON AND INPUT IT INTO THE DIRECTIONS API
     });
   }
   init();
@@ -372,3 +339,41 @@ let MyCustomMarker = L.Marker.extend({
     return false;
   },
 });
+
+function resetMarkers(mymap) {
+  heritageLayer.clearLayers();
+  museumLayer.clearLayers();
+  treesLayer.clearLayers();
+  touristAttractionLayer.clearLayers();
+  heritageLayer.addTo(mymap);
+  museumLayer.addTo(mymap);
+  treesLayer.addTo(mymap);
+  touristAttractionLayer.addTo(mymap);
+  getHeritageLayer(heritageLayer);
+  getMuseumLayer(museumLayer);
+  getTreesLayer(treesLayer);
+  getTouristAttractionLayer(touristAttractionLayer);
+}
+
+function addControlHeader() {
+  // STYLE CONTROL BOX
+  let layerControl = document.querySelector(
+    ".leaflet-control-layers-expanded .leaflet-control-layers-list"
+  );
+
+  let baseLayerControl = document.querySelector(".leaflet-control-layers-base");
+
+  let overlaysControl = document.querySelector(
+    ".leaflet-control-layers-overlays "
+  );
+
+  baseLayerControl.insertAdjacentHTML(
+    "afterbegin",
+    "<div><h1>Base Maps</h1></div>"
+  );
+
+  overlaysControl.insertAdjacentHTML(
+    "afterbegin",
+    "<div><h1>Markers</h1></div>"
+  );
+}

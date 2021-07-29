@@ -60,6 +60,9 @@ async function getHeritageLayer(heritageLayer) {
                     <p>
                          Address: ${address}
                     </p>
+                    <br>
+                   <p><i class="fas fa-directions fa-2x" style="float: right;"></i></p>
+                   <br>
                  </div>`);
     },
     filter: function (feature) {
@@ -72,7 +75,7 @@ async function getHeritageLayer(heritageLayer) {
         .replaceAll(" ", "");
       let lowercaseDescription =
         feature.properties.Description.toLowerCase().replaceAll(" ", "");
-      console.log(lowercaseDescription);
+      // console.log(lowercaseDescription);
       // if (lowercaseDescription.search(searchByKeywordInput) !== -1) {
       //   console.log(lowercaseDescription.search(searchByKeywordInput));
       //   return true;
@@ -188,11 +191,11 @@ async function getMuseumLayer(museumLayer) {
 
       layer.bindPopup(`<div style=" color: ${randDarkColor()}; width:300px">
                     <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
-                    <a href=${link} target="_blank" style="text-decoration:none; color:inherit;"><p style="font-weight:800">
+                    <p style="font-weight:800">
                          ${name}
-                    </p></a>
+                    </p>
                     <p>
-                         Description: ${description}
+                         ${description}
                     </p>
                     <p>
                          Address: ${address}

@@ -96,10 +96,13 @@ body {
   margin: 1rem;
   font-size: 2rem;
   text-align: center;
+  display: flex;
+  justify-content: center;
 }
 
 /* RESUABLE COMPONENTS */
 .inputBox {
+  margin: 1rem;
   padding: 1.5rem;
   border-radius: 50px;
   outline: none;
