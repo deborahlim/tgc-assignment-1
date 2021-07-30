@@ -36,34 +36,66 @@ async function getHeritageLayer(heritageLayer) {
       });
     },
     onEachFeature: function (feature, layer) {
-      layer.bindPopup(feature.properties.Description);
+      console.log(feature);
       let e = document.createElement("div");
       e.innerHTML = feature.properties.Description;
       let tds = e.querySelectorAll("td");
-      //console.log(tds);
+      // console.log(tds);
       let photo = tds[3].innerHTML;
       let name = tds[4].innerHTML;
-      let link = tds[5].innerHTML;
       let description = tds[6].innerHTML;
       let address = `${tds[9].innerHTML}, ${tds[10].innerHTML}`;
       if (!tds[9].innerHTML) address = tds[10].innerHTML;
       if (!tds[10].innerHTML) address = tds[9].innerHTML;
+      let latlng = `${feature.geometry.coordinates[0]}, ${feature.geometry.coordinates[1]}`;
 
-      layer.bindPopup(`<div style=" color: ${randDarkColor()}; width:300px">
-                    <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
-                    <p style="font-weight:900">
-                         ${name}
-                    </p>
-                    <p>
-                         ${description}
-                    </p>
-                    <p>
-                         Address: ${address}
-                    </p>
-                    <br>
-                   <p><i class="fas fa-directions fa-2x" style="float: right;"></i></p>
-                   <br>
-                 </div>`);
+      // https://stackoverflow.com/questions/13698975/click-link-inside-leaflet-popup-and-do-javascript
+      let container = $("<div />");
+      container.on("click", ".directionsPopupBtn", function (e) {
+        let directionInput = document.querySelector(
+          "#mapbox-directions-destination-input"
+        );
+
+        showDirectionsPanel();
+
+        // https://stackoverflow.com/questions/35659430/how-do-i-programmatically-trigger-an-input-event-without-jquery
+        directionInput.dispatchEvent(new Event("input", { bubbles: true }));
+        directionInput.value = latlng;
+        directionInput.focus();
+        console.log(directionInput.value);
+      });
+
+      container.html(`<div style=" color: ${randDarkColor()}; width:300px">
+      <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
+      <p style="font-weight:900">
+           ${name}
+      </p>
+      <p>
+           ${description}
+      </p>
+      <p>
+           Address: ${address}
+      </p>
+      <br>
+     <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right;" ></i></div>
+     <br>
+   </div>`);
+      // layer.bindPopup(`<div style=" color: ${randDarkColor()}; width:300px">
+      //             <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
+      //             <p style="font-weight:900">
+      //                  ${name}
+      //             </p>
+      //             <p>
+      //                  ${description}
+      //             </p>
+      //             <p>
+      //                  Address: ${address}
+      //             </p>
+      //             <br>
+      //            <p class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right;" ></i></p>
+      //            <br>
+      //          </div>`);
+      layer.bindPopup(container[0]);
     },
     filter: function (feature) {
       let searchByKeywordInput = document
@@ -87,7 +119,6 @@ async function getHeritageLayer(heritageLayer) {
       }
     },
     popupOptions: {
-      //className: "heritagePopup",
       keepInView: true,
     },
   }).addTo(heritageLayer);
@@ -112,10 +143,12 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
       e.innerHTML = feature.properties.description;
       let tds = e.querySelectorAll("td");
       // console.log(tds);
-      let photo = "https://www.visitsingapore" + tds[7].innerText.slice(17);
+      let photo = tds[7].innerText.slice(17)
+        ? "https://www.visitsingapore" + tds[7].innerText.slice(17)
+        : {};
       // console.log(photo);
       let name = tds[13].innerText;
-      let link = tds[27].innerText ? tds[27].innerText : "#";
+      let link = tds[27].innerText ? tds[27].innerText : {};
       //   let description = tds[6].innerHTML;
       //   let address = `${tds[9].innerHTML}, ${tds[10].innerHTML}`;
       //   if (!tds[9].innerHTML) address = tds[10].innerHTML;
@@ -148,7 +181,7 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
       if (lowercaseDescription.search(searchByKeywordInput) !== -1) {
         return true;
       }
-      console.log(lowercaseDescription);
+      // console.log(lowercaseDescription);
     },
     popupOptions: {
       //className: "touristAttractionPopup",
@@ -179,9 +212,9 @@ async function getMuseumLayer(museumLayer) {
       e.innerHTML = feature.properties.Description;
       let tds = e.querySelectorAll("td");
       //console.log(tds);
-      let photo = tds[10].innerHTML;
+      let photo = tds[10].innerHTML + "SameSite=Strict";
       let name = tds[9].innerHTML;
-      let link = tds[6].innerHTML;
+      // let link = tds[6].innerHTML;
       let description = tds[5].innerHTML;
       let address = `${tds[1].innerHTML}, ${tds[0].innerHTML} ${tds[3].innerHTML}, Singapore ${tds[2].innerHTML}`;
       if (!tds[1].innerHTML)
@@ -244,13 +277,13 @@ async function getTreesLayer(treesLayer) {
       let tds = e.querySelectorAll("td");
       //console.log(tds);
       let name = tds[4].innerHTML;
-      let link = tds[5].innerHTML;
+      // let link = tds[5].innerHTML;
       let description = tds[6].innerHTML;
 
       layer.bindPopup(`<div style=" color: ${randDarkColor()}; width:300px">
-                    <a href=${link} target="_blank" style="text-decoration:none; color:inherit;"><p style="font-weight:800">
+                    <p style="font-weight:800">
                          ${name}
-                    </p></a>
+                    </p>
                     <p>
                          ${description}
                     </p>

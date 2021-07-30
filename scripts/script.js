@@ -14,6 +14,22 @@ async function main() {
     getMapLayers(mymap);
     addControlHeader();
     window.addEventListener("DOMContentLoaded", () => {
+      // TOGGLE SIDE PANEL DISPLAY
+      let sidePanelToggleBtn = document.querySelector(
+        ".side-panel-toggle-btn "
+      );
+      sidePanelToggleBtn.addEventListener("click", function () {
+        let sidePanel = document.querySelector(".box");
+        if (sidePanel.style.display !== "none") {
+          sidePanel.style.display = "none";
+
+          sidePanelToggleBtn.style.left = "0";
+        } else {
+          sidePanel.style.display = "";
+          sidePanelToggleBtn.style.left = "25%";
+        }
+      });
+
       //  FILTER ALL MARKERS BY KEYWORD USING CLICK BUTTON
       let searchByKeywordBtn = document.getElementById("keyWordBtn");
 
@@ -59,6 +75,14 @@ async function main() {
               },
             })
             .addTo(mymap);
+          //PUT CURRENT COORDINATES INTO DIRECTIONS ORIGIN INPUT
+          let currentLocationInput = document.querySelector(
+            "#mapbox-directions-origin-input"
+          );
+          currentLocationInput.dispatchEvent(
+            new Event("input", { bubbles: true })
+          );
+          currentLocationInput.value = `${e.latlng.lng}, ${e.latlng.lat}`;
         });
       });
 
@@ -140,6 +164,11 @@ async function main() {
       }
 
       // GET LOCATION OF CLICKED DIRECTIONS ICON AND INPUT IT INTO THE DIRECTIONS API
+      // let smallDirectionsBtn = document.querySelector(".directionsPopupBtn");
+      // console.log(smallDirectionsBtn);
+      // smallDirectionsBtn.addEventListener("click", function (e) {
+      //   console.log(e);
+      // });
     });
   }
   init();
@@ -233,6 +262,19 @@ function toggleSidePanel() {
       directionsContainerHidden.classList.add("directions-container");
       sidebarContainer.classList.add("sidebar-container-hidden");
     }
+}
+
+function showDirectionsPanel() {
+  let directionsContainerHidden = document.querySelector(
+    ".directions-container-hidden"
+  );
+  let sidebarContainer = document.querySelector(".sidebar-container");
+  if (
+    directionsContainerHidden.classList.contains("directions-container-hidden")
+  ) {
+    directionsContainerHidden.classList.add("directions-container");
+    sidebarContainer.classList.add("sidebar-container-hidden");
+  }
 }
 
 // https://gist.github.com/Chak10/dc24c61c9bf2f651cb6d290eeef864c1
@@ -376,4 +418,8 @@ function addControlHeader() {
     "afterbegin",
     "<div><h1>Markers</h1></div>"
   );
+}
+
+function l(mymap) {
+  mymap.locate();
 }

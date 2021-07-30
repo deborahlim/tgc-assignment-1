@@ -29,7 +29,13 @@ body,
 body {
   /* padding: 1.5rem; */
   font-weight: 400;
-  font-family: sans-serif;
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+  position: relative;
+}
+
+/* MAP COMPONENT */
+#map {
+  flex: 1;
 }
 
 /* OVERALL MAP */
@@ -43,12 +49,43 @@ body {
   display: flex;
   flex-direction: column;
   flex-basis: 25%;
+  box-shadow: 0 10px 5px 1px rgba(0, 0, 0, 0.6);
+  /* border: 2px solid rgba(0, 0, 0, 0.6); */
+  z-index: 20000;
+  transition: all 0.2s;
 }
 
-/* MAP COMPONENT */
-#map {
-  flex: 1;
-  z-index: 0;
+/* LOGO */
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  /* background-color: #3bb2d0; */
+}
+
+.logo-content {
+  margin-left: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+/* SIDE PANEL BUTTON */
+.side-panel-toggle-btn {
+  position: absolute;
+  left: 25%;
+  top: 50%;
+  z-index: 100000;
+  padding: 1rem;
+  /* background-color: #3bb2d0af; */
+  border-radius: 0 10px 10px 0;
+  box-shadow: 2px 0 2px 1px rgba(0, 0, 0, 0.6);
+  transition: all 0.2s;
+}
+
+.side-panel-toggle-btn button {
+  background-color: inherit;
+  z-index: 1000000;
 }
 
 /* SIDE PANEL */
@@ -57,7 +94,9 @@ body {
   flex-basis: 90%;
   display: flex;
   flex-direction: column;
-  box-shadow: 3px 5px 5px rgba(255, 255, 255, 0.753);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 0px -2px 2px rgba(0, 0, 0, 0.3);
+  padding: 1rem;
 }
 
 /* SIDEBAR COMPONENT */
@@ -112,7 +151,15 @@ body {
   background-color: #3bb2d0;
   color: black;
   width: fit-content;
-  font-weight: 900;
+  border: 1px solid rgba(0, 0, 0, 0.794);
+
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  background-color: royalblue;
+  color: white;
+  transition: all 0.2s;
 }
 
 .searchResult {
@@ -125,7 +172,7 @@ body {
   flex-direction: column;
   flex-basis: content;
   padding-right: 1rem; */
-
+  transition: all 0.2;
   display: none;
   /* background-color: rgba(0, 0, 0, 0.8); */
 }
@@ -138,6 +185,7 @@ body {
   overflow-y: overlay;
   /* display: none; */
   /* background-color: rgba(0, 0, 0, 0.8); */
+  transition: all 0.2;
 }
 
 .directions-control {
@@ -145,7 +193,13 @@ body {
   flex-basis: 10%;
   justify-content: center;
   align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.301);
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.281);
+  /* background-color: #3bb2d0; */
+  margin-bottom: 1.5rem;
 }
+/* border-radius: 10px; */
+/* margin: 0.5rem; */
 
 .directions-btn {
   /* position: absolute;
@@ -201,7 +255,7 @@ body {
   z-index: 10;
   background: white;
   left: 50px;
-  top: 131px !important;
+  top: 22.2rem !important;
   cursor: pointer;
 }
 
