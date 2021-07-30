@@ -14,7 +14,7 @@ async function main() {
     getMapLayers(mymap);
     addControlHeader();
     window.addEventListener("DOMContentLoaded", () => {
-      // TOGGLE SIDE PANEL DISPLAY
+      // TOGGLE SIDE PANEL DISPLAY OPEN AND CLOSE
       let sidePanelToggleBtn = document.querySelector(
         ".side-panel-toggle-btn "
       );
@@ -127,7 +127,7 @@ async function main() {
             searchQuery.innerHTML = "";
             res.results.features.forEach((el) => {
               // console.log(el);
-              placeName = JSON.stringify(el.text).slice(1, -1);
+              // placeName = JSON.stringify(el.text).slice(1, -1);
               // console.log(placeName);
               // ADD DESCRIPTION IN SIDEBAR
               let content = document.createElement("div");
@@ -149,7 +149,7 @@ async function main() {
                       "marker-color": "#800080",
                     }),
                   })
-                    .bindPopup(`<h1>${el.text}</h1>`)
+                    .bindPopup(`<h1 style="width:100%">${el.text}</h1>`)
                     .addTo(searchQueryLayer);
                 },
               }).addTo(mymap);
@@ -164,12 +164,37 @@ async function main() {
         mymap.addLayer(searchQueryLayer);
       }
 
-      // GET LOCATION OF CLICKED DIRECTIONS ICON AND INPUT IT INTO THE DIRECTIONS API
-      // let smallDirectionsBtn = document.querySelector(".directionsPopupBtn");
-      // console.log(smallDirectionsBtn);
-      // smallDirectionsBtn.addEventListener("click", function (e) {
-      //   console.log(e);
-      // });
+      // ADD TOURIST ATTRACTION DETAILS TO SIDEBAR ON CLICK
+      touristAttractionLayer.on("click", function (e) {
+        let touristAttraction = document.createElement("div");
+        touristAttraction.innerHTML = `${e.layer.feature.properties.description}`;
+        console.log(e.layer.feature.properties.description);
+        console.log(touristAttraction.innerHTML);
+        let tds = touristAttraction.querySelectorAll("td");
+        console.log(tds);
+        let photo = tds[7].innerText.slice(17)
+          ? "https://www.visitsingapore" + tds[7].innerText.slice(17)
+          : {};
+        // console.log(photo);
+        let name = tds[13].innerText;
+        // let link = tds[27].innerText !== "" ? tds[27].innerText : {};
+        // let latlng = `${feature.geometry.coordinates[0]}, ${feature.geometry.coordinates[1]}`;
+        let description = tds[25].innerHTML;
+        let address = `${tds[21].innerHTML}, Singapore ${tds[23].innerHTML}`;
+        if (!tds[21].innerHTML) address = tds[23].innerHTML;
+        if (!tds[23].innerHTML) address = tds[21].innerHTML;
+        touristAttraction.innerHTML = `<div style=" color: ${randDarkColor()}; width:300px">
+                  <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
+                  <p style="font-weight:900">
+                       ${name}
+                  </p>
+                  <p>
+                       ${description}
+                  </p>
+                  <p>
+                       Address: ${address}`;
+        searchQuery.insertAdjacentElement("beforeend", touristAttraction);
+      });
     });
   }
   init();
@@ -232,14 +257,14 @@ function initMap(initialLayer) {
   // });
 
   // WHEN CLICK ON MAP TOGGLE SIDE PANEL
-  mymap.on("click", toggleSidePanel);
+  mymap.on("click", toggleView);
 
   return mymap;
 }
 
 // WHEN CLICK ON DIRECTIONS BUTTON SIDE PANEL
 let directionsBtn = document.getElementById("directionsBtn");
-directionsBtn.addEventListener("click", toggleSidePanel);
+directionsBtn.addEventListener("click", toggleView);
 
 // TOGGLE SIDEBAR VIEW AND DIRECTIONS VIEW
 
@@ -247,7 +272,7 @@ directionsBtn.addEventListener("click", toggleSidePanel);
 main();
 
 // TO TOGGLE BETWEEN DIRECTIONS CONTAINER AND SIDEBAR CONTAINER
-function toggleSidePanel() {
+function toggleView() {
   let directionsContainerHidden = document.querySelector(
     ".directions-container-hidden"
   );
@@ -409,16 +434,17 @@ function addControlHeader() {
   let overlaysControl = document.querySelector(
     ".leaflet-control-layers-overlays "
   );
+  if (!document.querySelector(".test")) {
+    baseLayerControl.insertAdjacentHTML(
+      "afterbegin",
+      "<div class='test'><h1>Base Maps</h1></div>"
+    );
 
-  baseLayerControl.insertAdjacentHTML(
-    "afterbegin",
-    "<div><h1>Base Maps</h1></div>"
-  );
-
-  overlaysControl.insertAdjacentHTML(
-    "afterbegin",
-    "<div><h1>Markers</h1></div>"
-  );
+    overlaysControl.insertAdjacentHTML(
+      "afterbegin",
+      "<div class='test'><h1>Markers</h1></div>"
+    );
+  }
 }
 
 function l(mymap) {

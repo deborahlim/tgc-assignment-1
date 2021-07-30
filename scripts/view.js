@@ -24,7 +24,7 @@ async function getTaxiLayer() {
 async function getHeritageLayer(heritageLayer) {
   let searchByKeywordInput = document.getElementById("keyWord");
   let response = await getData("data/historic-sites-geojson.geojson");
-  console.log(response);
+  // console.log(response);
 
   L.geoJSON(response.data, {
     pointToLayer: function (geoJsonPoint, latlng) {
@@ -36,7 +36,7 @@ async function getHeritageLayer(heritageLayer) {
       });
     },
     onEachFeature: function (feature, layer) {
-      console.log(feature);
+      // console.log(feature);
       let e = document.createElement("div");
       e.innerHTML = feature.properties.Description;
       let tds = e.querySelectorAll("td");
@@ -148,22 +148,40 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
         : {};
       // console.log(photo);
       let name = tds[13].innerText;
-      let link = tds[27].innerText ? tds[27].innerText : {};
+      // let link = tds[27].innerText !== "" ? tds[27].innerText : {};
+      let latlng = `${feature.geometry.coordinates[0]}, ${feature.geometry.coordinates[1]}`;
       //   let description = tds[6].innerHTML;
       //   let address = `${tds[9].innerHTML}, ${tds[10].innerHTML}`;
       //   if (!tds[9].innerHTML) address = tds[10].innerHTML;
       //   if (!tds[10].innerHTML) address = tds[9].innerHTML;
-      layer.bindPopup(
+
+      let container = $("<div />");
+      container.on("click", ".directionsPopupBtn", function (e) {
+        let directionInput = document.querySelector(
+          "#mapbox-directions-destination-input"
+        );
+
+        showDirectionsPanel();
+
+        // https://stackoverflow.com/questions/35659430/how-do-i-programmatically-trigger-an-input-event-without-jquery
+        directionInput.dispatchEvent(new Event("input", { bubbles: true }));
+        directionInput.value = latlng;
+        directionInput.focus();
+        // console.log(directionInput.value);
+      });
+
+      container.html(
         `<div style=" color: ${randDarkColor()}; width:300px">
                     <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%; height:100%"></div>
-                    <a href="${link}" target="_blank" style="text-decoration:none; color:inherit"><p style="font-weight:800">
+                    <p style="font-weight:800">
                          ${name}
-                    </p></a>
-                 </div>`,
-        {
-          _offset: L.Point(0, 7),
-        }
+                    </p>
+                    <br>
+                    <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right;" ></i></div>
+                    <br>
+                 </div>`
       );
+      layer.bindPopup(container[0]);
     },
 
     filter: function (feature) {
@@ -259,7 +277,7 @@ async function getMuseumLayer(museumLayer) {
 async function getTreesLayer(treesLayer) {
   let searchByKeywordInput = document.getElementById("keyWord");
   let response = await getData("data/heritage-trees-geojson.geojson");
-  console.log(response.data);
+  // console.log(response.data);
 
   L.geoJSON(response.data, {
     pointToLayer: function (geoJsonPoint, latlng) {
