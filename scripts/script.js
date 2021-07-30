@@ -83,6 +83,7 @@ async function main() {
             new Event("input", { bubbles: true })
           );
           currentLocationInput.value = `${e.latlng.lng}, ${e.latlng.lat}`;
+          currentLocationInput.focus();
         });
       });
 
