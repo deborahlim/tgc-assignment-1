@@ -36,13 +36,20 @@ async function getHeritageLayer(heritageLayer) {
       });
     },
     onEachFeature: function (feature, layer) {
+<<<<<<< HEAD
       console.log(feature);
+=======
+>>>>>>> 7cf60b9ba42886639a45602a1df15782c9d49c37
       let e = document.createElement("div");
       e.innerHTML = feature.properties.Description;
       let tds = e.querySelectorAll("td");
       // console.log(tds);
       let photo = tds[3].innerHTML;
       let name = tds[4].innerHTML;
+<<<<<<< HEAD
+=======
+      let postalCode = tds[11].innerHTML;
+>>>>>>> 7cf60b9ba42886639a45602a1df15782c9d49c37
       let description = tds[6].innerHTML;
       let address = `${tds[9].innerHTML}, ${tds[10].innerHTML}`;
       if (!tds[9].innerHTML) address = tds[10].innerHTML;
@@ -65,6 +72,18 @@ async function getHeritageLayer(heritageLayer) {
         console.log(directionInput.value);
       });
 
+<<<<<<< HEAD
+=======
+      let container = $("<div />");
+      container.on("click", ".directionsPopupBtn", function (e) {
+        let directionInput = document.querySelector(
+          "#mapbox-directions-origin-input"
+        );
+        directionInput.value = postalCode;
+        console.log(directionInput);
+      });
+
+>>>>>>> 7cf60b9ba42886639a45602a1df15782c9d49c37
       container.html(`<div style=" color: ${randDarkColor()}; width:300px">
       <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
       <p style="font-weight:900">
