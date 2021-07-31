@@ -32,7 +32,7 @@ async function updateTaxiAvail() {
 
 // get data
 async function getData(url) {
-  let response = await axios.get(url);
+  let response = await axios.get(url, { withCredentials: true });
   return response;
 }
 

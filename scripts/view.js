@@ -47,23 +47,10 @@ async function getHeritageLayer(heritageLayer) {
       let address = `${tds[9].innerHTML}, ${tds[10].innerHTML}`;
       if (!tds[9].innerHTML) address = tds[10].innerHTML;
       if (!tds[10].innerHTML) address = tds[9].innerHTML;
-      let latlng = `${feature.geometry.coordinates[0]}, ${feature.geometry.coordinates[1]}`;
 
       // https://stackoverflow.com/questions/13698975/click-link-inside-leaflet-popup-and-do-javascript
       let container = $("<div />");
-      container.on("click", ".directionsPopupBtn", function (e) {
-        let directionInput = document.querySelector(
-          "#mapbox-directions-destination-input"
-        );
-
-        showDirectionsPanel();
-
-        // https://stackoverflow.com/questions/35659430/how-do-i-programmatically-trigger-an-input-event-without-jquery
-        directionInput.dispatchEvent(new Event("input", { bubbles: true }));
-        directionInput.value = latlng;
-        directionInput.focus();
-        console.log(directionInput.value);
-      });
+      inputLatLng(feature, container);
 
       container.html(`<div style=" color: ${randDarkColor()}; width:300px">
       <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
@@ -148,27 +135,8 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
         : {};
       // console.log(photo);
       let name = tds[13].innerText;
-      // let link = tds[27].innerText !== "" ? tds[27].innerText : {};
-      let latlng = `${feature.geometry.coordinates[0]}, ${feature.geometry.coordinates[1]}`;
-      //   let description = tds[6].innerHTML;
-      //   let address = `${tds[9].innerHTML}, ${tds[10].innerHTML}`;
-      //   if (!tds[9].innerHTML) address = tds[10].innerHTML;
-      //   if (!tds[10].innerHTML) address = tds[9].innerHTML;
-
       let container = $("<div />");
-      container.on("click", ".directionsPopupBtn", function (e) {
-        let directionInput = document.querySelector(
-          "#mapbox-directions-destination-input"
-        );
-
-        showDirectionsPanel();
-
-        // https://stackoverflow.com/questions/35659430/how-do-i-programmatically-trigger-an-input-event-without-jquery
-        directionInput.dispatchEvent(new Event("input", { bubbles: true }));
-        directionInput.value = latlng;
-        directionInput.focus();
-        // console.log(directionInput.value);
-      });
+      inputLatLng(feature, container);
 
       container.html(
         `<div style=" color: ${randDarkColor()}; width:300px">
@@ -176,9 +144,7 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
                     <p style="font-weight:800">
                          ${name}
                     </p>
-                    <br>
                     <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right;" ></i></div>
-                    <br>
                  </div>`
       );
       layer.bindPopup(container[0]);
@@ -232,15 +198,17 @@ async function getMuseumLayer(museumLayer) {
       //console.log(tds);
       let photo = tds[10].innerHTML + "SameSite=Strict";
       let name = tds[9].innerHTML;
-      // let link = tds[6].innerHTML;
       let description = tds[5].innerHTML;
       let address = `${tds[1].innerHTML}, ${tds[0].innerHTML} ${tds[3].innerHTML}, Singapore ${tds[2].innerHTML}`;
       if (!tds[1].innerHTML)
         address = `${tds[0].innerHTML} ${tds[3].innerHTML}, Singapore ${tds[2].innerHTML}`;
       if (!tds[3].innerHTML)
         address = `${tds[1].innerHTML}, , Singapore ${tds[2].innerHTML}`;
+      let container = $("<div />");
+      inputLatLng(feature, container);
 
-      layer.bindPopup(`<div style=" color: ${randDarkColor()}; width:300px">
+      container.html(
+        `<div style=" color: ${randDarkColor()}; width:300px">
                     <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
                     <p style="font-weight:800">
                          ${name}
@@ -251,8 +219,12 @@ async function getMuseumLayer(museumLayer) {
                     <p>
                          Address: ${address}
                     </p>
-                 </div>`);
-      // { minWidth: 300 };
+                    <br>
+                    <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right;" ></i></div>
+                    <br>
+                 </div>`
+      );
+      layer.bindPopup(container[0]);
     },
     filter: function (feature) {
       let searchByKeywordInput = document

@@ -408,6 +408,8 @@ let MyCustomMarker = L.Marker.extend({
   },
 });
 
+// HELPER FUNCTIONS
+
 function resetMarkers(mymap) {
   heritageLayer.clearLayers();
   museumLayer.clearLayers();
@@ -447,6 +449,20 @@ function addControlHeader() {
   }
 }
 
-function l(mymap) {
-  mymap.locate();
+function inputLatLng(feature, container) {
+  let latlng = `${feature.geometry.coordinates[0]}, ${feature.geometry.coordinates[1]}`;
+
+  container.on("click", ".directionsPopupBtn", function (e) {
+    let directionInput = document.querySelector(
+      "#mapbox-directions-destination-input"
+    );
+
+    showDirectionsPanel();
+
+    // https://stackoverflow.com/questions/35659430/how-do-i-programmatically-trigger-an-input-event-without-jquery
+    directionInput.dispatchEvent(new Event("input", { bubbles: true }));
+    directionInput.value = latlng;
+    directionInput.focus();
+    // console.log(directionInput.value);
+  });
 }
