@@ -33,26 +33,28 @@
     <link rel="stylesheet" href="styles/style.css" />
     <title>Document</title>
   </head>
+
   <body>
-    <div class="mapContainer">
-      <div class="box">
-        <div class="logo">
+    <main><div id="map"></div></main>
+    <section class="side-panel-container">
+      <div class="side-panel-box">
+        <header class="logo">
           <i class="fas fa-map-marked-alt fa-5x"></i>
           <p class="logo-content">Discover Singapore</p>
-        </div>
+        </header>
         <div class="directions-control">
-          <div class="inputBoxDiv">
-            <button class="btn inputBox" id="toggleTaxiBtn">
+          <div class="input-box-div">
+            <button class="btn input-box" id="toggleTaxiBtn">
               <i class="fas fa-taxi fa-2x"></i>
             </button>
           </div>
-          <div class="inputBoxDiv">
-            <button class="btn inputBox" id="userLocation">
+          <div class="input-box-div">
+            <button class="btn input-box" id="userLocation">
               <i class="fas fa-location-arrow fa-2x"></i>
             </button>
           </div>
-          <div class="inputBoxDiv">
-            <button class="btn inputBox directions-btn" id="directionsBtn">
+          <div class="input-box-div">
+            <button class="btn input-box directions-btn" id="directionsBtn">
               <i class="fas fa-directions fa-2x" id="directionsBtn"></i>
             </button>
           </div>
@@ -68,53 +70,50 @@
           </div>
 
           <div class="sidebar-container">
-            <div class="searchResultDiv">
-              <div class="inputBoxDiv">
+            <div class="search-result-div">
+              <div class="input-box-div">
                 <input
-                  class="inputBox"
+                  class="input-box"
                   type="search"
                   id="keyWord"
                   placeholder="Search By Keyword"
                 />
-                <button class="btn inputBox" id="keyWordBtn">
+                <button class="btn input-box" id="keyWordBtn">
                   <i class="fas fa-search-location fa-2x"></i>
                 </button>
               </div>
-              <div class="inputBoxDiv">
+              <div class="input-box-div">
                 <input
                   type="text"
                   placeholder="Search By Marker Type"
-                  class="inputBox"
+                  class="input-box"
                   id="selectedSearch"
                 />
-                <button class="btn inputBox" id="searchBtn">
+                <button class="btn input-box" id="searchBtn">
                   <i class="fas fa-search-location fa-2x"></i>
                 </button>
               </div>
-              <div class="inputBoxDiv">
+              <div class="input-box-div">
                 <input
                   type="text"
                   placeholder="Search By Proximity"
-                  class="inputBox"
+                  class="input-box"
                   id="selectedRadius"
                 />
-                <button class="btn inputBox" id="setBtn">
+                <button class="btn input-box" id="setBtn">
                   <i class="fas fa-search-location fa-2x"></i>
                 </button>
               </div>
 
-              <div class="inputBoxDiv filter"></div>
-              <div class="searchQueryDiv" id="searchQuery"></div>
+              <div class="search-query-div" id="searchQuery"></div>
             </div>
           </div>
         </div>
       </div>
-      <div class="side-panel-toggle-btn">
-        <button><i class="fas fa-caret-left fa-2x"></i></button>
-      </div>
-      <div id="map"></div>
+    </section>
+    <div class="side-panel-toggle-btn">
+      <button><i class="fas fa-caret-left fa-2x"></i></button>
     </div>
-
     <script src="https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.js"></script>
     <link
       href="https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.css"

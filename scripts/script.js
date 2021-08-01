@@ -14,19 +14,26 @@ async function main() {
     getMapLayers(mymap);
     addControlHeader();
     window.addEventListener("DOMContentLoaded", () => {
+      // TOGGLE BETWEEN SIDEBAR AND DIRECTIONS VIEW
+      let directionsBtn = document.getElementById("directionsBtn");
+      directionsBtn.addEventListener("click", toggleView);
+
       // TOGGLE SIDE PANEL DISPLAY OPEN AND CLOSE
       let sidePanelToggleBtn = document.querySelector(
         ".side-panel-toggle-btn "
       );
       sidePanelToggleBtn.addEventListener("click", function () {
-        let sidePanel = document.querySelector(".box");
-        if (sidePanel.style.display !== "none") {
-          sidePanel.style.display = "none";
+        let sidePanel = document.querySelector(".side-panel-container");
+        if (sidePanel.style.width !== "0rem") {
+          sidePanel.style.width = "0rem";
+          sidePanelToggleBtn.style.left = "0rem";
 
-          sidePanelToggleBtn.style.left = "0";
+          sidePanelToggleBtn.innerHTML = `<i class="fas fa-caret-right fa-2x"></i>`;
         } else {
-          sidePanel.style.display = "";
-          sidePanelToggleBtn.style.left = "25%";
+          sidePanel.style.width = "50rem";
+          sidePanelToggleBtn.style.left = "50rem";
+
+          sidePanelToggleBtn.innerHTML = `<i class="fas fa-caret-left fa-2x"></i>`;
         }
       });
 
@@ -166,34 +173,80 @@ async function main() {
 
       // ADD TOURIST ATTRACTION DETAILS TO SIDEBAR ON CLICK
       touristAttractionLayer.on("click", function (e) {
-        let touristAttraction = document.createElement("div");
-        touristAttraction.innerHTML = `${e.layer.feature.properties.description}`;
-        console.log(e.layer.feature.properties.description);
-        console.log(touristAttraction.innerHTML);
-        let tds = touristAttraction.querySelectorAll("td");
-        console.log(tds);
-        let photo = tds[7].innerText.slice(17)
-          ? "https://www.visitsingapore" + tds[7].innerText.slice(17)
-          : {};
-        // console.log(photo);
+        showSearchPanel();
+        // variables for tourist attraction box
+        let temp = document.createElement("div");
+
+        temp.innerHTML = `${e.layer.feature.properties.description}`;
+        let tds = temp.querySelectorAll("td");
+
+        if (tds[7].innerText.slice(17).includes("Null")) {
+          photo = "";
+        } else photo = "https://www.visitsingapore" + tds[7].innerText.slice(17);
         let name = tds[13].innerText;
-        // let link = tds[27].innerText !== "" ? tds[27].innerText : {};
-        // let latlng = `${feature.geometry.coordinates[0]}, ${feature.geometry.coordinates[1]}`;
+        let link = tds[27].innerText.includes("Null")
+          ? "Unavailable"
+          : tds[27].innerText;
+        let latlng = `${e.latlng.lng}, ${e.latlng.lat}`;
         let description = tds[25].innerHTML;
         let address = `${tds[21].innerHTML}, Singapore ${tds[23].innerHTML}`;
-        if (!tds[21].innerHTML) address = tds[23].innerHTML;
-        if (!tds[23].innerHTML) address = tds[21].innerHTML;
-        touristAttraction.innerHTML = `<div style=" color: ${randDarkColor()}; width:300px">
-                  <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
-                  <p style="font-weight:900">
-                       ${name}
-                  </p>
-                  <p>
-                       ${description}
-                  </p>
-                  <p>
-                       Address: ${address}`;
-        searchQuery.insertAdjacentElement("beforeend", touristAttraction);
+        if (tds[21].innerHTML.includes("Null")) address = tds[23].innerHTML;
+        if (tds[23].innerHTML.includes("Null")) address = tds[21].innerHTML;
+        let openingHours = tds[31].innerHTML.includes("Null")
+          ? "Unavailable"
+          : tds[31].innerHTML;
+        // create tourist attraction box
+        let touristAttraction = $("<div />");
+        touristAttraction.addClass("tourist-attraction-box");
+        inputLatLng(e, touristAttraction, latlng);
+        touristAttraction.html(
+          link === "Unavailable"
+            ? `
+   <img src="${photo}" alt="Photo of ${name}">
+    <h1>
+         ${name}
+    </h1>
+    <div>
+    <i class="fas fa-globe-americas fa-2x"></i>
+    <span>${link}</span>
+    </div>
+    <div>
+    <i class="fas fa-info-circle fa-2x"></i> ${description}
+    </div>
+    <div class="">
+    <i class="fas fa-map-marker-alt fa-2x"></i> ${address}
+    </div>
+    <div> 
+    <i id="attraction-icon-3" class="fas fa-clock fa-2x"></i> ${openingHours}
+    </div>
+    <div>
+    <i class="fas fa-directions fa-2x"></i>Get Directions
+    </div>`
+            : `
+    <img src="${photo}" alt="Photo of ${name}">
+     <h1>
+          ${name}
+     </h1>
+     <div>
+     <a href="${link}" target="_blank" class="attraction-link"><i class="fas fa-globe-americas fa-2x"></i></a>
+     <a href="${link}" target="_blank"><span>${link}</span></a>
+     </div>
+     <div>
+     <i class="fas fa-info-circle fa-2x"></i> ${description}
+     </div>
+     <div class="">
+     <i class="fas fa-map-marker-alt fa-2x"></i> ${address}
+     </div>
+     <div> 
+     <i id="attraction-icon-3" class="fas fa-clock fa-2x"></i> ${openingHours}
+     </div>
+     <div class="directionsPopupBtn">
+     <i class="fas fa-directions fa-2x"></i>Get Directions
+     </div>`
+        );
+
+        searchQuery.innerHTML = "";
+        searchQuery.insertAdjacentElement("beforeend", touristAttraction[0]);
       });
     });
   }
@@ -262,12 +315,6 @@ function initMap(initialLayer) {
   return mymap;
 }
 
-// WHEN CLICK ON DIRECTIONS BUTTON SIDE PANEL
-let directionsBtn = document.getElementById("directionsBtn");
-directionsBtn.addEventListener("click", toggleView);
-
-// TOGGLE SIDEBAR VIEW AND DIRECTIONS VIEW
-
 ////// MAIN THREAD ////////
 main();
 
@@ -303,6 +350,16 @@ function showDirectionsPanel() {
   }
 }
 
+function showSearchPanel() {
+  let directionsContainerHidden = document.querySelector(
+    ".directions-container-hidden"
+  );
+  let sidebarContainer = document.querySelector(".sidebar-container");
+  if (sidebarContainer.classList.contains("sidebar-container")) {
+    sidebarContainer.classList.remove("sidebar-container-hidden");
+    directionsContainerHidden.classList.remove("directions-container");
+  }
+}
 // https://gist.github.com/Chak10/dc24c61c9bf2f651cb6d290eeef864c1
 function randDarkColor() {
   var lum = -0.25;
@@ -449,10 +506,8 @@ function addControlHeader() {
   }
 }
 
-function inputLatLng(feature, container) {
-  let latlng = `${feature.geometry.coordinates[0]}, ${feature.geometry.coordinates[1]}`;
-
-  container.on("click", ".directionsPopupBtn", function (e) {
+function inputLatLng(feature, container, latlng) {
+  container.on("click", ".directionsPopupBtn", function () {
     let directionInput = document.querySelector(
       "#mapbox-directions-destination-input"
     );

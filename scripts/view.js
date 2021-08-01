@@ -47,10 +47,11 @@ async function getHeritageLayer(heritageLayer) {
       let address = `${tds[9].innerHTML}, ${tds[10].innerHTML}`;
       if (!tds[9].innerHTML) address = tds[10].innerHTML;
       if (!tds[10].innerHTML) address = tds[9].innerHTML;
-
+      let latlng = `${feature.geometry.coordinates[0]}, ${feature.geometry.coordinates[1]}`;
       // https://stackoverflow.com/questions/13698975/click-link-inside-leaflet-popup-and-do-javascript
       let container = $("<div />");
-      inputLatLng(feature, container);
+
+      inputLatLng(feature, container, latlng);
 
       container.html(`<div style=" color: ${randDarkColor()}; width:300px">
       <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
@@ -130,13 +131,15 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
       e.innerHTML = feature.properties.description;
       let tds = e.querySelectorAll("td");
       // console.log(tds);
-      let photo = tds[7].innerText.slice(17)
-        ? "https://www.visitsingapore" + tds[7].innerText.slice(17)
-        : {};
+      let photo;
+      if (tds[7].innerText.slice(17)) {
+        photo = "https://www.visitsingapore" + tds[7].innerText.slice(17);
+      } else photo = "";
+      let latlng = `${feature.geometry.coordinates[0]}, ${feature.geometry.coordinates[1]}`;
       // console.log(photo);
       let name = tds[13].innerText;
       let container = $("<div />");
-      inputLatLng(feature, container);
+      inputLatLng(feature, container, latlng);
 
       container.html(
         `<div style=" color: ${randDarkColor()}; width:300px">
@@ -145,7 +148,8 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
                          ${name}
                     </p>
                     <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right;" ></i></div>
-                 </div>`
+                <br>
+                    </div>`
       );
       layer.bindPopup(container[0]);
     },
@@ -204,8 +208,10 @@ async function getMuseumLayer(museumLayer) {
         address = `${tds[0].innerHTML} ${tds[3].innerHTML}, Singapore ${tds[2].innerHTML}`;
       if (!tds[3].innerHTML)
         address = `${tds[1].innerHTML}, , Singapore ${tds[2].innerHTML}`;
+      let latlng = `${feature.geometry.coordinates[0]}, ${feature.geometry.coordinates[1]}`;
       let container = $("<div />");
-      inputLatLng(feature, container);
+
+      inputLatLng(feature, container, latlng);
 
       container.html(
         `<div style=" color: ${randDarkColor()}; width:300px">

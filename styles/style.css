@@ -17,13 +17,13 @@ html {
   padding: 0;
 }
 
-body,
-.mapContainer,
-.box,
+.body,
+.side-panel-container,
+.side-panel-box,
 .side-panel,
 .sidebar-container,
 .searchResultDiv {
-  overflow-y: hidden;
+  overflow: hidden;
 }
 
 body {
@@ -33,26 +33,30 @@ body {
   position: relative;
 }
 
-/* MAP COMPONENT */
+/* MAIN MAP */
 #map {
-  flex: 1;
-}
-
-/* OVERALL MAP */
-
-.mapContainer {
   height: 100vh;
-  display: flex;
+  width: 100vw;
+  z-index: 0;
 }
 
-.box {
-  display: flex;
-  flex-direction: column;
-  flex-basis: 25%;
-  box-shadow: 0 10px 5px 1px rgba(0, 0, 0, 0.6);
-  /* border: 2px solid rgba(0, 0, 0, 0.6); */
-  z-index: 20000;
+/* SIDE PANEL */
+
+.side-panel-container {
+  position: absolute;
+  height: 100vh;
+  width: 50rem;
+  transform: translateY(-100%);
+  z-index: 1;
   transition: all 0.2s;
+}
+
+.side-panel-box {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  box-shadow: 0 10px 5px 1px rgba(0, 0, 0, 0.6);
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 /* LOGO */
@@ -61,7 +65,8 @@ body {
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  /* background-color: #3bb2d0; */
+
+  flex-basis: 10%;
 }
 
 .logo-content {
@@ -73,25 +78,22 @@ body {
 /* SIDE PANEL BUTTON */
 .side-panel-toggle-btn {
   position: absolute;
-  left: 25%;
+  left: 50rem;
   top: 50%;
-  z-index: 100000;
+  z-index: 3;
   padding: 1rem;
-  /* background-color: #3bb2d0af; */
+  background-color: rgba(255, 255, 255, 0.8);
   border-radius: 0 10px 10px 0;
   box-shadow: 2px 0 2px 1px rgba(0, 0, 0, 0.6);
   transition: all 0.2s;
-}
-
-.side-panel-toggle-btn button {
-  background-color: inherit;
-  z-index: 1000000;
+  cursor: pointer;
 }
 
 /* SIDE PANEL */
 
 .side-panel {
-  flex-basis: 90%;
+  /* flex: 1; */
+
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
@@ -101,37 +103,38 @@ body {
 
 /* SIDEBAR COMPONENT */
 .sidebar-container {
-  flex-basis: 100%;
-  width: 100%;
-  height: 100vh;
+  /* flex-basis: 100%; */
+  /* width: 100%; */
+  /* height: 100vh; */
+
   display: flex;
   flex-direction: column;
   /* padding: 2rem; */
   background-color: rgba(0, 0, 0, 0.8);
   color: black;
   z-index: 0;
-  /* display: none; */
 }
 
 .sidebar-container-hidden {
-  display: flex;
+  /* display: flex;
   flex-direction: column;
   /* padding: 2rem; */
-  background-color: rgba(0, 0, 0, 0.8);
+  /* background-color: rgba(0, 0, 0, 0.8);
   color: black;
   flex-basis: 100%;
-  z-index: 0;
+  z-index: 0;  */
   display: none;
 }
 
 /* SIDEBAR CONTENT */
-.searchResultDiv {
+.search-result-div {
   display: flex;
   flex-direction: column;
   /* margin: 1rem; */
+  overflow-y: hidden;
 }
 
-.inputBoxDiv {
+.input-box-div {
   margin: 1rem;
   font-size: 2rem;
   text-align: center;
@@ -140,15 +143,23 @@ body {
 }
 
 /* RESUABLE COMPONENTS */
-.inputBox {
+.input-box {
+  color: black;
+
   margin: 1rem;
   padding: 1.5rem;
   border-radius: 50px;
   outline: none;
+
+  width: 100%;
+}
+
+.input-box:hover {
+  border: 5px solid #93d2e2;
 }
 
 .btn {
-  background-color: #3bb2d0;
+  background-color: #81d1e6;
   color: black;
   width: fit-content;
   border: 1px solid rgba(0, 0, 0, 0.794);
@@ -157,13 +168,45 @@ body {
 }
 
 .btn:hover {
-  background-color: royalblue;
+  background-color: #3bb2d0;
   color: white;
   transition: all 0.2s;
 }
 
 .searchResult {
   font-size: 1.5rem;
+}
+
+/* PLACES API GEOCODER QUERY STYLING */
+.search-query-div {
+  /* background-color: rgba(0, 0, 0, 0.5); */
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 11px;
+  line-height: 18px;
+  /* border-radius: 3px; */
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+/* SCROLLBAR STYLING */
+
+.search-query-div::-webkit-scrollbar,
+#directions::-webkit-scrollbar {
+  width: 1rem;
+}
+
+.search-query-div::-webkit-scrollbar-thumb,
+#directions::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.searchQueryBox {
+  margin: 1rem;
+  color: #757575;
+  font-size: 1.2rem;
+  /* box-shadow: 3px 3px 5px rgba(144, 194, 45, 0.2); */
+  border-bottom: 1px solid;
 }
 
 /* DIRECTIONS COMPONENT */
@@ -189,8 +232,9 @@ body {
 }
 
 .directions-control {
-  display: flex;
   flex-basis: 10%;
+
+  display: flex;
   justify-content: center;
   align-items: center;
   border-bottom: 1px solid rgba(0, 0, 0, 0.301);
@@ -255,48 +299,17 @@ body {
   z-index: 10;
   background: white;
   left: 50px;
-  top: 22.9rem !important;
+  top: 21rem !important;
   cursor: pointer;
 }
 
-/* PLACES API GEOCODER QUERY STYLING */
-.searchQueryDiv {
-  /* display: block; */
-  padding: 10px;
-  /* background: rgba(0, 0, 0, 0.5); */
-  background: transparent;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 11px;
-  line-height: 18px;
-  border-radius: 3px;
-  overflow-y: overlay;
-}
-
-/* SCROLLBAR STYLING */
-
-.searchQueryDiv::-webkit-scrollbar,
-#directions::-webkit-scrollbar {
-  border-radius: 7px;
-  z-index: 0;
-  width: 1rem;
-}
-
-.searchQueryDiv::-webkit-scrollbar-thumb,
-#directions::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.8);
-  /* border-radius: 7px; */
-  z-index: 10101001;
-}
-
-.searchQueryBox {
-  margin: 1rem;
-  color: #757575;
-  font-size: 1.2rem;
-  /* box-shadow: 3px 3px 5px rgba(144, 194, 45, 0.2); */
-  border-bottom: 1px solid;
-}
-
 /* LINKS */
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 .searchQueryLink {
   margin: 0.1rem;
   font-size: 1rem;
@@ -311,14 +324,7 @@ body {
   margin-bottom: 0.5rem;
 }
 
-/* locate user btn
-.locateUserBtn {
-  color: black;
-}
-
-.locateUserBtn:hover {
-  color: orangered;
-} */
+/* WHAT ARE THESE */
 
 .heritagePopup {
   background-color: black !important;
@@ -366,4 +372,41 @@ body {
   font-weight: 900 !important;
   color: black;
   /* background-color: rgba(59, 178, 208, 0.7) !important; */
+}
+
+/* TOURIST ATTRACTION BOX */
+.tourist-attraction-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.tourist-attractoion link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.tourist-attraction-box img {
+  width: 100%;
+  height: 100%;
+}
+
+.tourist-attraction-box h1 {
+  font-size: 2.5rem;
+  line-height: 100%;
+  padding: 1rem;
+}
+
+.tourist-attraction-box > div {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+  font-size: 1.5rem;
+}
+
+.tourist-attraction-box div:nth-child(5) i {
+  margin: 1.4rem;
+}
+
+.tourist-attraction-box i {
+  margin: 1rem;
 }
