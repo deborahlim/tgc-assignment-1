@@ -200,7 +200,7 @@ async function getMuseumLayer(museumLayer) {
       e.innerHTML = feature.properties.Description;
       let tds = e.querySelectorAll("td");
       //console.log(tds);
-      let photo = tds[10].innerHTML + "SameSite=Strict";
+      let photo = tds[10].innerHTML;
       let name = tds[9].innerHTML;
       let description = tds[5].innerHTML;
       let address = `${tds[1].innerHTML}, ${tds[0].innerHTML} ${tds[3].innerHTML}, Singapore ${tds[2].innerHTML}`;
@@ -230,6 +230,7 @@ async function getMuseumLayer(museumLayer) {
                     <br>
                  </div>`
       );
+
       layer.bindPopup(container[0]);
     },
     filter: function (feature) {
