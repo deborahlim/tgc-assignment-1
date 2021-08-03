@@ -22,19 +22,17 @@ async function main() {
 
     window.addEventListener("DOMContentLoaded", () => {
       // SHOW PLACES OF INTEREST
-      // Add marker when user clicks on map
-      // Create pop up for each marker and display the location
       heritageLayer.on("click", function (ev) {
-        getNearbyPOI(ev, mymap);
+        addPOIMarkertoMap(mymap);
       });
 
-      museumLayer.on("click", function (ev) {
-        getNearbyPOI(ev, mymap);
-      });
+      // museumLayer.on("click", function (ev) {
+      //   addPOItoMap(mymap);
+      // });
 
-      touristAttractionLayer.on("click", function (ev) {
-        getNearbyPOI(ev, mymap);
-      });
+      // touristAttractionLayer.on("click", function (ev) {
+      //    addPOItoMap(mymap);
+      // });
 
       // TOGGLE BETWEEN SIDEBAR AND DIRECTIONS VIEW
       let directionsBtn = document.getElementById("directionsBtn");
@@ -138,56 +136,56 @@ async function main() {
       });
 
       //// ADD SEARCH BOX USING MAPBOX PLACES API //////
-      mymap.addControl(
-        L.mapbox
-          .geocoderControl("mapbox.places", {
-            position: "topright",
-            keepOpen: false,
-            accessToken:
-              "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q",
-            queryOptions: {
-              autocomplete: false,
-              country: "sg",
-              limit: 10,
-            },
-          })
-          .on("found", function (res) {
-            searchQueryLayer.clearLayers();
-            searchQuery.innerHTML = "";
-            res.results.features.forEach((el) => {
-              let content = document.createElement("div");
-              let searchQuery = document.getElementById("searchQuery");
-              content.className = "searchQueryBox";
-              content.innerHTML = `<a class="searchQueryLink" href="https://foursquare.com/v/${el.properties.foursquare}/photos"><h1>${el.text}</h1>
-              </a><p>Category: ${el.properties.category}</p><p>${el.properties.address}, ${el.context[2].text}, 
-              Singapore ${el.context[0].text} </p> `;
-              searchQuery.insertAdjacentElement("beforeend", content);
-              // console.log(content.innerHTML);
-              console.log(el);
-              // ADD MARKERS
-              L.geoJSON(el, {
-                pointToLayer: function (geoJsonPoint, latlng) {
-                  return L.marker(latlng, {
-                    icon: L.mapbox.marker.icon({
-                      // "marker-symbol": el.properties.maki,
-                      "marker-symbol": "restaurant",
-                      "marker-color": "#800080",
-                    }),
-                  })
-                    .bindPopup(`<h1 style="width:100%">${el.text}</h1>`)
-                    .addTo(searchQueryLayer);
-                },
-              }).addTo(mymap);
-            });
-          })
-      );
+      // mymap.addControl(
+      //   L.mapbox
+      //     .geocoderControl("mapbox.places", {
+      //       position: "topright",
+      //       keepOpen: false,
+      //       accessToken:
+      //         "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q",
+      //       queryOptions: {
+      //         autocomplete: false,
+      //         country: "sg",
+      //         limit: 10,
+      //       },
+      //     })
+      //     .on("found", function (res) {
+      //       searchQueryLayer.clearLayers();
+      //       searchQuery.innerHTML = "";
+      //       res.results.features.forEach((el) => {
+      //         let content = document.createElement("div");
+      //         let searchQuery = document.getElementById("searchQuery");
+      //         content.className = "searchQueryBox";
+      //         content.innerHTML = `<a class="searchQueryLink" href="https://foursquare.com/v/${el.properties.foursquare}/photos"><h1>${el.text}</h1>
+      //         </a><p>Category: ${el.properties.category}</p><p>${el.properties.address}, ${el.context[2].text},
+      //         Singapore ${el.context[0].text} </p> `;
+      //         searchQuery.insertAdjacentElement("beforeend", content);
+      //         // console.log(content.innerHTML);
+      //         console.log(el);
+      //         // ADD MARKERS
+      //         L.geoJSON(el, {
+      //           pointToLayer: function (geoJsonPoint, latlng) {
+      //             return L.marker(latlng, {
+      //               icon: L.mapbox.marker.icon({
+      //                 // "marker-symbol": el.properties.maki,
+      //                 "marker-symbol": "restaurant",
+      //                 "marker-color": "#800080",
+      //               }),
+      //             })
+      //               .bindPopup(`<h1 style="width:100%">${el.text}</h1>`)
+      //               .addTo(searchQueryLayer);
+      //           },
+      //         }).addTo(mymap);
+      //       });
+      //     })
+      // );
 
-      // SO THAT PREVIOUS SEARCH MARKERS ARE REMOVED AND NEW SEARCH MARKERS ARE ADDED
-      if (mymap.hasLayer(searchQueryLayer)) {
-        mymap.removeLayer(searchQueryLayer);
-      } else {
-        mymap.addLayer(searchQueryLayer);
-      }
+      // // SO THAT PREVIOUS SEARCH MARKERS ARE REMOVED AND NEW SEARCH MARKERS ARE ADDED
+      // if (mymap.hasLayer(searchQueryLayer)) {
+      //   mymap.removeLayer(searchQueryLayer);
+      // } else {
+      //   mymap.addLayer(searchQueryLayer);
+      // }
 
       // ADD TOURIST ATTRACTION DETAILS TO SIDEBAR ON CLICK
       touristAttractionLayer.on("click", function (e) {
@@ -361,13 +359,6 @@ function randDarkColor() {
 // HELPER FUNCTIONS
 
 async function resetMarkers(mymap) {
-  markersGroup = L.featureGroup(
-    heritageLayer,
-    museumLayer,
-    treesLayer,
-    touristAttractionLayer
-  );
-
   heritageLayer.clearLayers();
   museumLayer.clearLayers();
   treesLayer.clearLayers();
@@ -427,42 +418,61 @@ function inputLatLng(feature, container, latlng) {
   });
 }
 
-async function getNearbyPOI(ev, mymap) {
-  searchQueryLayer.clearLayers();
-  let results = [];
-  let names = [];
+async function getNearbyPOI(container, latlng) {
+  let [lng, lat] = latlng.split(",");
+  container.on("click", ".nearbyPOIBtn", async function () {
+    searchQueryLayer.clearLayers();
+    let results = [];
+    let names = [];
 
-  let searchResultDiv = document.querySelector(".search-query-div");
-  let searchResults = document.createElement("div");
-  searchResultDiv.innerHTML = "";
-  query = "food";
-  let result = await search(ev.latlng.lat, ev.latlng.lng, query);
-  console.log(result);
+    let searchResultDiv = document.querySelector(".search-query-div");
+    let searchResults = document.createElement("div");
+    searchResultDiv.innerHTML = "";
+    query = "food";
+    let result = await search(lat, lng, query);
+    console.log(result);
 
-  results.push(result);
-  for (let rec of result.response.groups[0].items) {
-    console.log(rec);
+    results.push(result);
+    for (let rec of result.response.groups[0].items) {
+      // console.log(rec);
 
-    L.marker([rec.venue.location.lat, rec.venue.location.lng], {
-      icon: L.mapbox.marker.icon({
-        "marker-symbol": "car",
-        "marker-color": "#F1ee1e",
-      }),
-    })
-      .bindPopup(`<h1 style="text-align: center">${rec.venue.name}</h1>`)
-      .addTo(searchQueryLayer);
+      let marker = L.marker([rec.venue.location.lat, rec.venue.location.lng], {
+        icon: L.mapbox.marker.icon({
+          "marker-symbol": "restaurant",
+          "marker-color": "#800080",
+        }),
+      })
+        .bindPopup(`<h1 style="text-align: center">${rec.venue.name}</h1>`)
+        .addTo(searchQueryLayer);
+      mouseOverOrOut(marker);
+      names.push(rec.venue.name);
+    }
 
-    names.push(rec.venue.name);
+    searchResultDiv.appendChild(searchResults);
+    searchResults.innerHTML = "";
+    for (let i of names) {
+      let p = document.createElement("p");
+      p.innerHTML = `${i}`;
+      searchResults.appendChild(p);
+    }
+
+    names = [];
+  });
+}
+
+function addPOIMarkertoMap(mymap) {
+  let searchResultBox = document.querySelector(".search-query-div");
+  if (searchResultBox.innerHTML !== "" || searchQueryLayer) {
+    searchQueryLayer.addTo(mymap);
   }
+}
 
-  searchResultDiv.appendChild(searchResults);
-  searchResults.innerHTML = "";
-  for (let i of names) {
-    let p = document.createElement("p");
-    p.innerHTML = `${i}`;
-    searchResults.appendChild(p);
-  }
+function mouseOverOrOut(layer) {
+  layer.on("mouseover", function () {
+    this.openPopup();
+  });
 
-  names = [];
-  searchQueryLayer.addTo(mymap);
+  layer.on("mouseout", function () {
+    this.closePopup();
+  });
 }

@@ -52,7 +52,7 @@ async function getHeritageLayer(heritageLayer) {
       let container = $("<div />");
 
       inputLatLng(feature, container, latlng);
-
+      getNearbyPOI(container, latlng);
       container.html(`<div style=" color: ${randDarkColor()}; width:300px">
       <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
       <p style="font-weight:900">
@@ -66,23 +66,10 @@ async function getHeritageLayer(heritageLayer) {
       </p>
       <br>
      <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right;" ></i></div>
+     <div class="nearbyPOIBtn"><i class="fas fa-utensils fa-2x" style="float: right; margin-right:1rem" ></i></div>
      <br>
    </div>`);
-      // layer.bindPopup(`<div style=" color: ${randDarkColor()}; width:300px">
-      //             <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
-      //             <p style="font-weight:900">
-      //                  ${name}
-      //             </p>
-      //             <p>
-      //                  ${description}
-      //             </p>
-      //             <p>
-      //                  Address: ${address}
-      //             </p>
-      //             <br>
-      //            <p class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right;" ></i></p>
-      //            <br>
-      //          </div>`);
+
       layer.bindPopup(container[0]);
     },
     filter: function (feature) {
@@ -95,12 +82,6 @@ async function getHeritageLayer(heritageLayer) {
         .replaceAll(" ", "");
       let lowercaseDescription =
         feature.properties.Description.toLowerCase().replaceAll(" ", "");
-      // console.log(lowercaseDescription);
-      // if (lowercaseDescription.search(searchByKeywordInput) !== -1) {
-      //   console.log(lowercaseDescription.search(searchByKeywordInput));
-      //   return true;
-      // }
-      // console.log(lowercaseDescription.search(searchByKeywordInput));
 
       if (lowercaseDescription.includes(searchByKeywordInput)) {
         return true;
@@ -140,6 +121,7 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
       let name = tds[13].innerText;
       let container = $("<div />");
       inputLatLng(feature, container, latlng);
+      getNearbyPOI(container, latlng);
 
       container.html(
         `<div style=" color: ${randDarkColor()}; width:300px">
@@ -148,6 +130,7 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
                          ${name}
                     </p>
                     <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right;" ></i></div>
+                    <div class="nearbyPOIBtn"><i class="fas fa-utensils fa-2x" style="float: right; margin-right:1rem" ></i></div>
                 <br>
                     </div>`
       );
@@ -214,6 +197,7 @@ async function getMuseumLayer(museumLayer) {
       let container = $("<div />");
 
       inputLatLng(feature, container, latlng);
+      getNearbyPOI(container, latlng);
 
       container.html(
         `<div style=" color: ${randDarkColor()}; width:300px">
@@ -229,6 +213,7 @@ async function getMuseumLayer(museumLayer) {
                     </p>
                     <br>
                     <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right;" ></i></div>
+                    <div class="nearbyPOIBtn"><i class="fas fa-utensils fa-2x" style="float: right; margin-right:1rem" ></i></div>
                     <br>
                  </div>`
       );
@@ -288,13 +273,7 @@ async function getTreesLayer(treesLayer) {
                     </p>
                  </div>`);
 
-      layer.on("mouseover", function (e) {
-        this.openPopup();
-      });
-
-      layer.on("mouseout", function (e) {
-        this.closePopup();
-      });
+      mouseOverOrOut(layer);
     },
     filter: function (feature) {
       let searchByKeywordInput = document
