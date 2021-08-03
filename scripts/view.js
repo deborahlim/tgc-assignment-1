@@ -176,7 +176,9 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
       keepInView: true,
     },
   });
-  omnivore.kml("data/TOURISM.kml", null, custom).addTo(touristAttractionLayer);
+  await omnivore
+    .kml("data/TOURISM.kml", null, custom)
+    .addTo(touristAttractionLayer);
 }
 
 // MUSUEM LAYER
@@ -379,13 +381,12 @@ function getDirections(mymap) {
 }
 
 // Render layers on mymap
-async function getMapLayers(mymap) {
+function getMapLayers(mymap) {
   getTaxiLayer(taxiResultLayer);
   getDirections(mymap);
   getHeritageLayer(heritageLayer);
   getTreesLayer(treesLayer);
   getMuseumLayer(museumLayer);
-  getMrtStations();
   getTouristAttractionLayer(touristAttractionLayer);
 
   let baseLayers = {

@@ -10,16 +10,30 @@ async function main() {
     searchQueryLayer = L.mapbox.featureLayer();
     userLocationLayer = L.mapbox.featureLayer();
     touristAttractionLayer = L.mapbox.featureLayer();
-    markersGroup = L.featureGroup();
+    markersGroup = L.featureGroup(
+      heritageLayer,
+      museumLayer,
+      treesLayer,
+      touristAttractionLayer
+    );
     initialLayer = L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11");
     getMapLayers(mymap);
     addControlHeader();
 
     window.addEventListener("DOMContentLoaded", () => {
-      // SHOW NEARBY MARKERS
-      let proximityBtn = document.getElementById("proximityBtn");
-      proximityBtn.addEventListener("click", function () {
-        showMarkersNearby(mymap);
+      // SHOW PLACES OF INTEREST
+      // Add marker when user clicks on map
+      // Create pop up for each marker and display the location
+      heritageLayer.on("click", function (ev) {
+        getNearbyPOI(ev, mymap);
+      });
+
+      museumLayer.on("click", function (ev) {
+        getNearbyPOI(ev, mymap);
+      });
+
+      touristAttractionLayer.on("click", function (ev) {
+        getNearbyPOI(ev, mymap);
       });
 
       // TOGGLE BETWEEN SIDEBAR AND DIRECTIONS VIEW
@@ -141,10 +155,6 @@ async function main() {
             searchQueryLayer.clearLayers();
             searchQuery.innerHTML = "";
             res.results.features.forEach((el) => {
-              // console.log(el);
-              // placeName = JSON.stringify(el.text).slice(1, -1);
-              // console.log(placeName);
-              // ADD DESCRIPTION IN SIDEBAR
               let content = document.createElement("div");
               let searchQuery = document.getElementById("searchQuery");
               content.className = "searchQueryBox";
@@ -277,46 +287,6 @@ function initMap(initialLayer) {
   // BUTTON TO TOGGLE FULL SCREEN
   mymap.addControl(new L.Control.Fullscreen());
 
-  // Add marker when user clicks on map
-  // Create pop up for each marker and display the location
-  // mymap.on("click", async function (ev) {
-  //   let markers = [];
-  //   let results = [];
-  //   let names = [];
-  //   let searchBtn = document.getElementById("searchBtn");
-  //   let searchResultDiv = document.querySelector(".searchResultDiv");
-  //   let searchResults = document.createElement("div");
-  //   let selectedSearchInput = document.getElementById("selectedSearch");
-
-  //   // if there is no marker on the map, do the following
-  //   let result = await search(ev.latlng.lat, ev.latlng.lng);
-  //   console.log(result);
-  //   results.push(result);
-  //   let currentMarker = L.marker([ev.latlng.lat, ev.latlng.lng])
-  //     .bindPopup(`${ev.latlng.lat}, ${ev.latlng.lng}`)
-  //     .addTo(mymap);
-  //   markers.push(currentMarker);
-
-  //   // input lat lng of marker into search input box and display results
-  //   selectedSearchInput.value = `${ev.latlng.lat}, ${ev.latlng.lng}`;
-  //   searchBtn.addEventListener("click", () => {
-  //     for (let rec of result.response.groups[0].items) {
-  //       names.push(rec.venue.name);
-  //     }
-
-  //     searchResultDiv.appendChild(searchResults);
-  //     searchResults.innerHTML = "";
-  //     for (let i of names) {
-  //       let p = document.createElement("p");
-  //       p.innerHTML = `${i}`;
-  //       p.className = "searchResult";
-  //       searchResults.appendChild(p);
-  //     }
-
-  //     names = [];
-  //   });
-  // });
-
   // WHEN CLICK ON MAP TOGGLE SIDE PANEL
   mymap.on("click", toggleView);
 
@@ -408,11 +378,11 @@ async function resetMarkers(mymap) {
   markersGroup.addLayer(treesLayer);
   markersGroup.addLayer(touristAttractionLayer);
 
+  await getTouristAttractionLayer(touristAttractionLayer);
   await getHeritageLayer(heritageLayer);
   await getMuseumLayer(museumLayer);
   await getTreesLayer(treesLayer);
-  await getTouristAttractionLayer(touristAttractionLayer);
-
+  // UNCAUGHT PROMISE? Bounds are not valid
   mymap.fitBounds(markersGroup.getBounds());
   markersGroup.addTo(mymap);
 }
@@ -455,4 +425,44 @@ function inputLatLng(feature, container, latlng) {
     directionInput.focus();
     // console.log(directionInput.value);
   });
+}
+
+async function getNearbyPOI(ev, mymap) {
+  searchQueryLayer.clearLayers();
+  let results = [];
+  let names = [];
+
+  let searchResultDiv = document.querySelector(".search-query-div");
+  let searchResults = document.createElement("div");
+  searchResultDiv.innerHTML = "";
+  query = "food";
+  let result = await search(ev.latlng.lat, ev.latlng.lng, query);
+  console.log(result);
+
+  results.push(result);
+  for (let rec of result.response.groups[0].items) {
+    console.log(rec);
+
+    L.marker([rec.venue.location.lat, rec.venue.location.lng], {
+      icon: L.mapbox.marker.icon({
+        "marker-symbol": "car",
+        "marker-color": "#F1ee1e",
+      }),
+    })
+      .bindPopup(`<h1 style="text-align: center">${rec.venue.name}</h1>`)
+      .addTo(searchQueryLayer);
+
+    names.push(rec.venue.name);
+  }
+
+  searchResultDiv.appendChild(searchResults);
+  searchResults.innerHTML = "";
+  for (let i of names) {
+    let p = document.createElement("p");
+    p.innerHTML = `${i}`;
+    searchResults.appendChild(p);
+  }
+
+  names = [];
+  searchQueryLayer.addTo(mymap);
 }
