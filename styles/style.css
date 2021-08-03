@@ -151,21 +151,57 @@ body {
   background-color: #81d1e6;
   color: black;
   border-radius: 50px;
-  transition: all 0.2s;
-  margin: 1rem;
+  margin: 2rem;
   padding: 1.5rem;
+  cursor: pointer;
 }
 
 .btn:hover {
   background-color: #3bb2d0;
   color: white;
-  transition: all 0.2s;
 }
 
+.btn:active {
+  transform: translateY(1px);
+}
 .search-bar-icon {
+  cursor: pointer;
   color: rgba(0, 0, 0, 0.322);
   background: transparent;
   transform: translateX(-5rem);
+}
+
+/* TOOLTIPS */
+.tooltip {
+  position: relative;
+}
+
+.tooltip-text {
+  font-size: 1rem;
+  display: inline-block;
+  transition: all 0.2s;
+  visibility: hidden;
+  width: 12rem;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 1rem;
+  position: absolute;
+  right: -1.5rem;
+  bottom: -2.5rem;
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+}
+
+.tooltip:active .tooltip-text {
+  position: absolute;
+  visibility: hidden;
+  width: 12rem;
+  right: -1.5rem;
+  bottom: -2.5rem;
 }
 
 /* PLACES API GEOCODER QUERY STYLING */
@@ -284,9 +320,9 @@ body {
   margin-bottom: 1.5rem;
 }
 
-.directions-btn {
+/* .directions-btn {
   z-index: 10000;
-}
+} */
 
 .mapbox-directions-inputs input {
   font-size: 1.5rem !important;
@@ -335,7 +371,7 @@ body {
   z-index: 10;
   background: white;
   left: 50px;
-  top: 25.3rem !important;
+  top: 21.9rem !important;
   cursor: pointer;
 }
 

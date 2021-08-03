@@ -26,13 +26,13 @@ async function main() {
         addPOIMarkertoMap(mymap);
       });
 
-      // museumLayer.on("click", function (ev) {
-      //   addPOItoMap(mymap);
-      // });
+      museumLayer.on("click", function (ev) {
+        addPOIMarkertoMap(mymap);
+      });
 
-      // touristAttractionLayer.on("click", function (ev) {
-      //    addPOItoMap(mymap);
-      // });
+      touristAttractionLayer.on("click", function (ev) {
+        addPOIMarkertoMap(mymap);
+      });
 
       // TOGGLE BETWEEN SIDEBAR AND DIRECTIONS VIEW
       let directionsBtn = document.getElementById("directionsBtn");
@@ -134,58 +134,6 @@ async function main() {
         };
         geocoder.reverseQuery([lng, lat], func);
       });
-
-      //// ADD SEARCH BOX USING MAPBOX PLACES API //////
-      // mymap.addControl(
-      //   L.mapbox
-      //     .geocoderControl("mapbox.places", {
-      //       position: "topright",
-      //       keepOpen: false,
-      //       accessToken:
-      //         "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q",
-      //       queryOptions: {
-      //         autocomplete: false,
-      //         country: "sg",
-      //         limit: 10,
-      //       },
-      //     })
-      //     .on("found", function (res) {
-      //       searchQueryLayer.clearLayers();
-      //       searchQuery.innerHTML = "";
-      //       res.results.features.forEach((el) => {
-      //         let content = document.createElement("div");
-      //         let searchQuery = document.getElementById("searchQuery");
-      //         content.className = "searchQueryBox";
-      //         content.innerHTML = `<a class="searchQueryLink" href="https://foursquare.com/v/${el.properties.foursquare}/photos"><h1>${el.text}</h1>
-      //         </a><p>Category: ${el.properties.category}</p><p>${el.properties.address}, ${el.context[2].text},
-      //         Singapore ${el.context[0].text} </p> `;
-      //         searchQuery.insertAdjacentElement("beforeend", content);
-      //         // console.log(content.innerHTML);
-      //         console.log(el);
-      //         // ADD MARKERS
-      //         L.geoJSON(el, {
-      //           pointToLayer: function (geoJsonPoint, latlng) {
-      //             return L.marker(latlng, {
-      //               icon: L.mapbox.marker.icon({
-      //                 // "marker-symbol": el.properties.maki,
-      //                 "marker-symbol": "restaurant",
-      //                 "marker-color": "#800080",
-      //               }),
-      //             })
-      //               .bindPopup(`<h1 style="width:100%">${el.text}</h1>`)
-      //               .addTo(searchQueryLayer);
-      //           },
-      //         }).addTo(mymap);
-      //       });
-      //     })
-      // );
-
-      // // SO THAT PREVIOUS SEARCH MARKERS ARE REMOVED AND NEW SEARCH MARKERS ARE ADDED
-      // if (mymap.hasLayer(searchQueryLayer)) {
-      //   mymap.removeLayer(searchQueryLayer);
-      // } else {
-      //   mymap.addLayer(searchQueryLayer);
-      // }
 
       // ADD TOURIST ATTRACTION DETAILS TO SIDEBAR ON CLICK
       touristAttractionLayer.on("click", function (e) {

@@ -30,6 +30,7 @@
       src="https://kit.fontawesome.com/4512c92067.js"
       crossorigin="anonymous"
     ></script>
+
     <link rel="stylesheet" href="styles/style.css" />
     <title>Document</title>
   </head>
@@ -43,26 +44,35 @@
           <p class="logo-content">Discover Singapore</p>
         </header>
         <div class="directions-control">
-          <div class="">
+          <div class="tooltip">
             <button class="btn" id="toggleTaxiBtn">
               <i class="fas fa-taxi fa-2x"></i>
             </button>
+            <span class="tooltip-text">Get Taxi Availability</span>
           </div>
-          <div class="">
+          <div class="tooltip">
             <button class="btn" id="userLocation">
               <i class="fas fa-location-arrow fa-2x"></i>
+              <span class="tooltip-text">Get Location</span>
             </button>
           </div>
-          <div class="">
-            <button class="btn directions-btn" id="directionsBtn">
+          <div class="tooltip">
+            <button class="btn" id="getNearbyPOI">
+              <i class="fas fa-utensils fa-2x"></i>
+            </button>
+            <span class="tooltip-text">Find Nearby Food</span>
+          </div>
+          <div class="tooltip">
+            <button class="btn" id="directionsBtn">
               <i class="fas fa-directions fa-2x" id="directionsBtn"></i>
+              <span class="tooltip-text">Get Directions</span>
             </button>
           </div>
         </div>
         <div class="side-panel">
           <div class="directions-container-hidden">
             <div id="inputs"></div>
-            <!-- <div id="errors"></div> -->
+            <div id="errors"></div>
             <div id="directions">
               <div id="routes"></div>
               <div id="instructions"></div>
@@ -115,6 +125,7 @@
       integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
       crossorigin="anonymous"
     ></script>
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js"></script>
     <script src="scripts/data.js"></script>
