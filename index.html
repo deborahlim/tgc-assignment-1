@@ -43,7 +43,7 @@
           <i class="fas fa-map-marked-alt fa-5x"></i>
           <p class="logo-content">Discover Singapore</p>
         </header>
-        <div class="directions-control">
+        <div class="control-box">
           <div class="tooltip">
             <button class="btn" id="toggleTaxiBtn">
               <i class="fas fa-taxi fa-2x"></i>
@@ -57,7 +57,7 @@
             </button>
           </div>
           <div class="tooltip">
-            <button class="btn" id="getNearbyPOI">
+            <button class="btn" id="getNearbyPOIBtn">
               <i class="fas fa-utensils fa-2x"></i>
             </button>
             <span class="tooltip-text">Find Nearby Food</span>
@@ -88,9 +88,13 @@
                   id="keyWord"
                   placeholder="Search Heritage Sites By Keyword"
                 />
+
                 <button class="search-bar-icon" id="keyWordBtn">
                   <i class="fas fa-search-location fa-2x"></i>
                 </button>
+                <div class="tooltip-si">
+                  <span class="tooltip-si-text">Search Map Markers</span>
+                </div>
               </div>
 
               <div class="input-box-div">
@@ -111,8 +115,11 @@
         </div>
       </div>
     </section>
-    <div class="side-panel-toggle-btn">
-      <button><i class="fas fa-caret-left fa-2x"></i></button>
+    <div class="side-panel-toggle-btn tooltip-sp">
+      <button class="">
+        <i class="fas fa-caret-left fa-2x"></i>
+      </button>
+      <span class="tooltip-sp-text">Collapse Side Panel</span>
     </div>
     <script src="https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.js"></script>
     <link

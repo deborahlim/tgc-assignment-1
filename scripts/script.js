@@ -48,12 +48,18 @@ async function main() {
           sidePanel.style.width = "0rem";
           sidePanelToggleBtn.style.left = "0rem";
 
-          sidePanelToggleBtn.innerHTML = `<i class="fas fa-caret-right fa-2x"></i>`;
+          sidePanelToggleBtn.innerHTML = `<button class="">
+          <i class="fas fa-caret-right fa-2x"></i>
+        </button>
+        <span class="tooltip-sp-text">Expand Side Panel</span>`;
         } else {
           sidePanel.style.width = "50rem";
           sidePanelToggleBtn.style.left = "50rem";
 
-          sidePanelToggleBtn.innerHTML = `<i class="fas fa-caret-left fa-2x"></i>`;
+          sidePanelToggleBtn.innerHTML = `<button class="">
+          <i class="fas fa-caret-left fa-2x"></i>
+        </button>
+        <span class="tooltip-sp-text">Collapse Side Panel</span>`;
         }
       });
 
@@ -112,6 +118,52 @@ async function main() {
           currentLocationInput.value = `${e.latlng.lng}, ${e.latlng.lat}`;
           currentLocationInput.focus();
         });
+      });
+
+      // BUTTON TO SEARCH FOR NEARBY FOOD
+
+      let nearbyPOIBtn = document.getElementById("getNearbyPOIBtn");
+
+      nearbyPOIBtn.addEventListener("click", async function () {
+        let { lat, lng } = mymap.getCenter();
+        let result = await search(lat, lng, "food");
+        searchQueryLayer.clearLayers();
+        let names = [];
+
+        let searchResultDiv = document.querySelector(".search-query-div");
+        let searchResults = document.createElement("div");
+        searchResultDiv.innerHTML = "";
+
+        for (let rec of result.response.groups[0].items) {
+          // console.log(rec);
+
+          let marker = L.marker(
+            [rec.venue.location.lat, rec.venue.location.lng],
+            {
+              icon: L.mapbox.marker.icon({
+                "marker-symbol": "restaurant",
+                "marker-color": "#800080",
+              }),
+            }
+          )
+            .bindPopup(
+              `<h1 style="text-align: center; min-width:100px; padding-top:1.3rem">${rec.venue.name}</h1>`
+            )
+            .addTo(searchQueryLayer);
+          mouseOverOrOut(marker);
+          names.push(rec.venue.name);
+        }
+
+        searchResultDiv.appendChild(searchResults);
+        searchResults.innerHTML = "";
+        for (let i of names) {
+          let p = document.createElement("p");
+          p.innerHTML = `${i}`;
+          searchResults.appendChild(p);
+        }
+
+        names = [];
+        addPOIMarkertoMap(mymap);
       });
 
       // BUTTON TO TOGGLE TAXI AVAILABILITY LAYER
@@ -225,7 +277,7 @@ function initMap(initialLayer) {
     .map("map", null, {
       minZoom: 11,
     })
-    .setView([1.3521, 103.8198], 11)
+    .setView([1.3521, 103.8198], 13)
     .addLayer(L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11"));
 
   mymap.setMaxBounds(mymap.getBounds());
@@ -390,7 +442,9 @@ async function getNearbyPOI(container, latlng) {
           "marker-color": "#800080",
         }),
       })
-        .bindPopup(`<h1 style="text-align: center">${rec.venue.name}</h1>`)
+        .bindPopup(
+          `<h1 style="text-align: center; min-width:100px; padding-top:1.3rem">${rec.venue.name}</h1>`
+        )
         .addTo(searchQueryLayer);
       mouseOverOrOut(marker);
       names.push(rec.venue.name);

@@ -11,8 +11,6 @@ async function search(lat, lng, query) {
         client_secret: "GS001PHKSG4L4P3YFRNEV30SRENYSVJIAK02AKPO0XIZ3F3Q",
         v: "20210717",
         query: query,
-        radius: 3000,
-        limit: 10,
       },
     }
   );
