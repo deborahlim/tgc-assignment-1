@@ -235,17 +235,20 @@ async function main() {
     <div> 
     <i id="attraction-icon-3" class="fas fa-clock fa-2x"></i> ${openingHours}
     </div>
-    <div>
+    <div class="directionsPopupBtn cursor">
     <i class="fas fa-directions fa-2x"></i>Get Directions
+    </div>
+    <div class="nearbyPOIBtn cursor">
+    <i class="fas fa-utensils fa-2x"></i>Find Nearby Food
     </div>`
             : `
     <img src="${photo}" alt="Photo of ${name}">
      <h1>
           ${name}
      </h1>
-     <div>
-     <a href="${link}" target="_blank" class="attraction-link"><i class="fas fa-globe-americas fa-2x"></i></a>
-     <a href="${link}" target="_blank"><span>${link}</span></a>
+     <div class="search-details">
+     <a href="${link}" target="_blank" class="attraction-link cursor"><i class="fas fa-globe-americas fa-2x"></i></a>
+     <a href="${link}" target="_blank class="cursor"><span>${link}</span></a>
      </div>
      <div>
      <i class="fas fa-info-circle fa-2x"></i> ${description}
@@ -256,9 +259,13 @@ async function main() {
      <div> 
      <i id="attraction-icon-3" class="fas fa-clock fa-2x"></i> ${openingHours}
      </div>
-     <div class="directionsPopupBtn">
-     <i class="fas fa-directions fa-2x"></i>Get Directions
-     </div>`
+     <div class="directionsPopupBtn cursor">
+     <i class="fas fa-directions fa-2x "></i>Get Directions
+     </div>
+     <div class="nearbyPOIBtn cursor">
+     <i class="fas fa-utensils fa-2x "></i>Find Nearby Food
+     </div>
+     `
         );
 
         searchQuery.innerHTML = "";
@@ -275,9 +282,9 @@ function initMap(initialLayer) {
     "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q";
   let mymap = L.mapbox
     .map("map", null, {
-      minZoom: 11,
+      minZoom: 12,
     })
-    .setView([1.3521, 103.8198], 13)
+    .setView([1.3521, 103.8198], 12)
     .addLayer(L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11"));
 
   mymap.setMaxBounds(mymap.getBounds());
@@ -373,9 +380,12 @@ async function resetMarkers(mymap) {
   await getHeritageLayer(heritageLayer);
   await getMuseumLayer(museumLayer);
   await getTreesLayer(treesLayer);
-  // UNCAUGHT PROMISE? Bounds are not valid
-  mymap.fitBounds(markersGroup.getBounds());
-  markersGroup.addTo(mymap);
+  // check if keyword is valid
+  let bounds = markersGroup.getBounds();
+  if (bounds.isValid()) {
+    mymap.fitBounds(markersGroup.getBounds());
+    markersGroup.addTo(mymap);
+  }
 }
 
 function addControlHeader() {

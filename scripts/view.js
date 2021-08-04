@@ -65,8 +65,8 @@ async function getHeritageLayer(heritageLayer) {
            Address: ${address}
       </p>
       <br>
-     <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right;" ></i></div>
-     <div class="nearbyPOIBtn"><i class="fas fa-utensils fa-2x" style="float: right; margin-right:1rem" ></i></div>
+     <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right; cursor:pointer" ></i></div>
+     <div class="nearbyPOIBtn"><i class="fas fa-utensils fa-2x" style="float: right; margin-right:1rem; cursor:pointer" ></i></div>
      <br>
    </div>`);
 
@@ -129,8 +129,8 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
                     <p style="font-weight:800">
                          ${name}
                     </p>
-                    <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right;" ></i></div>
-                    <div class="nearbyPOIBtn"><i class="fas fa-utensils fa-2x" style="float: right; margin-right:1rem" ></i></div>
+                    <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right; cursor:pointer" ></i></div>
+                    <div class="nearbyPOIBtn"><i class="fas fa-utensils fa-2x" style="float: right; margin-right:1rem; cursor:pointer" ></i></div>
                 <br>
                     </div>`
       );
@@ -212,8 +212,8 @@ async function getMuseumLayer(museumLayer) {
                          Address: ${address}
                     </p>
                     <br>
-                    <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right;" ></i></div>
-                    <div class="nearbyPOIBtn"><i class="fas fa-utensils fa-2x" style="float: right; margin-right:1rem" ></i></div>
+                    <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right; cursor:pointer" ></i></div>
+                    <div class="nearbyPOIBtn"><i class="fas fa-utensils fa-2x" style="float: right; margin-right:1rem; cursor:pointer" ></i></div>
                     <br>
                  </div>`
       );
