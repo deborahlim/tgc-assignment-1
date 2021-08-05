@@ -301,42 +301,6 @@ async function getTreesLayer(treesLayer) {
   }).addTo(treesLayer);
 }
 
-async function getMrtStations() {
-  let response = await getData("data/lta-mrt-station-exit-geojson.geojson");
-  let mrt = L.geoJSON(response.data, {
-    pointToLayer: function (geoJsonPoint, latlng) {
-      return L.marker(latlng, {
-        icon: L.mapbox.marker.icon({
-          "marker-symbol": "town-hall",
-          "marker-color": "0044FF",
-        }),
-      });
-    },
-    onEachFeature: function (feature, layer) {
-      // console.log(feature);
-      layer.bindPopup(feature.properties.Description);
-      let e = document.createElement("div");
-      e.innerHTML = feature.properties.Description;
-      // let tds = e.querySelectorAll("td");
-      // let name = tds[4].innerHTML;
-      // let description = tds[6].innerHTML;
-      // let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-      // layer.bindPopup(`<div style="color: #${randomColor}">
-      //             <p style="font-weight:600">
-      //                  Name: ${name}
-      //             </p>
-      //             <p>
-      //                  Description: ${description}
-      //             </p>
-      //          </div>`);
-    },
-
-    // pointToLayer: function (geoJsonPoint, latlng) {
-    //   return L.marker(latlng).bindPopup(`${latlng}`);
-    // },
-  }).addTo(mrtStationsLayer);
-}
-
 function getDirections(mymap) {
   // move the attribution control out of the way
   mymap.attributionControl.setPosition("bottomright");
@@ -384,15 +348,10 @@ function getMapLayers(mymap) {
     ),
   };
   let overlays = {
-    //Taxis: taxiResultLayer,
-
     "Historic Sites": heritageLayer,
     "Heritage Trees": treesLayer,
     "Tourist Attractions": touristAttractionLayer,
     Museums: museumLayer,
-
-    // "MRT Stations": mrtStationsLayer,
-    //Search: searchQueryLayer,
   };
 
   let c = L.control.layers(baseLayers, overlays, {

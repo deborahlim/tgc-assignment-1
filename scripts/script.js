@@ -267,7 +267,7 @@ function initMap() {
     .setView([1.3521, 103.8198], 12)
     .addLayer(L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11"));
 
-  mymap.setMaxBounds(mymap.getBounds());
+  // mymap.setMaxBounds(mymap.getBounds());
 
   // BUTTON TO TOGGLE FULL SCREEN
   mymap.addControl(new L.Control.Fullscreen());

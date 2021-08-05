@@ -13,35 +13,58 @@ function mouseOverOrOut(layer) {
 
 // TOGGLE SIDE PANEL OPEN AND CLOSE
 function toggleSidePanel(sidePanelToggleBtn) {
+  let desiredWidth = getDesiredSidePanelWidth();
   let sidePanel = document.querySelector(".side-panel-container");
-  if (sidePanel.style.width !== "0rem") {
-    sidePanel.style.width = "0rem";
-    sidePanelToggleBtn.style.left = "0rem";
+
+  console.log(window.innerWidth);
+  if (sidePanel.style.width !== "0%") {
+    sidePanel.style.width = "0%";
+    sidePanelToggleBtn.style.left = "0%";
 
     sidePanelToggleBtn.innerHTML = `<button class="">
-        <i class="fas fa-caret-right fa-2x"></i>
+        <i class="fas fa-caret-right "></i>
       </button>
       <span class="tooltip-sp-text">Expand Side Panel</span>`;
   } else {
-    sidePanel.style.width = "50rem";
-    sidePanelToggleBtn.style.left = "50rem";
+    sidePanel.style.width = desiredWidth;
+    sidePanelToggleBtn.style.left = desiredWidth;
 
     sidePanelToggleBtn.innerHTML = `<button class="">
-        <i class="fas fa-caret-left fa-2x"></i>
+        <i class="fas fa-caret-left"></i>
       </button>
       <span class="tooltip-sp-text">Collapse Side Panel</span>`;
   }
 }
 
 function openSidePanel(sidePanelToggleBtn) {
+  let desiredWidth = getDesiredSidePanelWidth();
   let sidePanel = document.querySelector(".side-panel-container");
-  sidePanel.style.width = "50rem";
-  sidePanelToggleBtn.style.left = "50rem";
+  sidePanel.style.width = desiredWidth;
+  sidePanelToggleBtn.style.left = desiredWidth;
 
   sidePanelToggleBtn.innerHTML = `<button class="">
-        <i class="fas fa-caret-left fa-2x"></i>
+        <i class="fas fa-caret-left"></i>
       </button>
       <span class="tooltip-sp-text">Collapse Side Panel</span>`;
+}
+
+// DIFFERENT SIDE PANEL WIDTH FOR DIFFERENT DEVICE SIZES
+function getDesiredSidePanelWidth() {
+  let desiredWidth = "25%";
+  if (window.innerWidth < "376") {
+    desiredWidth = "85%";
+  } else if (window.innerWidth < "541") {
+    desiredWidth = "90%";
+  } else if (window.innerWidth < "769") {
+    desiredWidth = "55%";
+  } else if (window.innerWidth < "1025") {
+    desiredWidth = "60%";
+  } else if (window.innerWidth < "1367") {
+    desiredWidth = "35%";
+  } else {
+    desiredWidth = "25%";
+  }
+  return desiredWidth;
 }
 
 // TO TOGGLE BETWEEN DIRECTIONS CONTAINER AND SIDEBAR CONTAINER
