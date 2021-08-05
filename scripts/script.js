@@ -16,7 +16,7 @@ async function main() {
       treesLayer,
       touristAttractionLayer
     );
-    initialLayer = L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11");
+
     getMapLayers(mymap);
     addControlHeader();
 
@@ -42,25 +42,9 @@ async function main() {
       let sidePanelToggleBtn = document.querySelector(
         ".side-panel-toggle-btn "
       );
+
       sidePanelToggleBtn.addEventListener("click", function () {
-        let sidePanel = document.querySelector(".side-panel-container");
-        if (sidePanel.style.width !== "0rem") {
-          sidePanel.style.width = "0rem";
-          sidePanelToggleBtn.style.left = "0rem";
-
-          sidePanelToggleBtn.innerHTML = `<button class="">
-          <i class="fas fa-caret-right fa-2x"></i>
-        </button>
-        <span class="tooltip-sp-text">Expand Side Panel</span>`;
-        } else {
-          sidePanel.style.width = "50rem";
-          sidePanelToggleBtn.style.left = "50rem";
-
-          sidePanelToggleBtn.innerHTML = `<button class="">
-          <i class="fas fa-caret-left fa-2x"></i>
-        </button>
-        <span class="tooltip-sp-text">Collapse Side Panel</span>`;
-        }
+        toggleSidePanel(sidePanelToggleBtn);
       });
 
       //  FILTER ALL MARKERS BY KEYWORD USING CLICK BUTTON
@@ -73,7 +57,7 @@ async function main() {
 
       // FILTER ALL MARKERS BY KEYWORD USING ENTER BUTTON
       document
-        .querySelector("#keyWord")
+        .getElementById("keyWord")
         .addEventListener("keypress", function (e) {
           if (e.key === "Enter") {
             resetMarkers(mymap);
@@ -108,6 +92,7 @@ async function main() {
               },
             })
             .addTo(mymap);
+
           //PUT CURRENT COORDINATES INTO DIRECTIONS ORIGIN INPUT
           let currentLocationInput = document.querySelector(
             "#mapbox-directions-origin-input"
@@ -125,45 +110,35 @@ async function main() {
       let nearbyPOIBtn = document.getElementById("getNearbyPOIBtn");
 
       nearbyPOIBtn.addEventListener("click", async function () {
-        let { lat, lng } = mymap.getCenter();
-        let result = await search(lat, lng, "food");
-        searchQueryLayer.clearLayers();
-        let names = [];
+        await getNearbyFood("food", mymap);
+      });
 
-        let searchResultDiv = document.querySelector(".search-query-div");
-        let searchResults = document.createElement("div");
-        searchResultDiv.innerHTML = "";
+      // SEARCH INPUT FOR SPECIFIC FOOD BY BUTTON CLICK OR PRESSING ENTER
+      let searchFoodInput = document.getElementById("selectedFood");
+      let searchFoodButton = document.getElementById("selectedFoodBtn");
 
-        for (let rec of result.response.groups[0].items) {
-          // console.log(rec);
+      searchFoodButton.addEventListener("click", async function () {
+        await getNearbyFood(searchFoodInput.value, mymap);
+      });
 
-          let marker = L.marker(
-            [rec.venue.location.lat, rec.venue.location.lng],
-            {
-              icon: L.mapbox.marker.icon({
-                "marker-symbol": "restaurant",
-                "marker-color": "#800080",
-              }),
-            }
-          )
-            .bindPopup(
-              `<h1 style="text-align: center; min-width:100px; padding-top:1.3rem">${rec.venue.name}</h1>`
-            )
-            .addTo(searchQueryLayer);
-          mouseOverOrOut(marker);
-          names.push(rec.venue.name);
+      searchFoodInput.addEventListener("keypress", async function (e) {
+        if (e.key == "Enter") {
+          await getNearbyFood(searchFoodInput.value, mymap);
         }
+      });
 
-        searchResultDiv.appendChild(searchResults);
-        searchResults.innerHTML = "";
-        for (let i of names) {
-          let p = document.createElement("p");
-          p.innerHTML = `${i}`;
-          searchResults.appendChild(p);
-        }
+      // INPUT LAT LNG ON FOOD MARKER CLICK
+      searchQueryLayer.on("click", function (e) {
+        let latlng = `${e.latlng.lng}, ${e.latlng.lat}`;
+        let directionInput = document.querySelector(
+          "#mapbox-directions-destination-input"
+        );
+        showDirectionsPanel();
 
-        names = [];
-        addPOIMarkertoMap(mymap);
+        // https://stackoverflow.com/questions/35659430/how-do-i-programmatically-trigger-an-input-event-without-jquery
+        directionInput.dispatchEvent(new Event("input", { bubbles: true }));
+        directionInput.value = latlng;
+        directionInput.focus();
       });
 
       // BUTTON TO TOGGLE TAXI AVAILABILITY LAYER
@@ -189,6 +164,7 @@ async function main() {
 
       // ADD TOURIST ATTRACTION DETAILS TO SIDEBAR ON CLICK
       touristAttractionLayer.on("click", function (e) {
+        openSidePanel(sidePanelToggleBtn);
         showSearchPanel();
         // variables for tourist attraction box
         let temp = document.createElement("div");
@@ -218,6 +194,7 @@ async function main() {
         let touristAttraction = $("<div />");
         touristAttraction.addClass("tourist-attraction-box");
         inputLatLng(e, touristAttraction, latlng);
+        getFoodNearMarker(touristAttraction, latlng);
         touristAttraction.html(
           link === "Unavailable"
             ? `
@@ -280,7 +257,7 @@ async function main() {
 }
 
 // INIIALISE MAP //
-function initMap(initialLayer) {
+function initMap() {
   L.mapbox.accessToken =
     "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q";
   let mymap = L.mapbox
@@ -301,211 +278,5 @@ function initMap(initialLayer) {
   return mymap;
 }
 
-////// MAIN THREAD ////////
+// CALL MAIN FUNCTION
 main();
-
-// TO TOGGLE BETWEEN DIRECTIONS CONTAINER AND SIDEBAR CONTAINER
-function toggleView() {
-  let directionsContainerHidden = document.querySelector(
-    ".directions-container-hidden"
-  );
-  let sidebarContainer = document.querySelector(".sidebar-container");
-
-  if (
-    directionsContainerHidden.classList.contains("directions-container-hidden")
-  )
-    if (directionsContainerHidden.classList.contains("directions-container")) {
-      directionsContainerHidden.classList.remove("directions-container");
-      sidebarContainer.classList.remove("sidebar-container-hidden");
-    } else {
-      directionsContainerHidden.classList.add("directions-container");
-      sidebarContainer.classList.add("sidebar-container-hidden");
-    }
-}
-
-function showDirectionsPanel() {
-  let directionsContainerHidden = document.querySelector(
-    ".directions-container-hidden"
-  );
-  let sidebarContainer = document.querySelector(".sidebar-container");
-  if (
-    directionsContainerHidden.classList.contains("directions-container-hidden")
-  ) {
-    directionsContainerHidden.classList.add("directions-container");
-    sidebarContainer.classList.add("sidebar-container-hidden");
-  }
-}
-
-function showSearchPanel() {
-  let directionsContainerHidden = document.querySelector(
-    ".directions-container-hidden"
-  );
-  let sidebarContainer = document.querySelector(".sidebar-container");
-  if (sidebarContainer.classList.contains("sidebar-container")) {
-    sidebarContainer.classList.remove("sidebar-container-hidden");
-    directionsContainerHidden.classList.remove("directions-container");
-  }
-}
-// https://gist.github.com/Chak10/dc24c61c9bf2f651cb6d290eeef864c1
-function randDarkColor() {
-  var lum = -0.25;
-  var hex = String(
-    "#" + Math.random().toString(16).slice(2, 8).toUpperCase()
-  ).replace(/[^0-9a-f]/gi, "");
-  if (hex.length < 6) {
-    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-  }
-  var rgb = "#",
-    c,
-    i;
-  for (i = 0; i < 3; i++) {
-    c = parseInt(hex.substr(i * 2, 2), 16);
-    c = Math.round(Math.min(Math.max(0, c + c * lum), 255)).toString(16);
-    rgb += ("00" + c).substr(c.length);
-  }
-  return rgb;
-}
-
-// HELPER FUNCTIONS
-
-async function resetMarkers(mymap) {
-  heritageLayer.clearLayers();
-  museumLayer.clearLayers();
-  treesLayer.clearLayers();
-  touristAttractionLayer.clearLayers();
-
-  markersGroup.addLayer(heritageLayer);
-  markersGroup.addLayer(museumLayer);
-  markersGroup.addLayer(treesLayer);
-  markersGroup.addLayer(touristAttractionLayer);
-
-  await getTouristAttractionLayer(touristAttractionLayer);
-  await getHeritageLayer(heritageLayer);
-  await getMuseumLayer(museumLayer);
-  await getTreesLayer(treesLayer);
-  // check if keyword is valid
-  let bounds = markersGroup.getBounds();
-  if (bounds.isValid()) {
-    mymap.fitBounds(markersGroup.getBounds());
-    markersGroup.addTo(mymap);
-  }
-}
-
-function addControlHeader() {
-  // STYLE CONTROL BOX
-  let layerControl = document.querySelector(
-    ".leaflet-control-layers-expanded .leaflet-control-layers-list"
-  );
-
-  let baseLayerControl = document.querySelector(".leaflet-control-layers-base");
-
-  let overlaysControl = document.querySelector(
-    ".leaflet-control-layers-overlays "
-  );
-  if (!document.querySelector(".test")) {
-    baseLayerControl.insertAdjacentHTML(
-      "afterbegin",
-      "<div class='test'><h1>Base Maps</h1></div>"
-    );
-
-    overlaysControl.insertAdjacentHTML(
-      "afterbegin",
-      "<div class='test'><h1>Markers</h1></div>"
-    );
-  }
-}
-
-function inputLatLng(feature, container, latlng) {
-  container.on("click", ".directionsPopupBtn", function () {
-    let directionInput = document.querySelector(
-      "#mapbox-directions-destination-input"
-    );
-
-    showDirectionsPanel();
-
-    // https://stackoverflow.com/questions/35659430/how-do-i-programmatically-trigger-an-input-event-without-jquery
-    directionInput.dispatchEvent(new Event("input", { bubbles: true }));
-    directionInput.value = latlng;
-    directionInput.focus();
-    // console.log(directionInput.value);
-  });
-}
-
-async function getNearbyPOI(container, latlng) {
-  let [lng, lat] = latlng.split(",");
-  container.on("click", ".nearbyPOIBtn", async function () {
-    searchQueryLayer.clearLayers();
-    let results = [];
-    let names = [];
-
-    let searchResultDiv = document.querySelector(".search-query-div");
-    let searchResults = document.createElement("div");
-    searchResultDiv.innerHTML = "";
-    query = "food";
-    let result = await search(lat, lng, query);
-    console.log(result);
-
-    results.push(result);
-    for (let rec of result.response.groups[0].items) {
-      // console.log(rec);
-
-      let marker = L.marker([rec.venue.location.lat, rec.venue.location.lng], {
-        icon: L.mapbox.marker.icon({
-          "marker-symbol": "restaurant",
-          "marker-color": "#800080",
-        }),
-      })
-        .bindPopup(
-          `<h1 style="text-align: center; min-width:100px; padding-top:1.3rem">${rec.venue.name}</h1>`
-        )
-        .addTo(searchQueryLayer);
-      mouseOverOrOut(marker);
-      names.push(rec.venue.name);
-    }
-
-    searchResultDiv.appendChild(searchResults);
-    searchResults.innerHTML = "";
-    for (let i of names) {
-      let p = document.createElement("p");
-      p.innerHTML = `${i}`;
-      searchResults.appendChild(p);
-    }
-
-    names = [];
-  });
-}
-
-function addPOIMarkertoMap(mymap) {
-  let searchResultBox = document.querySelector(".search-query-div");
-  if (searchResultBox.innerHTML !== "" || searchQueryLayer) {
-    searchQueryLayer.addTo(mymap);
-  }
-}
-
-function mouseOverOrOut(layer) {
-  layer.on("mouseover", function () {
-    this.openPopup();
-  });
-
-  layer.on("mouseout", function () {
-    this.closePopup();
-  });
-}
-
-function myScript(container) {
-  container.html(`<div style=" color: ${randDarkColor()}; width:300px">
-  <p style="font-weight:900">
-       ${name}
-  </p>
-  <p>
-       ${description}
-  </p>
-  <p>
-       Address: ${address}
-  </p>
-  <br>
- <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right; cursor:pointer" ></i></div>
- <div class="nearbyPOIBtn"><i class="fas fa-utensils fa-2x" style="float: right; margin-right:1rem; cursor:pointer" ></i></div>
- <br>
-</div>`);
-}

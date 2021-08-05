@@ -362,13 +362,13 @@ body {
   transition: all 0.2;
 }
 
-.mapbox-directions-inputs input {
+/* .mapbox-directions-inputs input {
   font-size: 1.5rem !important;
 }
 
 .mapbox-directions-profile label {
   font-size: 1.5rem !important;
-}
+} */
 
 #inputs,
 #errors,
@@ -379,10 +379,11 @@ body {
 }
 
 #inputs {
+  position: relative;
   z-index: 10;
-  top: 15px;
-  left: 10px;
-  font-size: 5rem !important;
+  /* top: 15px;
+  left: 10px; */
+  /* font-size: 5rem !important; */
 }
 
 #directions {
@@ -409,7 +410,7 @@ body {
   z-index: 10;
   background: white;
   left: 50px;
-  top: 21.9rem !important;
+  top: 30px !important;
   cursor: pointer;
 }
 

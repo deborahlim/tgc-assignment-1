@@ -52,7 +52,7 @@ async function getHeritageLayer(heritageLayer) {
       let container = $("<div />");
 
       inputLatLng(feature, container, latlng);
-      getNearbyPOI(container, latlng);
+      getFoodNearMarker(container, latlng);
       container.html(`<div style=" color: ${randDarkColor()}; width:300px"'>
       <div style="width:100%"><img src="${photo}" onerror="this.style.display='none'" style="width:100%"></div>
       <p style="font-weight:900">
@@ -122,13 +122,12 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
       } else {
         photo = "https://www.visitsingapore" + tds[7].innerText.slice(17);
       }
-      console.log(photo);
       let latlng = `${feature.geometry.coordinates[0]}, ${feature.geometry.coordinates[1]}`;
       // console.log(photo);
       let name = tds[13].innerText;
       let container = $("<div />");
       inputLatLng(feature, container, latlng);
-      getNearbyPOI(container, latlng);
+      getFoodNearMarker(container, latlng);
 
       container.html(
         `<div style=" color: ${randDarkColor()}; width:300px">
@@ -204,7 +203,7 @@ async function getMuseumLayer(museumLayer) {
       let container = $("<div />");
 
       inputLatLng(feature, container, latlng);
-      getNearbyPOI(container, latlng);
+      getFoodNearMarker(container, latlng);
 
       container.html(
         `<div style=" color: ${randDarkColor()}; width:300px">
