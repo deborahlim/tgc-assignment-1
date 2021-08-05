@@ -53,8 +53,8 @@ async function getHeritageLayer(heritageLayer) {
 
       inputLatLng(feature, container, latlng);
       getNearbyPOI(container, latlng);
-      container.html(`<div style=" color: ${randDarkColor()}; width:300px">
-      <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
+      container.html(`<div style=" color: ${randDarkColor()}; width:300px"'>
+      <div style="width:100%"><img src="${photo}" onerror="this.style.display='none'" style="width:100%"></div>
       <p style="font-weight:900">
            ${name}
       </p>
@@ -93,7 +93,7 @@ async function getHeritageLayer(heritageLayer) {
   }).addTo(heritageLayer);
 }
 
-// TOURIST ATTRACTION LAYER
+// TOURIST ATTRACTION LAYERa
 async function getTouristAttractionLayer(touristAttractionLayer) {
   let searchByKeywordInput = document.getElementById("keyWord");
 
@@ -113,9 +113,16 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
       let tds = e.querySelectorAll("td");
       // console.log(tds);
       let photo;
-      if (tds[7].innerText.slice(17)) {
+
+      if (
+        tds[7].innerText.includes("Null") ||
+        tds[7].innerText.slice(17).includes("hajjah-fatimah-mosque")
+      ) {
+        photo = "";
+      } else {
         photo = "https://www.visitsingapore" + tds[7].innerText.slice(17);
-      } else photo = "";
+      }
+      console.log(photo);
       let latlng = `${feature.geometry.coordinates[0]}, ${feature.geometry.coordinates[1]}`;
       // console.log(photo);
       let name = tds[13].innerText;
@@ -125,7 +132,7 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
 
       container.html(
         `<div style=" color: ${randDarkColor()}; width:300px">
-                    <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%; height:100%"></div>
+                    <div style="width:100%"><img src="${photo}" onerror="this.style.display='none'" style="width:100%; height:100%"></div>
                     <p style="font-weight:800">
                          ${name}
                     </p>
@@ -201,7 +208,7 @@ async function getMuseumLayer(museumLayer) {
 
       container.html(
         `<div style=" color: ${randDarkColor()}; width:300px">
-                    <div style="width:100%"><img src="${photo}" alt="Photo of ${name}" style="width:100%"></div>
+                    <div style="width:100%"><img src="${photo}" onerror="this.style.display='none'" style="width:100%"></div>
                     <p style="font-weight:800">
                          ${name}
                     </p>

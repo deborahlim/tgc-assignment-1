@@ -196,10 +196,13 @@ async function main() {
         temp.innerHTML = `${e.layer.feature.properties.description}`;
         let tds = temp.querySelectorAll("td");
 
-        if (tds[7].innerText.slice(17).includes("Null")) {
+        if (
+          tds[7].innerText.includes("Null") ||
+          tds[7].innerText.slice(17).includes("hajjah-fatimah-mosque")
+        ) {
           photo = "";
         } else photo = "https://www.visitsingapore" + tds[7].innerText.slice(17);
-        let name = tds[13].innerText;
+        let name = tds[13].innerHTML;
         let link = tds[27].innerText.includes("Null")
           ? "Unavailable"
           : tds[27].innerText;
@@ -218,54 +221,54 @@ async function main() {
         touristAttraction.html(
           link === "Unavailable"
             ? `
-   <img src="${photo}" alt="Photo of ${name}">
-    <h1>
-         ${name}
-    </h1>
-    <div>
-    <i class="fas fa-globe-americas fa-2x"></i>
-    <span>${link}</span>
-    </div>
-    <div>
-    <i class="fas fa-info-circle fa-2x"></i> ${description}
-    </div>
-    <div class="">
-    <i class="fas fa-map-marker-alt fa-2x"></i> ${address}
-    </div>
-    <div> 
-    <i id="attraction-icon-3" class="fas fa-clock fa-2x"></i> ${openingHours}
-    </div>
-    <div class="directionsPopupBtn cursor">
-    <i class="fas fa-directions fa-2x"></i>Get Directions
-    </div>
-    <div class="nearbyPOIBtn cursor">
-    <i class="fas fa-utensils fa-2x"></i>Find Nearby Food
-    </div>`
+              <img src="${photo}" onerror="this.style.display='none'">
+      <h1>
+      ${name}
+      </h1>
+      <div>
+      <i class="fas fa-globe-americas fa-2x"></i>
+      <span>${link}</span>
+      </div>
+      <div>
+      <i class="fas fa-info-circle fa-2x"></i> ${description}
+      </div>
+      <div class="">
+      <i class="fas fa-map-marker-alt fa-2x"></i> ${address}
+      </div>
+      <div>
+      <i id="attraction-icon-3" class="fas fa-clock fa-2x"></i> ${openingHours}
+      </div>
+      <div class="directionsPopupBtn cursor">
+      <i class="fas fa-directions fa-2x"></i>Get Directions
+      </div>
+      <div class="nearbyPOIBtn cursor">
+      <i class="fas fa-utensils fa-2x"></i>Find Nearby Food
+      </div>`
             : `
-    <img src="${photo}" alt="Photo of ${name}">
-     <h1>
-          ${name}
-     </h1>
-     <div class="search-details">
-     <a href="${link}" target="_blank" class="attraction-link cursor"><i class="fas fa-globe-americas fa-2x"></i></a>
-     <a href="${link}" target="_blank class="cursor"><span>${link}</span></a>
-     </div>
-     <div>
-     <i class="fas fa-info-circle fa-2x"></i> ${description}
-     </div>
-     <div class="">
-     <i class="fas fa-map-marker-alt fa-2x"></i> ${address}
-     </div>
-     <div> 
-     <i id="attraction-icon-3" class="fas fa-clock fa-2x"></i> ${openingHours}
-     </div>
-     <div class="directionsPopupBtn cursor">
-     <i class="fas fa-directions fa-2x "></i>Get Directions
-     </div>
-     <div class="nearbyPOIBtn cursor">
-     <i class="fas fa-utensils fa-2x "></i>Find Nearby Food
-     </div>
-     `
+              <img src="${photo}" onerror="this.style.display='none'">
+       <h1>
+      ${name}
+       </h1>
+       <div class="search-details">
+       <a href="${link}" target="_blank" class="attraction-link cursor"><i class="fas fa-globe-americas fa-2x"></i></a>
+       <a href="${link}" target="_blank class="cursor"><span>${link}</span></a>
+       </div>
+       <div>
+       <i class="fas fa-info-circle fa-2x"></i> ${description}
+       </div>
+       <div class="">
+       <i class="fas fa-map-marker-alt fa-2x"></i> ${address}
+       </div>
+       <div>
+       <i id="attraction-icon-3" class="fas fa-clock fa-2x"></i> ${openingHours}
+       </div>
+       <div class="directionsPopupBtn cursor">
+       <i class="fas fa-directions fa-2x "></i>Get Directions
+       </div>
+       <div class="nearbyPOIBtn cursor">
+       <i class="fas fa-utensils fa-2x "></i>Find Nearby Food
+       </div>
+       `
         );
 
         searchQuery.innerHTML = "";
@@ -487,4 +490,22 @@ function mouseOverOrOut(layer) {
   layer.on("mouseout", function () {
     this.closePopup();
   });
+}
+
+function myScript(container) {
+  container.html(`<div style=" color: ${randDarkColor()}; width:300px">
+  <p style="font-weight:900">
+       ${name}
+  </p>
+  <p>
+       ${description}
+  </p>
+  <p>
+       Address: ${address}
+  </p>
+  <br>
+ <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right; cursor:pointer" ></i></div>
+ <div class="nearbyPOIBtn"><i class="fas fa-utensils fa-2x" style="float: right; margin-right:1rem; cursor:pointer" ></i></div>
+ <br>
+</div>`);
 }
