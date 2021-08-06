@@ -15,7 +15,7 @@ async function getTaxiLayer() {
       return test;
     },
   }).addTo(taxiResultLayer);
-
+  mouseOverOrOut(taxiResultLayer);
   // To get updated taxi data every minute
   // setTimeout(getTaxiLayer, 6000);
 }
@@ -66,7 +66,7 @@ async function getHeritageLayer(heritageLayer) {
       </p>
       <br>
      <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right; cursor:pointer" ></i></div>
-     <div class="nearbyPOIBtn"><i class="fas fa-utensils fa-2x" style="float: right; margin-right:1rem; cursor:pointer" ></i></div>
+     <div class="nearbyFoodBtn"><i class="fas fa-utensils fa-2x" style="float: right; margin-right:1rem; cursor:pointer" ></i></div>
      <br>
    </div>`);
 
@@ -136,7 +136,7 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
                          ${name}
                     </p>
                     <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right; cursor:pointer" ></i></div>
-                    <div class="nearbyPOIBtn"><i class="fas fa-utensils fa-2x" style="float: right; margin-right:1rem; cursor:pointer" ></i></div>
+                    <div class="nearbyFoodBtn"><i class="fas fa-utensils fa-2x" style="float: right; margin-right:1rem; cursor:pointer" ></i></div>
                 <br>
                     </div>`
       );
@@ -219,7 +219,7 @@ async function getMuseumLayer(museumLayer) {
                     </p>
                     <br>
                     <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right; cursor:pointer" ></i></div>
-                    <div class="nearbyPOIBtn"><i class="fas fa-utensils fa-2x" style="float: right; margin-right:1rem; cursor:pointer" ></i></div>
+                    <div class="nearbyFoodBtn"><i class="fas fa-utensils fa-2x" style="float: right; margin-right:1rem; cursor:pointer" ></i></div>
                     <br>
                  </div>`
       );
@@ -348,10 +348,10 @@ function getMapLayers(mymap) {
     ),
   };
   let overlays = {
-    "Historic Sites": heritageLayer,
-    "Heritage Trees": treesLayer,
     "Tourist Attractions": touristAttractionLayer,
     Museums: museumLayer,
+    "Historic Sites": heritageLayer,
+    "Heritage Trees": treesLayer,
   };
 
   let c = L.control.layers(baseLayers, overlays, {

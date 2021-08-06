@@ -11,6 +11,20 @@ async function search(lat, lng, query) {
         client_secret: "GS001PHKSG4L4P3YFRNEV30SRENYSVJIAK02AKPO0XIZ3F3Q",
         v: "20210717",
         query: query,
+        // limit: ,
+      },
+    }
+  );
+  return response.data;
+}
+
+async function getVenueDetails(VENUE_ID) {
+  let response = await axios.get(
+    `https://api.foursquare.com/v2/venues/${VENUE_ID}`,
+    {
+      params: {
+        client_id: "2DFI0KPAFWAW0NV4GMLMSXGMBINKZLFDOWBXUSA2FARDWXBO",
+        client_secret: "GS001PHKSG4L4P3YFRNEV30SRENYSVJIAK02AKPO0XIZ3F3Q",
       },
     }
   );

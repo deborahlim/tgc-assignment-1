@@ -161,10 +161,6 @@ async function resetMarkers(mymap) {
 // MODIFY LEAFLET LAYER CONTROL BOX
 function addControlHeader() {
   // STYLE CONTROL BOX
-  let layerControl = document.querySelector(
-    ".leaflet-control-layers-expanded .leaflet-control-layers-list"
-  );
-
   let baseLayerControl = document.querySelector(".leaflet-control-layers-base");
 
   let overlaysControl = document.querySelector(
@@ -183,7 +179,7 @@ function addControlHeader() {
   }
 }
 
-// TO INPUT LATLNG WHEN CLICK DIRECTIONS BUTTON IN POP UP POP UP / SEARCH RESULT
+// TO INPUT LATLNG WHEN USER CLICK DIRECTIONS BUTTON IN MARKER POP UP / SEARCH RESULT
 function inputLatLng(feature, container, latlng) {
   container.on("click", ".directionsPopupBtn", function () {
     let directionInput = document.querySelector(
@@ -236,6 +232,7 @@ async function getFoodNearMarker(container, latlng) {
     searchResults.innerHTML = "";
     for (let i of names) {
       let p = document.createElement("p");
+      p.classList.add("venue");
       p.innerHTML = `${i}`;
       searchResults.appendChild(p);
     }
@@ -245,7 +242,7 @@ async function getFoodNearMarker(container, latlng) {
 }
 
 // ADD FOOD MARKERS TO MAP
-function addPOIMarkertoMap(mymap) {
+function addFoodMarkertoMap(mymap) {
   let searchResultBox = document.querySelector(".search-query-div");
   if (searchResultBox.innerHTML !== "" || searchQueryLayer) {
     searchQueryLayer.addTo(mymap);
@@ -253,41 +250,63 @@ function addPOIMarkertoMap(mymap) {
 }
 
 // DISPLAY FOOD RESULT/MARKERS ON MAP DEPENDING ON MAP CENTER
-async function getNearbyFood(query, mymap) {
+async function getNearbyFood(query, mymap, items, markers) {
   let { lat, lng } = mymap.getCenter();
   let result = await search(lat, lng, query);
+  console.log(result.response.groups[0].items);
   searchQueryLayer.clearLayers();
   let names = [];
-
-  let searchResultDiv = document.querySelector(".search-query-div");
+  markers = [];
+  items = [...result.response.groups[0].items];
+  document.querySelector(".sort-by").style.visibility = "visible";
+  let searchResultDiv = document.querySelector(".search-results");
   let searchResults = document.createElement("div");
   searchResultDiv.innerHTML = "";
 
   for (let rec of result.response.groups[0].items) {
-    // console.log(rec);
+    let name = rec.venue.name;
 
+    let icon =
+      rec.venue.categories[0].icon.prefix +
+      "60" +
+      rec.venue.categories[0].icon.suffix;
+    // console.log(rec);
+    // ADD MARKER TO SEARCH QUERY LAYER
     let marker = L.marker([rec.venue.location.lat, rec.venue.location.lng], {
       icon: L.mapbox.marker.icon({
         "marker-symbol": "restaurant",
         "marker-color": "#800080",
       }),
-    })
+    });
+    console.log(marker);
+    marker
       .bindPopup(
         `<h1 style="text-align: center; min-width:100px; padding-top:1.3rem">${rec.venue.name}</h1>`
       )
       .addTo(searchQueryLayer);
-    mouseOverOrOut(marker);
-    names.push(rec.venue.name);
-  }
 
-  searchResultDiv.appendChild(searchResults);
-  searchResults.innerHTML = "";
-  for (let i of names) {
-    let p = document.createElement("p");
-    p.innerHTML = `${i}`;
-    searchResults.appendChild(p);
+    markers.push(marker);
+    mouseOverOrOut(marker);
+
+    // items.push(rec);
+    let p = document.createElement("div");
+    p.innerHTML = `<span><img src="${icon}"></span> <p>${name}</p> `;
+    p.classList.add("venue");
+    console.log(p);
+
+    searchResultDiv.appendChild(p);
   }
 
   names = [];
-  addPOIMarkertoMap(mymap);
+  addFoodMarkertoMap(mymap);
+  return [items, markers];
+}
+
+// REVERSE GEOCODING
+function popUpAddress(layer) {
+  let bind = (err, data) => {
+    let t = data.features[0].place_name;
+    layer.bindPopup(`<h1 style="text-align: center">${t}</h1>`);
+  };
+  return bind;
 }

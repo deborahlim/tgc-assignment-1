@@ -6,7 +6,6 @@ async function main() {
     heritageLayer = L.mapbox.featureLayer();
     treesLayer = L.mapbox.featureLayer();
     museumLayer = L.mapbox.featureLayer();
-    mrtStationsLayer = L.mapbox.featureLayer();
     searchQueryLayer = L.mapbox.featureLayer();
     userLocationLayer = L.mapbox.featureLayer();
     touristAttractionLayer = L.mapbox.featureLayer();
@@ -21,19 +20,9 @@ async function main() {
     addControlHeader();
 
     window.addEventListener("DOMContentLoaded", () => {
-      // SHOW PLACES OF INTEREST
-      heritageLayer.on("click", function (ev) {
-        addPOIMarkertoMap(mymap);
-      });
-
-      museumLayer.on("click", function (ev) {
-        addPOIMarkertoMap(mymap);
-      });
-
-      touristAttractionLayer.on("click", function (ev) {
-        addPOIMarkertoMap(mymap);
-      });
-
+      let searchResultArr;
+      let items;
+      let markers;
       // TOGGLE BETWEEN SIDEBAR AND DIRECTIONS VIEW
       let directionsBtn = document.getElementById("directionsBtn");
       directionsBtn.addEventListener("click", toggleView);
@@ -68,24 +57,26 @@ async function main() {
       // BUTTON TO GET USER LOCATION
       userLocationBtn.addEventListener("click", function (e) {
         if (!navigator.geolocation) {
-          userLocationBtn.textContent = "Please Enable Location";
+          console.log("Please enable location");
         } else {
           e.preventDefault();
           mymap.locate();
         }
 
         mymap.on("locationfound", function (e) {
+          let { lat, lng } = e.latlng;
           mymap.fitBounds(e.bounds);
+          let geocoder = L.mapbox.geocoder("mapbox.places");
+          let address = popUpAddress(userLocationLayer);
 
           userLocationLayer
             .setGeoJSON({
               type: "Feature",
               geometry: {
                 type: "Point",
-                coordinates: [e.latlng.lng, e.latlng.lat],
+                coordinates: [lng, lat],
               },
               properties: {
-                title: "Here I am!",
                 "marker-size": "large",
                 "marker-color": "#000000",
                 "marker-symbol": "viewpoint",
@@ -93,6 +84,8 @@ async function main() {
             })
             .addTo(mymap);
 
+          geocoder.reverseQuery([lng, lat], address);
+          mouseOverOrOut(userLocationLayer);
           //PUT CURRENT COORDINATES INTO DIRECTIONS ORIGIN INPUT
           let currentLocationInput = document.querySelector(
             "#mapbox-directions-origin-input"
@@ -100,16 +93,16 @@ async function main() {
           currentLocationInput.dispatchEvent(
             new Event("input", { bubbles: true })
           );
-          currentLocationInput.value = `${e.latlng.lng}, ${e.latlng.lat}`;
+          currentLocationInput.value = `${lng}, ${lat}`;
           currentLocationInput.focus();
         });
       });
 
       // BUTTON TO SEARCH FOR NEARBY FOOD
 
-      let nearbyPOIBtn = document.getElementById("getNearbyPOIBtn");
+      let nearbyFoodBtn = document.getElementById("getNearbyFoodBtn");
 
-      nearbyPOIBtn.addEventListener("click", async function () {
+      nearbyFoodBtn.addEventListener("click", async function () {
         await getNearbyFood("food", mymap);
       });
 
@@ -118,17 +111,94 @@ async function main() {
       let searchFoodButton = document.getElementById("selectedFoodBtn");
 
       searchFoodButton.addEventListener("click", async function () {
-        await getNearbyFood(searchFoodInput.value, mymap);
+        items = await getNearbyFood(searchFoodInput.value, mymap);
+        searchResultArr = items.slice();
       });
 
       searchFoodInput.addEventListener("keypress", async function (e) {
         if (e.key == "Enter") {
-          await getNearbyFood(searchFoodInput.value, mymap);
+          let foodItems = await getNearbyFood(searchFoodInput.value, mymap);
+          let [items, markers] = foodItems;
+          searchResultArr = items.slice();
+          foodMarkersArr = markers.slice();
+          console.log(foodMarkersArr);
         }
+      });
+
+      // SORT FOOD RESULTS BY DISTANCE OR RELEVANCE(DEFAULT)
+      let sortByDistance = document.getElementById("food");
+      sortByDistance.addEventListener("change", function (e) {
+        let value = e.target.value;
+        let searchResultDiv = document.querySelector(".search-results");
+        searchResults = document.createElement("div");
+        searchResultDiv.innerHTML = "";
+        searchResultDiv.appendChild(searchResults);
+        if (value == "distance") {
+          searchResultArr.sort((a, b) =>
+            a.venue.location.distance > b.venue.location.distance ? 1 : -1
+          );
+          searchResults.innerHTML = "";
+          for (let i of searchResultArr) {
+            console.log(i);
+            let distance = i.venue.location.distance;
+            let icon =
+              i.venue.categories[0].icon.prefix +
+              "100" +
+              i.venue.categories[0].icon.suffix;
+            let p = document.createElement("p");
+            p.classList.add("venue");
+            p.innerHTML = `<img src ="${icon}">`;
+
+            searchResults.appendChild(p);
+          }
+        } else if (value == "relevance") {
+          searchResults.innerHTML = "";
+
+          for (let i of items) {
+            console.log(i);
+            let distance = i.venue.location.distance;
+            let p = document.createElement("p");
+            p.classList.add("venue");
+            p.innerHTML = `${distance}`;
+            searchResults.appendChild(p);
+          }
+        }
+      });
+
+      // Open PopUP when hover over search result
+      let foodSearchResults = document.querySelector(".search-results");
+      foodSearchResults.addEventListener("mouseover", function (e) {
+        if (e.target && e.target.nodeName == "DIV") {
+          let foodResultName = e.target.innerHTML;
+          console.log(foodResultName);
+          console.log(searchResultArr);
+          for (let i of searchResultArr) {
+            console.log(i.venue.name);
+            if (foodResultName.includes(i.venue.name)) {
+              console.log(foodMarkersArr);
+              foodMarkersArr[i]._popup.togglePopup();
+            }
+          }
+        }
+      });
+
+      // ADD FOOD MARKERS ON TO MAP
+      heritageLayer.on("click", function (ev) {
+        addFoodMarkertoMap(mymap);
+      });
+
+      museumLayer.on("click", function (ev) {
+        addFoodMarkertoMap(mymap);
+      });
+
+      touristAttractionLayer.on("click", function (ev) {
+        addFoodMarkertoMap(mymap);
       });
 
       // INPUT LAT LNG ON FOOD MARKER CLICK
       searchQueryLayer.on("click", function (e) {
+        openSidePanel(sidePanelToggleBtn);
+        showDirectionsPanel();
         let latlng = `${e.latlng.lng}, ${e.latlng.lat}`;
         let directionInput = document.querySelector(
           "#mapbox-directions-destination-input"
@@ -155,11 +225,8 @@ async function main() {
       taxiResultLayer.on("click", function (e) {
         let { lat, lng } = e.latlng;
         let geocoder = L.mapbox.geocoder("mapbox.places");
-        let func = (err, data) => {
-          let t = data.features[0].place_name;
-          taxiResultLayer.bindPopup(`<h1 style="text-align: center">${t}</h1>`);
-        };
-        geocoder.reverseQuery([lng, lat], func);
+        let address = popUpAddress(taxiResultLayer);
+        geocoder.reverseQuery([lng, lat], address);
       });
 
       // ADD TOURIST ATTRACTION DETAILS TO SIDEBAR ON CLICK
@@ -218,7 +285,7 @@ async function main() {
       <div class="directionsPopupBtn cursor">
       <i class="fas fa-directions fa-2x"></i>Get Directions
       </div>
-      <div class="nearbyPOIBtn cursor">
+      <div class="nearbyFoodBtn cursor">
       <i class="fas fa-utensils fa-2x"></i>Find Nearby Food
       </div>`
             : `
@@ -242,14 +309,14 @@ async function main() {
        <div class="directionsPopupBtn cursor">
        <i class="fas fa-directions fa-2x "></i>Get Directions
        </div>
-       <div class="nearbyPOIBtn cursor">
+       <div class="nearbyFoodBtn cursor">
        <i class="fas fa-utensils fa-2x "></i>Find Nearby Food
        </div>
        `
         );
 
-        searchQuery.innerHTML = "";
-        searchQuery.insertAdjacentElement("beforeend", touristAttraction[0]);
+        searchResult.innerHTML = "";
+        searchResult.insertAdjacentElement("beforeend", touristAttraction[0]);
       });
     });
   }

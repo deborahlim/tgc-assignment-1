@@ -31,7 +31,7 @@ html {
 .side-panel-box,
 .side-panel,
 .sidebar-container,
-.search-result-div {
+.search-query-div {
   overflow: hidden;
 }
 
@@ -139,7 +139,7 @@ body {
 }
 
 /* SIDEBAR CONTENT */
-.search-result-div {
+.search-query-div {
   flex: 1;
 
   display: flex;
@@ -153,6 +153,12 @@ body {
   width: 100%;
   display: flex;
   justify-content: center;
+}
+
+.sort-by {
+  visibility: hidden;
+
+  margin: 1rem 0.5rem;
 }
 
 /* RESUABLE COMPONENTS */
@@ -263,7 +269,7 @@ body {
 }
 
 /* PLACES API GEOCODER QUERY STYLING */
-.search-query-div {
+.search-result-div {
   margin-top: 1rem;
   /* background: transparent; */
   color: rgba(255, 255, 255, 0.8);
@@ -273,26 +279,39 @@ body {
   overflow-x: hidden;
 }
 
-.searchQueryBox {
-  margin: 1rem;
-  color: #757575;
+.search-results {
+  margin: 2rem;
+  color: inherit;
   font-size: 1.2rem;
-  /* box-shadow: 3px 3px 5px rgba(144, 194, 45, 0.2); */
   border-bottom: 1px solid;
 }
 
-.searchQueryLink {
-  margin: 0.1rem;
-  font-size: 1rem;
-  text-decoration: none;
-  color: rgba(255, 255, 255, 0.75);
-  font-family: sans-serif;
+.venue {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+
   cursor: pointer;
+  color: inherit;
 }
 
-.searchQueryBox p {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+.venue:hover img {
+  color: #3bb2d0;
+}
+
+.venue p {
+  margin-left: 1rem;
+  padding: 1rem;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.venue:hover p {
+  border-bottom: 2px solid #3bb2d0;
+  transition: all 0.2s;
 }
 
 /* TOURIST ATTRACTION BOX */
@@ -342,12 +361,12 @@ body {
 
 /* SCROLLBAR STYLING */
 
-.search-query-div::-webkit-scrollbar,
+.search-result-div::-webkit-scrollbar,
 #directions::-webkit-scrollbar {
   width: 1rem;
 }
 
-.search-query-div::-webkit-scrollbar-thumb,
+.search-result-div::-webkit-scrollbar-thumb,
 #directions::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.8);
 }

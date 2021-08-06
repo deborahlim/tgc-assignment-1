@@ -57,7 +57,7 @@
             </button>
           </div>
           <div class="tooltip">
-            <button class="btn" id="getNearbyPOIBtn">
+            <button class="btn" id="getNearbyFoodBtn">
               <i class="fas fa-utensils fa-2x"></i>
             </button>
             <span class="tooltip-text">Find Nearby Food</span>
@@ -80,7 +80,7 @@
           </div>
 
           <div class="sidebar-container">
-            <div class="search-result-div">
+            <div class="search-query-div">
               <div class="input-box-div">
                 <input
                   class="input-box"
@@ -109,7 +109,16 @@
                 </button>
               </div>
 
-              <div class="search-query-div" id="searchQuery"></div>
+              <div class="search-result-div" id="searchResult">
+                <div class="sort-by">
+                  <label for="food">Sort By:</label>
+                  <select name="food" id="food">
+                    <option value="relevance">Relevance</option>
+                    <option value="distance">Distance</option>
+                  </select>
+                </div>
+                <div class="search-results"></div>
+              </div>
             </div>
           </div>
         </div>
