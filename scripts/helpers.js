@@ -257,6 +257,7 @@ async function getNearbyFood(query, mymap, items, markers) {
   searchQueryLayer.clearLayers();
   let names = [];
   markers = [];
+  let marker = {};
   items = [...result.response.groups[0].items];
   document.querySelector(".sort-by").style.visibility = "visible";
   let searchResultDiv = document.querySelector(".search-results");
@@ -265,41 +266,42 @@ async function getNearbyFood(query, mymap, items, markers) {
 
   for (let rec of result.response.groups[0].items) {
     let name = rec.venue.name;
-
+    // console.log(rec);
     let icon =
       rec.venue.categories[0].icon.prefix +
       "60" +
       rec.venue.categories[0].icon.suffix;
     // console.log(rec);
     // ADD MARKER TO SEARCH QUERY LAYER
-    let marker = L.marker([rec.venue.location.lat, rec.venue.location.lng], {
-      icon: L.mapbox.marker.icon({
-        "marker-symbol": "restaurant",
-        "marker-color": "#800080",
-      }),
-    });
-    console.log(marker);
-    marker
+    marker[rec.venue.id] = L.marker(
+      [rec.venue.location.lat, rec.venue.location.lng],
+      {
+        icon: L.mapbox.marker.icon({
+          "marker-symbol": "restaurant",
+          "marker-color": "#800080",
+        }),
+      }
+    )
       .bindPopup(
         `<h1 style="text-align: center; min-width:100px; padding-top:1.3rem">${rec.venue.name}</h1>`
       )
       .addTo(searchQueryLayer);
+    // console.log(marker);
 
-    markers.push(marker);
-    mouseOverOrOut(marker);
+    // markers.push(marker);
+    // mouseOverOrOut(marker);
 
     // items.push(rec);
     let p = document.createElement("div");
     p.innerHTML = `<span><img src="${icon}"></span> <p>${name}</p> `;
     p.classList.add("venue");
-    console.log(p);
 
     searchResultDiv.appendChild(p);
   }
 
   names = [];
   addFoodMarkertoMap(mymap);
-  return [items, markers];
+  return [items, marker];
 }
 
 // REVERSE GEOCODING

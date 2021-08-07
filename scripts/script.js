@@ -118,9 +118,9 @@ async function main() {
       searchFoodInput.addEventListener("keypress", async function (e) {
         if (e.key == "Enter") {
           let foodItems = await getNearbyFood(searchFoodInput.value, mymap);
-          let [items, markers] = foodItems;
+          let [items, marker] = foodItems;
           searchResultArr = items.slice();
-          foodMarkersArr = markers.slice();
+          foodMarkersArr = { ...marker };
           console.log(foodMarkersArr);
         }
       });
@@ -167,18 +167,26 @@ async function main() {
 
       // Open PopUP when hover over search result
       let foodSearchResults = document.querySelector(".search-results");
-      foodSearchResults.addEventListener("mouseover", function (e) {
+      foodSearchResults.addEventListener("click", function (e) {
         if (e.target && e.target.nodeName == "DIV") {
+          let id;
           let foodResultName = e.target.innerHTML;
-          console.log(foodResultName);
-          console.log(searchResultArr);
-          for (let i of searchResultArr) {
-            console.log(i.venue.name);
-            if (foodResultName.includes(i.venue.name)) {
-              console.log(foodMarkersArr);
-              foodMarkersArr[i]._popup.togglePopup();
+
+          for (i of searchResultArr) {
+            if (i.venue.name.includes(foodResultName)) {
+              id = i.venue.id;
             }
           }
+          foodMarkersArr[id].openPopup();
+          console.log(foodResultName);
+          console.log(searchResultArr);
+          // for (let i of searchResultArr) {
+          //   console.log(i);
+          //   if (i.venue.id == foodMarkersArr[i]) {
+          //     foodMarkersArr[i.venue.id].openPopup();
+          //     console.log(foodMarkersArr[i.venue.id]);
+          //   }
+          // }
         }
       });
 
