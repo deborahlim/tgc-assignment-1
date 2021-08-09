@@ -21,8 +21,7 @@ async function main() {
 
     window.addEventListener("DOMContentLoaded", () => {
       let searchResultArr;
-      let items;
-      let markers;
+      let searchByDistanceArr;
       // TOGGLE BETWEEN SIDEBAR AND DIRECTIONS VIEW
       let directionsBtn = document.getElementById("directionsBtn");
       directionsBtn.addEventListener("click", toggleView);
@@ -111,17 +110,20 @@ async function main() {
       let searchFoodButton = document.getElementById("selectedFoodBtn");
 
       searchFoodButton.addEventListener("click", async function () {
-        items = await getNearbyFood(searchFoodInput.value, mymap);
-        searchResultArr = items.slice();
+        let foodItems = await getNearbyFood(searchFoodInput.value, mymap);
+        let [items, marker] = foodItems;
+        searchByDistanceArr = [...items];
+        searchResultArr = [...items];
+        foodMarkersArr = { ...marker };
       });
 
       searchFoodInput.addEventListener("keypress", async function (e) {
         if (e.key == "Enter") {
           let foodItems = await getNearbyFood(searchFoodInput.value, mymap);
           let [items, marker] = foodItems;
-          searchResultArr = items.slice();
+          searchByDistanceArr = [...items];
+          searchResultArr = [...items];
           foodMarkersArr = { ...marker };
-          console.log(foodMarkersArr);
         }
       });
 
@@ -133,60 +135,65 @@ async function main() {
         searchResults = document.createElement("div");
         searchResultDiv.innerHTML = "";
         searchResultDiv.appendChild(searchResults);
+        // SORT BY DISTANCE
         if (value == "distance") {
-          searchResultArr.sort((a, b) =>
+          searchByDistanceArr.sort((a, b) =>
             a.venue.location.distance > b.venue.location.distance ? 1 : -1
           );
           searchResults.innerHTML = "";
-          for (let i of searchResultArr) {
-            console.log(i);
-            let distance = i.venue.location.distance;
+          for (let i of searchByDistanceArr) {
+            let name = i.venue.name;
+
             let icon =
               i.venue.categories[0].icon.prefix +
-              "100" +
+              "60" +
               i.venue.categories[0].icon.suffix;
-            let p = document.createElement("p");
+            let p = document.createElement("div");
+            p.innerHTML = `<span><img src="${icon}"></span> <p>${name}</p> `;
             p.classList.add("venue");
-            p.innerHTML = `<img src ="${icon}">`;
 
-            searchResults.appendChild(p);
+            searchResultDiv.appendChild(p);
           }
         } else if (value == "relevance") {
           searchResults.innerHTML = "";
 
-          for (let i of items) {
-            console.log(i);
-            let distance = i.venue.location.distance;
-            let p = document.createElement("p");
+          for (let i of searchResultArr) {
+            let name = i.venue.name;
+
+            let icon =
+              i.venue.categories[0].icon.prefix +
+              "60" +
+              i.venue.categories[0].icon.suffix;
+            let p = document.createElement("div");
+            p.innerHTML = `<span><img src="${icon}"></span> <p>${name}</p> `;
             p.classList.add("venue");
-            p.innerHTML = `${distance}`;
-            searchResults.appendChild(p);
+
+            searchResultDiv.appendChild(p);
           }
         }
       });
 
       // Open PopUP when hover over search result
       let foodSearchResults = document.querySelector(".search-results");
-      foodSearchResults.addEventListener("click", function (e) {
-        if (e.target && e.target.nodeName == "DIV") {
-          let id;
-          let foodResultName = e.target.innerHTML;
-
+      foodSearchResults.addEventListener("mouseover", function (e) {
+        if (e.target && e.target.nodeName == "P") {
+          let foodResultName = e.target.innerHTML.slice(0, 9);
           for (i of searchResultArr) {
             if (i.venue.name.includes(foodResultName)) {
-              id = i.venue.id;
+              foodMarkersArr[i.venue.id].openPopup();
             }
           }
-          foodMarkersArr[id].openPopup();
-          console.log(foodResultName);
-          console.log(searchResultArr);
-          // for (let i of searchResultArr) {
-          //   console.log(i);
-          //   if (i.venue.id == foodMarkersArr[i]) {
-          //     foodMarkersArr[i.venue.id].openPopup();
-          //     console.log(foodMarkersArr[i.venue.id]);
-          //   }
-          // }
+        }
+      });
+
+      foodSearchResults.addEventListener("mouseout", function (e) {
+        if (e.target && e.target.nodeName == "P") {
+          let foodResultName = e.target.innerHTML.slice(0, 9);
+          for (i of searchResultArr) {
+            if (i.venue.name.includes(foodResultName)) {
+              foodMarkersArr[i.venue.id].closePopup();
+            }
+          }
         }
       });
 
@@ -322,8 +329,13 @@ async function main() {
        </div>
        `
         );
+        document.querySelector(".sort-by").style.visibility = "hidden";
 
         searchResult.innerHTML = "";
+        if (!searchResult.innerHTML.includes("tourist-attraction-box")) {
+          searchResult.style.margin = "0rem";
+          searchResult.style.transform = "translateY(-38px)";
+        }
         searchResult.insertAdjacentElement("beforeend", touristAttraction[0]);
       });
     });

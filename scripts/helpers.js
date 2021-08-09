@@ -199,20 +199,22 @@ function inputLatLng(feature, container, latlng) {
 // SHOW SEARCH QUERY LAYER / FOOD MARKERS
 async function getFoodNearMarker(container, latlng) {
   let [lng, lat] = latlng.split(",");
-  container.on("click", ".nearbyPOIBtn", async function () {
+  container.on("click", ".nearbyFoodBtn", async function () {
     searchQueryLayer.clearLayers();
     let results = [];
     let names = [];
 
-    let searchResultDiv = document.querySelector(".search-query-div");
+    let searchResultDiv = document.querySelector(".search-results");
     let searchResults = document.createElement("div");
     searchResultDiv.innerHTML = "";
     let result = await search(lat, lng, "food");
     console.log(result);
-
+    document.querySelector(".sort-by").style.visibility = "visible";
+    searchResultDiv.style.margin = "2rem";
+    searchResultDiv.style.transform = "translateY(0px)";
     results.push(result);
     for (let rec of result.response.groups[0].items) {
-      // console.log(rec);
+      console.log(rec);
 
       let marker = L.marker([rec.venue.location.lat, rec.venue.location.lng], {
         icon: L.mapbox.marker.icon({
@@ -243,35 +245,35 @@ async function getFoodNearMarker(container, latlng) {
 
 // ADD FOOD MARKERS TO MAP
 function addFoodMarkertoMap(mymap) {
-  let searchResultBox = document.querySelector(".search-query-div");
+  let searchResultBox = document.querySelector(".search-results");
   if (searchResultBox.innerHTML !== "" || searchQueryLayer) {
     searchQueryLayer.addTo(mymap);
   }
 }
 
 // DISPLAY FOOD RESULT/MARKERS ON MAP DEPENDING ON MAP CENTER
-async function getNearbyFood(query, mymap, items, markers) {
+async function getNearbyFood(query, mymap) {
+  document.querySelector(".sort-by").style.visibility = "hidden";
   let { lat, lng } = mymap.getCenter();
   let result = await search(lat, lng, query);
   console.log(result.response.groups[0].items);
   searchQueryLayer.clearLayers();
   let names = [];
-  markers = [];
   let marker = {};
-  items = [...result.response.groups[0].items];
-  document.querySelector(".sort-by").style.visibility = "visible";
-  let searchResultDiv = document.querySelector(".search-results");
-  let searchResults = document.createElement("div");
-  searchResultDiv.innerHTML = "";
+  let items = [...result.response.groups[0].items];
 
+  let searchResultDiv = document.querySelector(".search-results");
+  searchResultDiv.innerHTML = "";
+  searchResultDiv.style.margin = "0rem";
+  searchResultDiv.style.transform = "translateY(-38px)";
   for (let rec of result.response.groups[0].items) {
     let name = rec.venue.name;
-    // console.log(rec);
+
     let icon =
       rec.venue.categories[0].icon.prefix +
       "60" +
       rec.venue.categories[0].icon.suffix;
-    // console.log(rec);
+
     // ADD MARKER TO SEARCH QUERY LAYER
     marker[rec.venue.id] = L.marker(
       [rec.venue.location.lat, rec.venue.location.lng],
@@ -286,12 +288,8 @@ async function getNearbyFood(query, mymap, items, markers) {
         `<h1 style="text-align: center; min-width:100px; padding-top:1.3rem">${rec.venue.name}</h1>`
       )
       .addTo(searchQueryLayer);
-    // console.log(marker);
-
-    // markers.push(marker);
     // mouseOverOrOut(marker);
 
-    // items.push(rec);
     let p = document.createElement("div");
     p.innerHTML = `<span><img src="${icon}"></span> <p>${name}</p> `;
     p.classList.add("venue");
