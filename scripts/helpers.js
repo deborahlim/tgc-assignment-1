@@ -56,9 +56,9 @@ function getDesiredSidePanelWidth() {
   } else if (window.innerWidth < "541") {
     desiredWidth = "90%";
   } else if (window.innerWidth < "769") {
-    desiredWidth = "55%";
+    desiredWidth = "45%";
   } else if (window.innerWidth < "1025") {
-    desiredWidth = "60%";
+    desiredWidth = "40%";
   } else if (window.innerWidth < "1367") {
     desiredWidth = "35%";
   } else {
@@ -213,7 +213,6 @@ function getFoodNearMarker(container, latlng) {
     let searchResultDiv = document.querySelector(".search-results");
     showFoodSearchResults(items, searchResultDiv);
     document.querySelector(".sort-by").style.visibility = "visible";
-    searchResultDiv.style.margin = "2rem";
     searchResultDiv.style.transform = "translateY(0px)";
     searchByDistanceArr = [...items];
     searchResultArr = [...items];
@@ -310,6 +309,7 @@ function showFoodSearchResults(arr, searchResultDiv) {
   searchResultDiv.appendChild(searchResults);
   searchResults.innerHTML = "";
   for (let i of arr) {
+    console.log(i);
     let name = i.venue.name;
 
     let icon =
@@ -318,11 +318,14 @@ function showFoodSearchResults(arr, searchResultDiv) {
       i.venue.categories[0].icon.suffix;
 
     let distance = i.venue.location.distance;
-    let location = i.venue.location.formattedAddress.join(",");
+    let [address, postCode, country] = [...i.venue.location.formattedAddress];
+    let location = !(i.venue.location.formattedAddress.length < 3)
+      ? `${address}, ${country} ${postCode}`
+      : `${address}, ${postCode}`;
     let p = document.createElement("div");
     p.innerHTML = `
     <span><img src="${icon}"></span>
-    <div>
+    <div class="venue-details">
     <p>${name}</p>
     <p>${location}</p>
     <p>Distance Away: ${distance}m</p>

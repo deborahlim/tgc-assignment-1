@@ -271,10 +271,9 @@ body {
 /* PLACES API GEOCODER QUERY STYLING */
 .search-result-div {
   margin-top: 1rem;
-  /* background: transparent; */
   color: rgba(255, 255, 255, 0.8);
-  font-size: 11px;
-  line-height: 18px;
+  font-size: 1.3rem;
+  line-height: 1.8rem;
   overflow-y: scroll;
   overflow-x: hidden;
 }
@@ -282,7 +281,7 @@ body {
 .search-results {
   margin: 2rem;
   color: inherit;
-  font-size: 1.2rem;
+  font-size: inherit;
 }
 
 .venue {
@@ -290,25 +289,25 @@ body {
   align-items: center;
   justify-content: start;
 
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
+  font-size: inherit;
+  margin-bottom: 2rem;
 
   cursor: pointer;
   color: inherit;
 }
 
-.venue:hover img {
-  color: #3bb2d0;
+.venue-details {
+  padding: 0.5rem;
 }
 
 .venue p {
   margin-left: 1rem;
-  transition: all 0.2s;
 }
 
 .venue p:first-child {
   color: #3bb2d0;
   font-size: 1.8rem;
+  margin-bottom: 0.5rem;
 }
 
 /* TOURIST ATTRACTION BOX */
@@ -511,6 +510,18 @@ a {
   .search-bar-icon {
     transform: translateX(-3.7rem);
   }
+
+  .search-results {
+    margin: 2rem 0;
+  }
+
+  .venue {
+    font-size: 1.1rem;
+  }
+
+  .venue p:first-child {
+    font-size: 1.5rem;
+  }
 }
 
 @media only screen and (min-width: 376px) and (max-width: 540px) {
@@ -534,25 +545,51 @@ a {
     margin: 0.5rem;
     padding: 1rem;
   }
+
+  .search-results {
+    margin: 2rem 0.5rem;
+  }
+
+  .venue {
+    font-size: 1.5rem;
+  }
 }
 
 @media only screen and (min-width: 541px) and (max-width: 768px) {
   .side-panel-container {
-    width: 55%;
+    width: 45%;
   }
 
   .side-panel-toggle-btn {
-    left: 55%;
+    left: 45%;
+  }
+
+  .logo,
+  .control-box {
+    flex-basis: 7%;
+  }
+
+  .search-results {
+    margin: 2rem 0.5rem;
+  }
+
+  .venue {
+    font-size: 1.5rem;
   }
 }
 
 @media only screen and (min-width: 769px) and (max-width: 1024px) {
   .side-panel-container {
-    width: 60%;
+    width: 40%;
   }
 
   .side-panel-toggle-btn {
-    left: 60%;
+    left: 40%;
+  }
+
+  .logo,
+  .control-box {
+    flex-basis: 6%;
   }
 }
 
