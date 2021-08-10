@@ -18,19 +18,6 @@ async function search(lat, lng, query) {
   return response.data;
 }
 
-async function getVenueDetails(VENUE_ID) {
-  let response = await axios.get(
-    `https://api.foursquare.com/v2/venues/${VENUE_ID}`,
-    {
-      params: {
-        client_id: "2DFI0KPAFWAW0NV4GMLMSXGMBINKZLFDOWBXUSA2FARDWXBO",
-        client_secret: "GS001PHKSG4L4P3YFRNEV30SRENYSVJIAK02AKPO0XIZ3F3Q",
-      },
-    }
-  );
-  return response.data;
-}
-
 // Set up Taxi Availability API
 async function updateTaxiAvail() {
   let response = await axios.get(
@@ -49,6 +36,3 @@ async function getData(url) {
   let response = await axios.get(url, { withCredentials: true });
   return response;
 }
-
-L.mapbox.accessToken =
-  "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q";
