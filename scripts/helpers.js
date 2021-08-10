@@ -73,16 +73,20 @@ function toggleView() {
     ".directions-container-hidden"
   );
   let sidebarContainer = document.querySelector(".sidebar-container");
-
+  let directionsBtn = document.getElementById("directionsBtn");
   if (
     directionsContainerHidden.classList.contains("directions-container-hidden")
   )
     if (directionsContainerHidden.classList.contains("directions-container")) {
       directionsContainerHidden.classList.remove("directions-container");
       sidebarContainer.classList.remove("sidebar-container-hidden");
+      directionsBtn.innerHTML = `<i class="fas fa-directions fa-2x" id="directionsBtn" aria-hidden="true"></i>
+      <span class="tooltip-text">Get Directions</span>`;
     } else {
       directionsContainerHidden.classList.add("directions-container");
       sidebarContainer.classList.add("sidebar-container-hidden");
+      directionsBtn.innerHTML = `<i class="fas fa-search-location fa-2x" id="directionsBtn" aria-hidden="true"></i>
+      <span class="tooltip-text">Search</span>`;
     }
 }
 
@@ -199,10 +203,8 @@ function inputLatLng(feature, container, latlng) {
 // SHOW SEARCH QUERY LAYER / FOOD MARKERS
 function getFoodNearMarker(container, latlng) {
   let [lng, lat] = latlng.split(",");
-  let items;
-  let marker;
-
   container.on("click", ".nearbyFoodBtn", async function () {
+    showSearchPanel();
     let test = await middle(lat, lng);
     let [items, marker] = test;
     searchByDistanceArr = [...items];
@@ -306,6 +308,9 @@ async function middle(lat, lng) {
       "60" +
       rec.venue.categories[0].icon.suffix;
 
+    let location = rec.venue.location.formattedAddress.join(",");
+    let distance = rec.venue.location.distance;
+
     // ADD MARKER TO SEARCH QUERY LAYER
     marker[rec.venue.id] = L.marker(
       [rec.venue.location.lat, rec.venue.location.lng],
@@ -323,7 +328,12 @@ async function middle(lat, lng) {
     mouseOverOrOut(marker[rec.venue.id]);
 
     let p = document.createElement("div");
-    p.innerHTML = `<span><img src="${icon}"></span> <p>${name}</p> `;
+    p.innerHTML = `
+    <span><img src="${icon}"></span>
+    <div>
+    <p>${name}</p>
+    <p>${location}</p>
+    <p>Distance Away: ${distance}m</p>`;
     p.classList.add("venue");
 
     searchResultDiv.appendChild(p);
@@ -343,7 +353,6 @@ function openFoodPopUp() {
       let foodResultName = e.target.innerHTML.slice(0, 9);
       for (i of searchResultArr) {
         if (i.venue.name.includes(foodResultName)) {
-          console.log(i);
           foodMarkersArr[i.venue.id].openPopup();
         }
       }
@@ -385,8 +394,17 @@ function sortFoodResultByDistance() {
           i.venue.categories[0].icon.prefix +
           "60" +
           i.venue.categories[0].icon.suffix;
+
+        let distance = i.venue.location.distance;
+        let location = i.venue.location.formattedAddress.join(",");
         let p = document.createElement("div");
-        p.innerHTML = `<span><img src="${icon}"></span> <p>${name}</p> `;
+        p.innerHTML = `
+        <span><img src="${icon}"></span>
+        <div>
+        <p>${name}</p>
+        <p>${location}</p>
+        <p>Distance Away: ${distance}m</p>
+        </div>`;
         p.classList.add("venue");
 
         searchResultDiv.appendChild(p);
@@ -401,8 +419,17 @@ function sortFoodResultByDistance() {
           i.venue.categories[0].icon.prefix +
           "60" +
           i.venue.categories[0].icon.suffix;
+        let location = i.venue.location.formattedAddress.join(",");
+        let distance = i.venue.location.distance;
+        console.log(location);
         let p = document.createElement("div");
-        p.innerHTML = `<span><img src="${icon}"></span> <p>${name}</p> `;
+        p.innerHTML = `
+        <span><img src="${icon}"></span>
+        <div>
+        <p>${name}</p>
+        <p>${location}</p>
+        <p>Distance Away: ${distance}m</p>
+        </div>`;
         p.classList.add("venue");
 
         searchResultDiv.appendChild(p);
