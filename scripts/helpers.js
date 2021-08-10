@@ -203,10 +203,18 @@ function inputLatLng(feature, container, latlng) {
 // SHOW SEARCH QUERY LAYER / FOOD MARKERS
 function getFoodNearMarker(container, latlng) {
   let [lng, lat] = latlng.split(",");
+
   container.on("click", ".nearbyFoodBtn", async function () {
     showSearchPanel();
-    let test = await middle(lat, lng);
-    let [items, marker] = test;
+    let result = await search(lat, lng, "food");
+    searchQueryLayer.clearLayers();
+    marker = {};
+    items = [...result.response.groups[0].items];
+    let searchResultDiv = document.querySelector(".search-results");
+    showFoodSearchResults(items, searchResultDiv);
+    document.querySelector(".sort-by").style.visibility = "visible";
+    searchResultDiv.style.margin = "2rem";
+    searchResultDiv.style.transform = "translateY(0px)";
     searchByDistanceArr = [...items];
     searchResultArr = [...items];
     foodMarkersArr = { ...marker };
@@ -228,54 +236,17 @@ async function getNearbyFood(query, mymap) {
   document.querySelector(".sort-by").style.visibility = "hidden";
   let { lat, lng } = mymap.getCenter();
   let result = await search(lat, lng, query);
-  console.log(result.response.groups[0].items);
   searchQueryLayer.clearLayers();
-  let names = [];
-  let marker = {};
   let items = [...result.response.groups[0].items];
-
   let searchResultDiv = document.querySelector(".search-results");
-  searchResultDiv.innerHTML = "";
-  searchResultDiv.style.margin = "0rem";
-  searchResultDiv.style.transform = "translateY(-38px)";
-  for (let rec of result.response.groups[0].items) {
-    let name = rec.venue.name;
 
-    let icon =
-      rec.venue.categories[0].icon.prefix +
-      "60" +
-      rec.venue.categories[0].icon.suffix;
-
-    // ADD MARKER TO SEARCH QUERY LAYER
-    marker[rec.venue.id] = L.marker(
-      [rec.venue.location.lat, rec.venue.location.lng],
-      {
-        icon: L.mapbox.marker.icon({
-          "marker-symbol": "restaurant",
-          "marker-color": "#800080",
-        }),
-      }
-    )
-      .bindPopup(
-        `<h1 style="text-align: center; min-width:100px; padding-top:1.3rem">${rec.venue.name}</h1>`
-      )
-      .addTo(searchQueryLayer);
-    mouseOverOrOut(marker[rec.venue.id]);
-
-    let p = document.createElement("div");
-    p.innerHTML = `<span><img src="${icon}"></span> <p>${name}</p> `;
-    p.classList.add("venue");
-
-    searchResultDiv.appendChild(p);
-  }
-
-  names = [];
+  showFoodSearchResults(items, searchResultDiv);
   addFoodMarkertoMap(mymap);
-  searchByDistanceArr = [...items];
+  searchResultDiv.style.marginBottom = "-38px";
+  searchResultDiv.style.transform = "translateY(-38px)";
   searchResultArr = [...items];
   foodMarkersArr = { ...marker };
   openFoodPopUp();
-  return [items, marker];
 }
 
 // REVERSE GEOCODING
@@ -285,64 +256,6 @@ function popUpAddress(layer) {
     layer.bindPopup(`<h1 style="text-align: center">${t}</h1>`);
   };
   return bind;
-}
-
-async function middle(lat, lng) {
-  searchQueryLayer.clearLayers();
-
-  let result = await search(lat, lng, "food");
-
-  let names = [];
-  marker = {};
-  items = [...result.response.groups[0].items];
-  // console.log(items);
-  let searchResultDiv = document.querySelector(".search-results");
-  searchResultDiv.innerHTML = "";
-  document.querySelector(".sort-by").style.visibility = "visible";
-  searchResultDiv.style.margin = "2rem";
-  searchResultDiv.style.transform = "translateY(0px)";
-  for (let rec of result.response.groups[0].items) {
-    let name = rec.venue.name;
-    let icon =
-      rec.venue.categories[0].icon.prefix +
-      "60" +
-      rec.venue.categories[0].icon.suffix;
-
-    let location = rec.venue.location.formattedAddress.join(",");
-    let distance = rec.venue.location.distance;
-
-    // ADD MARKER TO SEARCH QUERY LAYER
-    marker[rec.venue.id] = L.marker(
-      [rec.venue.location.lat, rec.venue.location.lng],
-      {
-        icon: L.mapbox.marker.icon({
-          "marker-symbol": "restaurant",
-          "marker-color": "#800080",
-        }),
-      }
-    )
-      .bindPopup(
-        `<h1 style="text-align: center; min-width:100px; padding-top:1.3rem">${rec.venue.name}</h1>`
-      )
-      .addTo(searchQueryLayer);
-    mouseOverOrOut(marker[rec.venue.id]);
-
-    let p = document.createElement("div");
-    p.innerHTML = `
-    <span><img src="${icon}"></span>
-    <div>
-    <p>${name}</p>
-    <p>${location}</p>
-    <p>Distance Away: ${distance}m</p>`;
-    p.classList.add("venue");
-
-    searchResultDiv.appendChild(p);
-  }
-
-  names = [];
-  // addFoodMarkertoMap(mymap);
-
-  return [items, marker];
 }
 
 // Open PopUP when hover over food search result
@@ -378,62 +291,63 @@ function sortFoodResultByDistance() {
   sortByDistance.addEventListener("change", function (e) {
     let value = e.target.value;
     let searchResultDiv = document.querySelector(".search-results");
-    searchResults = document.createElement("div");
-    searchResultDiv.innerHTML = "";
-    searchResultDiv.appendChild(searchResults);
     // SORT BY DISTANCE
     if (value == "distance") {
       searchByDistanceArr.sort((a, b) =>
         a.venue.location.distance > b.venue.location.distance ? 1 : -1
       );
-      searchResults.innerHTML = "";
-      for (let i of searchByDistanceArr) {
-        let name = i.venue.name;
-
-        let icon =
-          i.venue.categories[0].icon.prefix +
-          "60" +
-          i.venue.categories[0].icon.suffix;
-
-        let distance = i.venue.location.distance;
-        let location = i.venue.location.formattedAddress.join(",");
-        let p = document.createElement("div");
-        p.innerHTML = `
-        <span><img src="${icon}"></span>
-        <div>
-        <p>${name}</p>
-        <p>${location}</p>
-        <p>Distance Away: ${distance}m</p>
-        </div>`;
-        p.classList.add("venue");
-
-        searchResultDiv.appendChild(p);
-      }
+      showFoodSearchResults(searchByDistanceArr, searchResultDiv);
     } else if (value == "relevance") {
-      searchResults.innerHTML = "";
-
-      for (let i of searchResultArr) {
-        let name = i.venue.name;
-
-        let icon =
-          i.venue.categories[0].icon.prefix +
-          "60" +
-          i.venue.categories[0].icon.suffix;
-        let location = i.venue.location.formattedAddress.join(",");
-        let distance = i.venue.location.distance;
-        console.log(location);
-        let p = document.createElement("div");
-        p.innerHTML = `
-        <span><img src="${icon}"></span>
-        <div>
-        <p>${name}</p>
-        <p>${location}</p>
-        <p>Distance Away: ${distance}m</p>
-        </div>`;
-        p.classList.add("venue");
-
-        searchResultDiv.appendChild(p);
-      }
+      showFoodSearchResults(searchResultArr, searchResultDiv);
     }
   });
+}
+
+// SHOW FOOD RESULTS IN SIDE PANEL
+function showFoodSearchResults(arr, searchResultDiv) {
+  searchResults = document.createElement("div");
+  searchResultDiv.innerHTML = "";
+  searchResultDiv.appendChild(searchResults);
+  searchResults.innerHTML = "";
+  for (let i of arr) {
+    let name = i.venue.name;
+
+    let icon =
+      i.venue.categories[0].icon.prefix +
+      "60" +
+      i.venue.categories[0].icon.suffix;
+
+    let distance = i.venue.location.distance;
+    let location = i.venue.location.formattedAddress.join(",");
+    let p = document.createElement("div");
+    p.innerHTML = `
+    <span><img src="${icon}"></span>
+    <div>
+    <p>${name}</p>
+    <p>${location}</p>
+    <p>Distance Away: ${distance}m</p>
+    </div>`;
+    p.classList.add("venue");
+
+    searchResultDiv.appendChild(p);
+    if (searchQueryLayer) {
+      addMarkertoSearchQueryLayer(i);
+    }
+  }
+}
+
+// ADD MARKER TO SEARCH QUERY LAYER
+function addMarkertoSearchQueryLayer(obj) {
+  let id = obj.venue.id;
+  marker[id] = L.marker([obj.venue.location.lat, obj.venue.location.lng], {
+    icon: L.mapbox.marker.icon({
+      "marker-symbol": "restaurant",
+      "marker-color": "#800080",
+    }),
+  })
+    .bindPopup(
+      `<h1 style="text-align: center; min-width:100px; padding-top:1.3rem">${obj.venue.name}</h1>`
+    )
+    .addTo(searchQueryLayer);
+  mouseOverOrOut(marker[id]);
 }

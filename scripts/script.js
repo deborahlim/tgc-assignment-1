@@ -100,6 +100,8 @@ async function main() {
       let nearbyFoodBtn = document.getElementById("getNearbyFoodBtn");
 
       nearbyFoodBtn.addEventListener("click", async function () {
+        marker = {};
+        items = [];
         await getNearbyFood("food", mymap);
       });
 
@@ -108,10 +110,12 @@ async function main() {
       let searchFoodButton = document.getElementById("selectedFoodBtn");
 
       searchFoodButton.addEventListener("click", async function () {
+        marker = {};
         await getNearbyFood(searchFoodInput.value, mymap);
       });
 
       searchFoodInput.addEventListener("keypress", async function (e) {
+        marker = {};
         if (e.key == "Enter") {
           await getNearbyFood(searchFoodInput.value, mymap);
         }
