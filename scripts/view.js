@@ -22,7 +22,6 @@ async function getTaxiLayer() {
 
 // HISTORIC SITE LAYER
 async function getHeritageLayer(heritageLayer) {
-  let searchByKeywordInput = document.getElementById("keyWord");
   let response = await getData("data/historic-sites-geojson.geojson");
   // console.log(response);
 
@@ -53,6 +52,7 @@ async function getHeritageLayer(heritageLayer) {
 
       inputLatLng(feature, container, latlng);
       getFoodNearMarker(container, latlng);
+
       container.html(`<div style=" color: ${randDarkColor()}; width:300px"'>
       <div style="width:100%"><img src="${photo}" onerror="this.style.display='none'" style="width:100%"></div>
       <p style="font-weight:900">
@@ -95,8 +95,6 @@ async function getHeritageLayer(heritageLayer) {
 
 // TOURIST ATTRACTION LAYERa
 async function getTouristAttractionLayer(touristAttractionLayer) {
-  let searchByKeywordInput = document.getElementById("keyWord");
-
   let custom = L.geoJSON(null, {
     pointToLayer: function (geoJsonPoint, latlng) {
       return L.marker(latlng, {
@@ -172,7 +170,6 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
 
 // MUSUEM LAYER
 async function getMuseumLayer(museumLayer) {
-  let searchByKeywordInput = document.getElementById("keyWord");
   let response = await getData("data/museums-geojson.geojson");
   // console.log(response.data);
 
@@ -204,7 +201,6 @@ async function getMuseumLayer(museumLayer) {
 
       inputLatLng(feature, container, latlng);
       getFoodNearMarker(container, latlng);
-
       container.html(
         `<div style=" color: ${randDarkColor()}; width:300px">
                     <div style="width:100%"><img src="${photo}" onerror="this.style.display='none'" style="width:100%"></div>
@@ -247,7 +243,6 @@ async function getMuseumLayer(museumLayer) {
 
 // HERITAGE TREES LAYER
 async function getTreesLayer(treesLayer) {
-  let searchByKeywordInput = document.getElementById("keyWord");
   let response = await getData("data/heritage-trees-geojson.geojson");
   // console.log(response.data);
 
@@ -310,21 +305,15 @@ function getDirections(mymap) {
   directions = L.mapbox.directions();
   L.mapbox.accessToken =
     "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q";
-  var directionsLayer = L.mapbox.directions.layer(directions).addTo(mymap);
+  L.mapbox.directions.layer(directions).addTo(mymap);
 
-  var directionsInputControl = L.mapbox.directions
-    .inputControl("inputs", directions)
-    .addTo(mymap);
+  L.mapbox.directions.inputControl("inputs", directions).addTo(mymap);
 
-  var directionsErrorsControl = L.mapbox.directions
-    .errorsControl("errors", directions)
-    .addTo(mymap);
+  L.mapbox.directions.errorsControl("errors", directions).addTo(mymap);
 
-  var directionsRoutesControl = L.mapbox.directions
-    .routesControl("routes", directions)
-    .addTo(mymap);
+  L.mapbox.directions.routesControl("routes", directions).addTo(mymap);
 
-  var directionsInstructionsControl = L.mapbox.directions
+  L.mapbox.directions
     .instructionsControl("instructions", directions)
     .addTo(mymap);
 }

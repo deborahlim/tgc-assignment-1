@@ -197,49 +197,19 @@ function inputLatLng(feature, container, latlng) {
 }
 
 // SHOW SEARCH QUERY LAYER / FOOD MARKERS
-async function getFoodNearMarker(container, latlng) {
+function getFoodNearMarker(container, latlng) {
   let [lng, lat] = latlng.split(",");
+  let items;
+  let marker;
+
   container.on("click", ".nearbyFoodBtn", async function () {
-    searchQueryLayer.clearLayers();
-    let results = [];
-    let names = [];
-
-    let searchResultDiv = document.querySelector(".search-results");
-    let searchResults = document.createElement("div");
-    searchResultDiv.innerHTML = "";
-    let result = await search(lat, lng, "food");
-    console.log(result);
-    document.querySelector(".sort-by").style.visibility = "visible";
-    searchResultDiv.style.margin = "2rem";
-    searchResultDiv.style.transform = "translateY(0px)";
-    results.push(result);
-    for (let rec of result.response.groups[0].items) {
-      console.log(rec);
-
-      let marker = L.marker([rec.venue.location.lat, rec.venue.location.lng], {
-        icon: L.mapbox.marker.icon({
-          "marker-symbol": "restaurant",
-          "marker-color": "#800080",
-        }),
-      })
-        .bindPopup(
-          `<h1 style="text-align: center; min-width:100px; padding-top:1.3rem">${rec.venue.name}</h1>`
-        )
-        .addTo(searchQueryLayer);
-      mouseOverOrOut(marker);
-      names.push(rec.venue.name);
-    }
-
-    searchResultDiv.appendChild(searchResults);
-    searchResults.innerHTML = "";
-    for (let i of names) {
-      let p = document.createElement("p");
-      p.classList.add("venue");
-      p.innerHTML = `${i}`;
-      searchResults.appendChild(p);
-    }
-
-    names = [];
+    let test = await middle(lat, lng);
+    let [items, marker] = test;
+    searchByDistanceArr = [...items];
+    searchResultArr = [...items];
+    foodMarkersArr = { ...marker };
+    openFoodPopUp();
+    sortFoodResultByDistance();
   });
 }
 
@@ -288,7 +258,7 @@ async function getNearbyFood(query, mymap) {
         `<h1 style="text-align: center; min-width:100px; padding-top:1.3rem">${rec.venue.name}</h1>`
       )
       .addTo(searchQueryLayer);
-    // mouseOverOrOut(marker);
+    mouseOverOrOut(marker[rec.venue.id]);
 
     let p = document.createElement("div");
     p.innerHTML = `<span><img src="${icon}"></span> <p>${name}</p> `;
@@ -299,6 +269,10 @@ async function getNearbyFood(query, mymap) {
 
   names = [];
   addFoodMarkertoMap(mymap);
+  searchByDistanceArr = [...items];
+  searchResultArr = [...items];
+  foodMarkersArr = { ...marker };
+  openFoodPopUp();
   return [items, marker];
 }
 
@@ -309,4 +283,130 @@ function popUpAddress(layer) {
     layer.bindPopup(`<h1 style="text-align: center">${t}</h1>`);
   };
   return bind;
+}
+
+async function middle(lat, lng) {
+  searchQueryLayer.clearLayers();
+
+  let result = await search(lat, lng, "food");
+
+  let names = [];
+  marker = {};
+  items = [...result.response.groups[0].items];
+  // console.log(items);
+  let searchResultDiv = document.querySelector(".search-results");
+  searchResultDiv.innerHTML = "";
+  document.querySelector(".sort-by").style.visibility = "visible";
+  searchResultDiv.style.margin = "2rem";
+  searchResultDiv.style.transform = "translateY(0px)";
+  for (let rec of result.response.groups[0].items) {
+    let name = rec.venue.name;
+    let icon =
+      rec.venue.categories[0].icon.prefix +
+      "60" +
+      rec.venue.categories[0].icon.suffix;
+
+    // ADD MARKER TO SEARCH QUERY LAYER
+    marker[rec.venue.id] = L.marker(
+      [rec.venue.location.lat, rec.venue.location.lng],
+      {
+        icon: L.mapbox.marker.icon({
+          "marker-symbol": "restaurant",
+          "marker-color": "#800080",
+        }),
+      }
+    )
+      .bindPopup(
+        `<h1 style="text-align: center; min-width:100px; padding-top:1.3rem">${rec.venue.name}</h1>`
+      )
+      .addTo(searchQueryLayer);
+    mouseOverOrOut(marker[rec.venue.id]);
+
+    let p = document.createElement("div");
+    p.innerHTML = `<span><img src="${icon}"></span> <p>${name}</p> `;
+    p.classList.add("venue");
+
+    searchResultDiv.appendChild(p);
+  }
+
+  names = [];
+  // addFoodMarkertoMap(mymap);
+
+  return [items, marker];
+}
+
+// Open PopUP when hover over food search result
+function openFoodPopUp() {
+  let foodSearchResults = document.querySelector(".search-results");
+  foodSearchResults.addEventListener("mouseover", function (e) {
+    if (e.target && e.target.nodeName == "P") {
+      let foodResultName = e.target.innerHTML.slice(0, 9);
+      for (i of searchResultArr) {
+        if (i.venue.name.includes(foodResultName)) {
+          console.log(i);
+          foodMarkersArr[i.venue.id].openPopup();
+        }
+      }
+    }
+  });
+
+  foodSearchResults.addEventListener("mouseout", function (e) {
+    if (e.target && e.target.nodeName == "P") {
+      let foodResultName = e.target.innerHTML.slice(0, 9);
+      for (i of searchResultArr) {
+        if (i.venue.name.includes(foodResultName)) {
+          foodMarkersArr[i.venue.id].closePopup();
+        }
+      }
+    }
+  });
+}
+
+// SORT FOOD RESULTS BY DISTANCE OR RELEVANCE(DEFAULT)
+
+function sortFoodResultByDistance() {
+  let sortByDistance = document.getElementById("food");
+  sortByDistance.addEventListener("change", function (e) {
+    let value = e.target.value;
+    let searchResultDiv = document.querySelector(".search-results");
+    searchResults = document.createElement("div");
+    searchResultDiv.innerHTML = "";
+    searchResultDiv.appendChild(searchResults);
+    // SORT BY DISTANCE
+    if (value == "distance") {
+      searchByDistanceArr.sort((a, b) =>
+        a.venue.location.distance > b.venue.location.distance ? 1 : -1
+      );
+      searchResults.innerHTML = "";
+      for (let i of searchByDistanceArr) {
+        let name = i.venue.name;
+
+        let icon =
+          i.venue.categories[0].icon.prefix +
+          "60" +
+          i.venue.categories[0].icon.suffix;
+        let p = document.createElement("div");
+        p.innerHTML = `<span><img src="${icon}"></span> <p>${name}</p> `;
+        p.classList.add("venue");
+
+        searchResultDiv.appendChild(p);
+      }
+    } else if (value == "relevance") {
+      searchResults.innerHTML = "";
+
+      for (let i of searchResultArr) {
+        let name = i.venue.name;
+
+        let icon =
+          i.venue.categories[0].icon.prefix +
+          "60" +
+          i.venue.categories[0].icon.suffix;
+        let p = document.createElement("div");
+        p.innerHTML = `<span><img src="${icon}"></span> <p>${name}</p> `;
+        p.classList.add("venue");
+
+        searchResultDiv.appendChild(p);
+      }
+    }
+  });
 }

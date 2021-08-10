@@ -20,8 +20,6 @@ async function main() {
     addControlHeader();
 
     window.addEventListener("DOMContentLoaded", () => {
-      let searchResultArr;
-      let searchByDistanceArr;
       // TOGGLE BETWEEN SIDEBAR AND DIRECTIONS VIEW
       let directionsBtn = document.getElementById("directionsBtn");
       directionsBtn.addEventListener("click", toggleView);
@@ -110,96 +108,19 @@ async function main() {
       let searchFoodButton = document.getElementById("selectedFoodBtn");
 
       searchFoodButton.addEventListener("click", async function () {
-        let foodItems = await getNearbyFood(searchFoodInput.value, mymap);
-        let [items, marker] = foodItems;
-        searchByDistanceArr = [...items];
-        searchResultArr = [...items];
-        foodMarkersArr = { ...marker };
+        await getNearbyFood(searchFoodInput.value, mymap);
       });
 
       searchFoodInput.addEventListener("keypress", async function (e) {
         if (e.key == "Enter") {
-          let foodItems = await getNearbyFood(searchFoodInput.value, mymap);
-          let [items, marker] = foodItems;
-          searchByDistanceArr = [...items];
-          searchResultArr = [...items];
-          foodMarkersArr = { ...marker };
-        }
-      });
-
-      // SORT FOOD RESULTS BY DISTANCE OR RELEVANCE(DEFAULT)
-      let sortByDistance = document.getElementById("food");
-      sortByDistance.addEventListener("change", function (e) {
-        let value = e.target.value;
-        let searchResultDiv = document.querySelector(".search-results");
-        searchResults = document.createElement("div");
-        searchResultDiv.innerHTML = "";
-        searchResultDiv.appendChild(searchResults);
-        // SORT BY DISTANCE
-        if (value == "distance") {
-          searchByDistanceArr.sort((a, b) =>
-            a.venue.location.distance > b.venue.location.distance ? 1 : -1
-          );
-          searchResults.innerHTML = "";
-          for (let i of searchByDistanceArr) {
-            let name = i.venue.name;
-
-            let icon =
-              i.venue.categories[0].icon.prefix +
-              "60" +
-              i.venue.categories[0].icon.suffix;
-            let p = document.createElement("div");
-            p.innerHTML = `<span><img src="${icon}"></span> <p>${name}</p> `;
-            p.classList.add("venue");
-
-            searchResultDiv.appendChild(p);
-          }
-        } else if (value == "relevance") {
-          searchResults.innerHTML = "";
-
-          for (let i of searchResultArr) {
-            let name = i.venue.name;
-
-            let icon =
-              i.venue.categories[0].icon.prefix +
-              "60" +
-              i.venue.categories[0].icon.suffix;
-            let p = document.createElement("div");
-            p.innerHTML = `<span><img src="${icon}"></span> <p>${name}</p> `;
-            p.classList.add("venue");
-
-            searchResultDiv.appendChild(p);
-          }
-        }
-      });
-
-      // Open PopUP when hover over search result
-      let foodSearchResults = document.querySelector(".search-results");
-      foodSearchResults.addEventListener("mouseover", function (e) {
-        if (e.target && e.target.nodeName == "P") {
-          let foodResultName = e.target.innerHTML.slice(0, 9);
-          for (i of searchResultArr) {
-            if (i.venue.name.includes(foodResultName)) {
-              foodMarkersArr[i.venue.id].openPopup();
-            }
-          }
-        }
-      });
-
-      foodSearchResults.addEventListener("mouseout", function (e) {
-        if (e.target && e.target.nodeName == "P") {
-          let foodResultName = e.target.innerHTML.slice(0, 9);
-          for (i of searchResultArr) {
-            if (i.venue.name.includes(foodResultName)) {
-              foodMarkersArr[i.venue.id].closePopup();
-            }
-          }
+          await getNearbyFood(searchFoodInput.value, mymap);
         }
       });
 
       // ADD FOOD MARKERS ON TO MAP
       heritageLayer.on("click", function (ev) {
         addFoodMarkertoMap(mymap);
+        console.log(ev);
       });
 
       museumLayer.on("click", function (ev) {
@@ -245,7 +166,7 @@ async function main() {
       });
 
       // ADD TOURIST ATTRACTION DETAILS TO SIDEBAR ON CLICK
-      touristAttractionLayer.on("click", function (e) {
+      touristAttractionLayer.on("click", async function (e) {
         openSidePanel(sidePanelToggleBtn);
         showSearchPanel();
         // variables for tourist attraction box
@@ -276,7 +197,8 @@ async function main() {
         let touristAttraction = $("<div />");
         touristAttraction.addClass("tourist-attraction-box");
         inputLatLng(e, touristAttraction, latlng);
-        getFoodNearMarker(touristAttraction, latlng);
+        getFoodNearMarker(touristAttraction, latlng, mymap);
+
         touristAttraction.html(
           link === "Unavailable"
             ? `
