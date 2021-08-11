@@ -33,12 +33,40 @@ async function main() {
         toggleSidePanel(sidePanelToggleBtn);
       });
 
+      // CLEAR MARKERS BUTTON
+      let clearMapMarkersBtn = document.getElementById("clearMapMarkersBtn");
+      clearMapMarkersBtn.addEventListener("click", async function () {
+        let keyWordInput = document.getElementById("keyWord");
+        keyWordInput.value = "";
+
+        mymap.removeLayer(heritageLayer);
+        mymap.removeLayer(museumLayer);
+        mymap.removeLayer(treesLayer);
+        mymap.removeLayer(touristAttractionLayer);
+        await getTouristAttractionLayer(touristAttractionLayer);
+        await getHeritageLayer(heritageLayer);
+        await getMuseumLayer(museumLayer);
+        await getTreesLayer(treesLayer);
+
+        addControlHeader();
+        searchResult.innerHTML = "";
+      });
+
+      // CLEAR FOOD RESULTS BUTTON
+      let clearFoodBtn = document.getElementById("clearFoodBtn");
+      clearFoodBtn.addEventListener("click", function () {
+        let FoodInput = document.getElementById("selectedFood");
+        FoodInput.value = "";
+        searchQueryLayer.clearLayers();
+        searchResult.innerHTML = "";
+      });
+
       //  FILTER ALL MARKERS BY KEYWORD USING CLICK BUTTON
       let searchByKeywordBtn = document.getElementById("keyWordBtn");
 
       searchByKeywordBtn.addEventListener("click", function () {
         resetMarkers(mymap);
-        addControlHeader(mymap);
+        addControlHeader();
       });
 
       // FILTER ALL MARKERS BY KEYWORD USING ENTER BUTTON
@@ -47,7 +75,7 @@ async function main() {
         .addEventListener("keypress", function (e) {
           if (e.key === "Enter") {
             resetMarkers(mymap);
-            addControlHeader(mymap);
+            addControlHeader();
           }
         });
 
@@ -124,7 +152,6 @@ async function main() {
       // ADD FOOD MARKERS ON TO MAP
       heritageLayer.on("click", function (ev) {
         addFoodMarkertoMap(mymap);
-        console.log(ev);
       });
 
       museumLayer.on("click", function (ev) {
@@ -255,7 +282,6 @@ async function main() {
        </div>
        `
         );
-        document.querySelector(".sort-by").style.visibility = "hidden";
 
         searchResult.innerHTML = "";
         if (!searchResult.innerHTML.includes("tourist-attraction-box")) {

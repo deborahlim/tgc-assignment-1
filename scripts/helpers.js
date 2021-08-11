@@ -144,7 +144,10 @@ async function resetMarkers(mymap) {
   museumLayer.clearLayers();
   treesLayer.clearLayers();
   touristAttractionLayer.clearLayers();
-
+  mymap.addLayer(heritageLayer);
+  mymap.addLayer(museumLayer);
+  mymap.addLayer(treesLayer);
+  mymap.addLayer(touristAttractionLayer);
   markersGroup.addLayer(heritageLayer);
   markersGroup.addLayer(museumLayer);
   markersGroup.addLayer(treesLayer);
@@ -213,6 +216,9 @@ function getFoodNearMarker(container, latlng) {
     let searchResultDiv = document.querySelector(".search-results");
     showFoodSearchResults(items, searchResultDiv);
     document.querySelector(".sort-by").style.visibility = "visible";
+    // document.getElementById(
+    //   "relevance"
+    // ).innerHTML = `<option value="relevance" selected>Relevance</option>`;
     searchResultDiv.style.transform = "translateY(0px)";
     searchByDistanceArr = [...items];
     searchResultArr = [...items];
@@ -314,7 +320,6 @@ function showFoodSearchResults(arr, searchResultDiv) {
   searchResults.innerHTML = "";
   // searchQueryLayer.clearLayers();
   for (let i of arr) {
-    console.log(i);
     let name = i.venue.name;
 
     let icon =
@@ -353,7 +358,10 @@ function showFoodSearchResults(arr, searchResultDiv) {
 
     searchResultDiv.appendChild(p);
 
-    if (sortBy.style.visibility == "hidden") {
+    if (
+      sortBy.style.visibility == "hidden" ||
+      searchQueryLayer.getLayers().length < 30
+    ) {
       addMarkertoSearchQueryLayer(i);
     }
   }

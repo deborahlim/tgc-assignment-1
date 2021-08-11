@@ -150,7 +150,7 @@ body {
 .input-box-div {
   margin: 1rem;
   font-size: 2rem;
-  width: 100%;
+  width: 110%;
   display: flex;
   justify-content: center;
 }
@@ -205,8 +205,14 @@ body {
   cursor: pointer;
   color: rgba(0, 0, 0, 0.322);
   background: transparent;
-  transform: translate(-5rem);
-  margin: 0;
+  transform: translate(-8rem);
+  margin-right: 1rem;
+  transition: all 0.2s;
+}
+
+.search-bar-icon:hover {
+  color: rgba(0, 0, 0, 0.7);
+  transition: all 0.2s;
 }
 
 /* TOOLTIPS */

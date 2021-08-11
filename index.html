@@ -84,13 +84,16 @@
               <div class="input-box-div">
                 <input
                   class="input-box"
-                  type="search"
+                  type="text"
                   id="keyWord"
                   placeholder="Search Map Markers"
                 />
 
                 <button class="search-bar-icon" id="keyWordBtn">
                   <i class="fas fa-search-location fa-2x"></i>
+                </button>
+                <button class="search-bar-icon" id="clearMapMarkersBtn">
+                  <i class="fas fa-times fa-2x"></i>
                 </button>
                 <div class="tooltip-si">
                   <span class="tooltip-si-text">Search</span>
@@ -107,13 +110,16 @@
                 <button class="search-bar-icon" id="selectedFoodBtn">
                   <i class="fas fa-search-location fa-2x"></i>
                 </button>
+                <button class="search-bar-icon" id="clearFoodBtn">
+                  <i class="fas fa-times fa-2x"></i>
+                </button>
               </div>
 
               <div class="search-result-div">
                 <div class="sort-by">
                   <label for="food">Sort By:</label>
                   <select name="food" id="food">
-                    <option value="relevance">Relevance</option>
+                    <option id="relevance" value="relevance">Relevance</option>
                     <option value="distance">Distance</option>
                   </select>
                 </div>
