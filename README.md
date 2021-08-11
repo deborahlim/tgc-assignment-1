@@ -2,82 +2,183 @@
 
 Project 1 SG Attractions & Heritage Map
 
-1. Context
+Context
 
-   - This project is a web application based on an interactive map of Singapore.
-   - It provides to the user information about Singapore’s heritage sites and tourist attractions.
-   - It also provides routing services and taxi transport information.
-   - The application has search and sorting functionality, allowing the user to display specific map markers.
-   - The application also makes use of an API to give the user food recommendations depending on user input.
-   - External User Goals: To find interesting places to visit in Singapore, learn about Singapore’s heritage and find an app that shows me how to get to places of interest.
-   - Organisation Goals: To give Singapore a distinctive and favourable identity in the map of the world and promote greater community ownership over Singaporeans’ shared heritage (according to SG Heritage Board & Centre for Liveable Cities)
+This project is a web application based on an interactive map of Singapore’s Attractions and Heritage Sites.
 
-2. Demo
+It provides to the user:
 
-   - A live website can be found here <LINK>
-   - Screenshot
+1. Information about Singapore’s heritage sites and tourist attractions, including museums, historic sites and heritage trees.
+2. Routing services and taxi transport information to get around Singapore
+3. Directions to get to places
+4. Search and sorting functionality, allowing the user to display specific map markers.
+5. Food recommendations based on user location, map view and map markers, and user input
 
-3. Defining the Project (Strategy, Scope)
-   - Strategy
-     - Site Owner / Organisational Goals
-       - Increase awareness of and interest for historic sites and places of interest in Singapore
-       - Increase Singapore’s attractiveness as a tourist destination
-       - Promote F&B Businesses in Singapore
-     - Identifying External Users
-       - Tourists
-       - History Enthusiasts
-       - Singapore residents or anyone who is wants to know more about Singapore’s heritage and find interesting places in Singapore.
-     - Identifying External Users’ Goals
-       - To search for / find / get information about heritage sites in Singapore
-       - To search for / find / get information attractions / interesting spots to visit
-       - To search for places of interest near their location
-     - User goals/ Stories
-       - As a tourist / Singaporean / history enthusiast, I want to find out more information about heritage site / attractions so that I can decide when to visit / get more knowledge
-       - As a tourist / Singaporean / history enthusiast, I want to see the heritage sites/ attractions near my location so that I do not make detours
-       - As a tourist / Singaporean / history enthusiast, I want to filter the heritage site / attractions according to a keyword so that I can see only those that I am interested in
-       - As a tourist / Singaporean / history enthusiast, I want to find directions to my desired location so I don’t get lost
-       - As a tourist / Singaporean / history enthusiast, I want to find tourist attractions / historical sites / food near me so that I can visit them conveniently without making detours.
-       - As a tourist / Singaporean / history enthusiast, I want to find a taxi, so that I can get to my desired location.
-   - Scope
-     - Projection Complexity
-       - Consume GET endpoint of API / consume geojson / kml file
-         1. Taxi Availability API
-         2. FourSquare API
-         3. Historical Sites geojson file
-         4. Heritage Trees geojson file
-         5. Museums geojson file
-         6. Tourist Attractions kml file
-       - Add / Remove DOM element based on user action
-         1. On each tourist attraction marker click, update content of the tourist attraction in the side panel
-         2. On each click of the nearby food icon in each marker popup, food results are updated
-         3. On toggling the sort by dropdown from by relevance to by distance, food search results are reordered
-       - Modifying CSS of DOM elements based on user action
-         1. Toggling Side Panel Open and close
-         2. Toggling search view and directions view of the side panel
-         3. Tooltips when hovering over buttons
-       - 1D traversal of array
-         1. To add food markers to Search Query Layer
-         2. To sort food search results
-       - Functional mapping method
-       - CSS layout technique
-         1. Flexbox
-       - Search or filtering criteria in the user interface
-         1. Searching for map markers by keyword
-         2. Search for food based on keyword
-         3. Sort Food results based on distance
-       - Map updating based on user action
-         1. Use leaflet layer control to toggle base and overlay map layers
-         2. External button to toggle taxi availability
-         3. External button to show user location with a marker and pop up
-         4. Showing different markers with keyword search
-         5. Showing directions when enter address into direction inputs
-       - Each layer group
-         1. Heritage
-         2. Tourist
-         3. Historic
-         4. Trees
-         5. Search Query layer
-       - Each marker clustering group
-         1. Taxi Availability Cluster Group
-       - Type of custom marker
-         - Each Layer group has a different coloured marker a unique icon
+External User Goals:
+To find interesting places to visit in Singapore, learn about Singapore’s heritage and find an app that shows me how to get to such places
+
+Organisation Goals:
+To give Singapore a distinctive and favourable identity in the map of the world and promote greater community ownership over Singaporeans’ shared heritage (according to SG Heritage Board & Centre for Liveable Cities)
+
+Demo
+
+A live website can be found here <LINK>
+Screenshot
+
+Defining the Project (Strategy, Scope)
+
+A) Strategy
+
+Site Owner / Organisational Goals:
+
+1. Increase awareness of and interest for historic sites, museums and tourist attractions in Singapore
+2. Increase Singapore’s attractiveness as a tourist destination
+3. Promote F&B Businesses in Singapore
+
+Identifying External Users:
+
+1. Tourists
+2. History Enthusiasts
+3. Singapore residents
+4. Anyone wanting to learn about Singapore’s heritage
+5. Anyone wanting to find interesting places in Singapore
+
+Identifying External Users’ Goals:
+
+1. To search for / find / get information about heritage sites in Singapore
+2. To search for / find / get information attractions / interesting spots to visit
+3. To explore food near their location or near attractions / heritage sites
+
+User goals/ Stories:
+
+1. As a tourist / Singaporean / history enthusiast, I want to find out more information about heritage site / attractions so that I can decide when to visit / get more knowledge
+2. As a tourist / Singaporean / history enthusiast, I want to see the heritage sites/ attractions near my location so that I do not make detours
+3. As a tourist / Singaporean / history enthusiast, I want to filter the heritage site / attractions according to a keyword so that I can see only those that I am interested in
+4. As a tourist / Singaporean / history enthusiast, I want to find directions to my desired location so I don’t get lost
+5. As a tourist / Singaporean / history enthusiast, I want to find tourist attractions / historical sites / food near me so that I can visit them conveniently without making detours.
+6. As a tourist / Singaporean / history enthusiast, I want to find a taxi, so that I can get to my desired location.
+
+B) Scope
+
+Projection Complexity:
+
+- Consume GET endpoint of API / consume geojson / kml file
+
+  1. Taxi Availability API
+  2. FourSquare API
+  3. Historical Sites geojson file
+  4. Heritage Trees geojson file
+  5. Museums geojson file
+  6. Tourist Attractions kml file
+
+- Add / Remove DOM element based on user action
+
+  1. On each tourist attraction marker click, update content of the tourist attraction in the side panel
+  2. On each click of the nearby food icon in each marker popup, food results are updated
+  3. On toggling the sort by dropdown from by relevance to by distance, food search results are reordered
+
+- Modifying CSS of DOM elements based on user action
+
+  1. Toggling Side Panel Open and close
+  2. Toggling search view and directions view of the side panel
+  3. Tooltips when hovering over buttons
+
+- 1D traversal of array
+
+  1. To add food markers to Search Query Layer
+  2. To sort food search results
+
+- CSS layout technique
+
+  1. Flexbox
+
+- Search or filtering criteria in the user interface
+
+  1. Searching for map markers by keyword
+  2. Search for food based on keyword
+  3. Sort Food results based on distance
+
+- Map updating based on user action
+
+  1. Use leaflet layer control to toggle base and overlay map layers
+  2. External button to toggle taxi availability
+  3. External button to show user location with a marker and pop up
+  4. Showing different markers with keyword search
+  5. Showing directions when enter address into direction inputs
+
+- Each layer group
+
+  1. Heritage
+  2. Tourist
+  3. Historic
+  4. Trees
+  5. Food
+
+- Each marker clustering group
+
+  1. Taxi Availability Cluster
+
+- Type of custom marker
+
+  - Each Layer group has a different coloured marker and unique icon
+
+- Directions Functionality (Mapbox.js Directions Plugin)
+
+- Food Recommendations Search Functionality (Foursquare Places API)
+
+- Tourist Attraction Details Box
+
+- Marker Pop Up Information from external data
+
+- Use of model view controller
+  - Data file: Functions to get external data
+  - View file: To build the map layers
+  - Helper file: Single purpose functions to help with event listeners and manipulating DOM
+  - Script: high level functions e.g. Initialise Map
+
+UX / UI ( Structure, Skeleton, Features)
+
+C) Structure
+
+1. The main part of the web application is the interactive map
+
+2. The side panel will allow the user access additional features based on the map
+   - Directions Panel
+     - Origin and Destination Inputs
+   - Search Results Panel
+     - Map Markers Search Input
+     - Food Search Input
+     - Tourist Attraction Info
+     - Food Recommendations Results
+
+D) Skeleton
+
+- Screenshot
+
+E) Surface
+
+Choice of Colours:
+
+- The application is multicoloured, as a colourful interface is shown to symbolise fun and playfulness, and informality.
+
+  1. Navigation and control components
+
+     - Directions input, location buttons and layer control box are blue as it is associated with control, safety and stability.
+
+  2. Markers
+
+     - Historic Sites: Dark Blue which symbolises depth and expertise
+     - Heritage Trees: Green to fit the nature theme of this layer
+     - Tourist Attractions: Purple
+     - Taxis: Yellow as it is very bright and stands out easily like taxis tend to do
+     - Food: Red is known to evoke the tastebuds and stimulate appetite
+
+  3. PopUps Content
+     - Random dark colours to ensure their readability against the white popup background colour
+     - The range of colours make reading the descriptions more interesting
+
+Choice of Fonts:
+
+- San Serif fonts are chosen are they enhance readability and look clean.
+- This is important as the information stands out more to the user
+- Specifically Open Sans, Verdana
