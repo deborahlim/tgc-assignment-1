@@ -251,7 +251,7 @@ async function main() {
        <i class="fas fa-directions fa-2x "></i>Get Directions
        </div>
        <div class="nearbyFoodBtn cursor">
-       <i class="fas fa-utensils fa-2x "></i>Find Nearby Food
+       <i class="fas fa-utensils fa-2x "></i>Explore Nearby Food
        </div>
        `
         );

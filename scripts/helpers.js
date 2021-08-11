@@ -217,8 +217,9 @@ function getFoodNearMarker(container, latlng) {
     searchByDistanceArr = [...items];
     searchResultArr = [...items];
     foodMarkersArr = { ...marker };
-    openFoodPopUp();
+
     sortFoodResultByDistance();
+    openFoodPopUp();
   });
 }
 
@@ -295,19 +296,23 @@ function sortFoodResultByDistance() {
       searchByDistanceArr.sort((a, b) =>
         a.venue.location.distance > b.venue.location.distance ? 1 : -1
       );
+
       showFoodSearchResults(searchByDistanceArr, searchResultDiv);
     } else if (value == "relevance") {
       showFoodSearchResults(searchResultArr, searchResultDiv);
     }
+    // openFoodPopUp();
   });
 }
 
 // SHOW FOOD RESULTS IN SIDE PANEL
 function showFoodSearchResults(arr, searchResultDiv) {
+  let sortBy = document.querySelector(".sort-by");
   searchResults = document.createElement("div");
   searchResultDiv.innerHTML = "";
   searchResultDiv.appendChild(searchResults);
   searchResults.innerHTML = "";
+  // searchQueryLayer.clearLayers();
   for (let i of arr) {
     console.log(i);
     let name = i.venue.name;
@@ -319,11 +324,25 @@ function showFoodSearchResults(arr, searchResultDiv) {
 
     let distance = i.venue.location.distance;
     let [address, postCode, country] = [...i.venue.location.formattedAddress];
-    let location = !(i.venue.location.formattedAddress.length < 3)
-      ? `${address}, ${country} ${postCode}`
-      : `${address}, ${postCode}`;
+    let location;
+    if (i.venue.location.formattedAddress.length === 3) {
+      location = `${address}, ${country} ${postCode}`;
+    } else if (i.venue.location.formattedAddress.length === 2) {
+      location = `${address}, ${postCode}`;
+    } else {
+      location = `${address}`;
+    }
+
     let p = document.createElement("div");
-    p.innerHTML = `
+    p.innerHTML =
+      sortBy.style.visibility == "hidden"
+        ? `
+    <span><img src="${icon}"></span>
+    <div class="venue-details">
+    <p>${name}</p>
+    <p>${location}</p>
+    </div>`
+        : `
     <span><img src="${icon}"></span>
     <div class="venue-details">
     <p>${name}</p>
@@ -333,7 +352,8 @@ function showFoodSearchResults(arr, searchResultDiv) {
     p.classList.add("venue");
 
     searchResultDiv.appendChild(p);
-    if (searchQueryLayer) {
+
+    if (sortBy.style.visibility == "hidden") {
       addMarkertoSearchQueryLayer(i);
     }
   }
