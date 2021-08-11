@@ -303,6 +303,12 @@ body {
   padding: 0.5rem;
 }
 
+.venue span {
+  display: flex;
+  justify-content: center;
+  min-width: 6rem;
+}
+
 .venue p {
   margin-left: 1rem;
 }
@@ -317,6 +323,7 @@ body {
 .tourist-attraction-box {
   display: flex;
   flex-direction: column;
+  justify-content: stretch;
 }
 
 /* .tourist-attraction link {
@@ -341,6 +348,7 @@ body {
   margin: 1rem 1rem 1rem 0;
   font-size: 1.5rem;
   padding: 1rem;
+  width: 100%;
 }
 
 .tourist-attraction-box > div:hover {
@@ -461,26 +469,10 @@ a {
 }
 
 .leaflet-popup-content {
-  /* width: 32rem !important; */
   width: 100% !important;
-  /* height: 100%; */
 }
-
-/* LEAFLET CONTROL STLYE CHANGES */
-
-/* .leaflet-control-container {
-  display: flex !important;
-  flex-direction: column;
-}
-
-.leaflet-top .leaflet-right {
-  border-radius: 50px !important;
-} */
-
-/* LAYER CONTROL BOX */
 
 .leaflet-control-layers-expanded {
-  /* padding: 0 !important; */
   background-color: rgba(59, 178, 208, 0.8) !important;
 }
 
@@ -524,6 +516,19 @@ a {
 
   .venue p:first-child {
     font-size: 1.5rem;
+  }
+
+  .tourist-attraction-box h1 {
+    font-size: 2rem;
+  }
+
+  .tourist-attraction-box div {
+    padding: 1rem 0;
+    font-size: 1.3rem;
+  }
+
+  .tourist-attraction-box > div:hover {
+    margin-right: 1rem;
   }
 }
 

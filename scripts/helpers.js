@@ -243,6 +243,7 @@ async function getNearbyFood(query, mymap) {
   let { lat, lng } = mymap.getCenter();
   let result = await search(lat, lng, query);
   searchQueryLayer.clearLayers();
+
   let items = [...result.response.groups[0].items];
   let searchResultDiv = document.querySelector(".search-results");
 
