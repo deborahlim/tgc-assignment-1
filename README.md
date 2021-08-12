@@ -1,8 +1,6 @@
-# tgc-assignment-1
+# TGC13 Project 1 SG Attractions & Heritage Map
 
-Project 1 SG Attractions & Heritage Map
-
-Context
+## Context
 
 This project is a web application based on an interactive map of Singapore’s Attractions and Heritage Sites.
 
@@ -14,28 +12,28 @@ It provides to the user:
 4. Search and sorting functionality, allowing the user to display specific map markers.
 5. Food recommendations based on user location, map view and map markers, and user input
 
-External User Goals:
+**External User Goals:**
 To find interesting places to visit in Singapore, learn about Singapore’s heritage and find an app that shows me how to get to such places
 
-Organisation Goals:
+**Organisation Goals:**
 To give Singapore a distinctive and favourable identity in the map of the world and promote greater community ownership over Singaporeans’ shared heritage (according to SG Heritage Board & Centre for Liveable Cities)
 
-Demo
+## Demo
 
 A live website can be found here <LINK>
 Screenshot
 
-Defining the Project (Strategy, Scope)
+## Defining the Project (Strategy, Scope)
 
-A) Strategy
+### A) Strategy
 
-Site Owner / Organisational Goals:
+**Site Owner / Organisational Goals:**
 
 1. Increase awareness of and interest for historic sites, museums and tourist attractions in Singapore
 2. Increase Singapore’s attractiveness as a tourist destination
 3. Promote F&B Businesses in Singapore
 
-Identifying External Users:
+**Identifying External Users:**
 
 1. Tourists
 2. History Enthusiasts
@@ -43,14 +41,14 @@ Identifying External Users:
 4. Anyone wanting to learn about Singapore’s heritage
 5. Anyone wanting to find interesting places in Singapore
 
-Identifying External Users’ Goals:
+**Identifying External Users’ Goals:**
 
 1. To search for heritage sites / tourist attractions in Singapore
 2. To get information about heritage sites / tourist attractions in SG
 3. To get directions to reach heritage sites / tourist attractions in SG
 4. To explore food options near their location or near attractions / heritage sites
 
-User goals/ Stories:
+**User goals/ Stories:**
 
 1. As a tourist / Singaporean / history enthusiast, I want to find out more information about heritage site / attractions so that I can decide when to visit / get more knowledge.
 2. As a tourist / Singaporean / history enthusiast, I want to find tourist attractions / historical sites / food near my current location so that I can visit them conveniently without making detours.
@@ -59,9 +57,9 @@ User goals/ Stories:
 5. As a tourist / Singaporean / history enthusiast, I want to find a taxi, so that I can get to my desired location.
 6. As a tourist / Singaporean / history enthusiast, I want to find food options near my current location or near location I will be visiting, so I can satisfy my hunger / food cravings as efficiently as possible.
 
-B) Scope
+### B) Scope
 
-Projection Complexity:
+**Projection Complexity:**
 
 - Consume GET endpoint of API / consume geojson / kml file
 
@@ -141,9 +139,9 @@ Projection Complexity:
   - Helper file: Single purpose functions to help with manipulating DOM and CSS and adding and removing layers from the map
   - Script file: Manager file, Uses functions from all the files to render the overall application
 
-UX / UI ( Structure, Skeleton, Features)
+## UX / UI ( Structure, Skeleton, Features)
 
-C) Structure
+### C) Structure
 
 1. The main part of the web application is the interactive map
 
@@ -159,13 +157,13 @@ C) Structure
    - Tourist Attraction Info
    - Food Recommendations Results
 
-D) Skeleton
+### D) Skeleton
 
 - Screenshot
 
-E) Surface
+### E) Surface
 
-Choice of Colours:
+**Choice of Colours:**
 
 - The application is multicoloured, as a colourful interface is shown to symbolise fun and playfulness, and informality.
 
@@ -186,13 +184,13 @@ Choice of Colours:
      - Random dark colours to ensure their readability against the white popup background colour
      - The range of colours make reading the descriptions more interesting
 
-Choice of Fonts:
+**Choice of Fonts:**
 
 - San Serif fonts are chosen are they enhance readability and look clean.
 - This is important as the information stands out more to the user
 - Specifically Helvetica Neue, Arial, Helvetica
 
-Use Cases / Features
+## Use Cases / Features
 
 | Use Case                                                                | User Objective                                                                                                                                                                                                      | Steps                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -206,7 +204,7 @@ Use Cases / Features
 | Searching for specific Foods                                            | Find a specific type of food                                                                                                                                                                                        | 1. Type in a keyword relating to food<br> <br>2. Press enter or click the search button. <br><br>3. Option to sort results by distance or popularity                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | Using the clear button in the search input boxes                        | Clear the markers in the map and information in the side panel                                                                                                                                                      | 1. Click the cross button in the marker search input box to clear the side panel and map markers<br> <br>2. Click the cross button in the marker search input box to clear the food markers and side panel.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 
-Testing
+## Testing
 
 The numbering in the test steps corresponds to the numbering in the expected results
 
