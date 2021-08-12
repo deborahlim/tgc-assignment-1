@@ -66,7 +66,6 @@ function popUpAddress(layer) {
 }
 
 // RANDOM DARK COLOUR FOR POP UP DESCRIPTION
-// https://gist.github.com/Chak10/dc24c61c9bf2f651cb6d290eeef864c1
 function randDarkColor() {
   var lum = -0.25;
   var hex = String(
@@ -200,7 +199,6 @@ function inputLatLng(feature, container, latlng) {
 
     showDirectionsPanel();
 
-    // https://stackoverflow.com/questions/35659430/how-do-i-programmatically-trigger-an-input-event-without-jquery
     directionInput.dispatchEvent(new Event("input", { bubbles: true }));
     directionInput.value = latlng;
     directionInput.focus();

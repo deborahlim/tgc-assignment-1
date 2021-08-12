@@ -298,7 +298,7 @@ function initMap() {
   // mymap.setMaxBounds(mymap.getBounds());
 
   // BUTTON TO TOGGLE FULL SCREEN
-  mymap.addControl(new L.Control.Fullscreen());
+  // mymap.addControl(new L.Control.Fullscreen());
 
   // WHEN CLICK ON MAP TOGGLE SIDE PANEL
   mymap.on("click", toggleView);

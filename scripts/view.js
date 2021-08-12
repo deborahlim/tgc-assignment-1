@@ -45,7 +45,6 @@ async function getHeritageLayer(heritageLayer) {
       if (!tds[9].innerHTML) address = tds[10].innerHTML;
       if (!tds[10].innerHTML) address = tds[9].innerHTML;
       let latlng = `${feature.geometry.coordinates[0]}, ${feature.geometry.coordinates[1]}`;
-      // https://stackoverflow.com/questions/13698975/click-link-inside-leaflet-popup-and-do-javascript
       let container = $("<div />");
 
       inputLatLng(feature, container, latlng);

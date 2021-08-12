@@ -4,7 +4,7 @@
 
 This project is a web application based on an interactive map of Singapore’s Attractions and Heritage Sites.
 
-It provides to the user:
+**It provides to the user:**
 
 1. Information about Singapore’s heritage sites and tourist attractions, including museums, historic sites and heritage trees.
 2. Routing services and directions to locations
@@ -20,7 +20,7 @@ To give Singapore a distinctive and favourable identity in the map of the world 
 
 ## Demo
 
-A live website can be found here <LINK>
+A live website can be found here <LINK> <br>
 Screenshot
 
 ## Defining the Project (Strategy, Scope)
@@ -146,16 +146,17 @@ Screenshot
 1. The main part of the web application is the interactive map
 
 2. The side panel will allow the user access additional features based on the map
-   a) Logo and Description
-   b) Search Input Box
-   - Map Markers Search Input
-   - Nearby Food Search Input
-     c) Directions Panel
-   - Origin and Destination Inputs
-   - Directions Details
-     d) Search Results Panel
-   - Tourist Attraction Info
-   - Food Recommendations Results
+
+- Logo and Description
+- Search Input Box
+  - Map Markers Search Input
+  - Nearby Food Search Input
+- Directions Panel
+  - Origin and Destination Inputs
+  - Directions Details
+- Search Results Panel
+  - Tourist Attraction Info
+  - Food Recommendations Results
 
 ### D) Skeleton
 
@@ -219,3 +220,69 @@ The numbering in the test steps corresponds to the numbering in the expected res
 | <br>7.               | <br>Testing Functionality of the Food Results in Side Panel and Food Markers in Map | <br>Assumption 1: Nearby Food Button in pop up has been clicked<br> <br>Assumption 2: Side panel view is on search <br> <br>1. Hover over a food recommendation in the side panel<br> <br>2. Hover over a food marker.<br> <br>3. Click a food marker                                                                                                        | <br>1. A pop up containing the corresponding name opens above the corresponding marker<br> <br>2. The corresponding pop up appears<br> <br>3. Side panel is switched to directions view. The Lat lng of the marker is in the destination input box                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | <br>8.               | <br>Testing functionality of Sorting of Food Recommendations in Side panel          | <br>Assumption 1: Nearby Food Button in pop up has been clicked<br> <br>1. In the side panel, select sort by distance from the dropdown<br> <br>2. Select sort by relevance                                                                                                                                                                                  | <br>1. The results are arranged by distance. This can be seen by the distance away from marker of the first result being the lowest and the last result being the largest <br> <br>2. The results are arranged by in their original order as the default is to sort by relevance.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | <br>9.               | <br>Testing functionality of Nearby Food Button in Side Panel                       | <br>1. Click the blue Nearby Food Button<br> <br><br> <br>                                                                                                                                                                                                                                                                                                   | <br>1. Not more than 30 food markers depending on the centre of the map view.<br> <br>Nearby Food Search not tied to the location of a marker should not have sorting functionality. There will be no distance information for these food recommendations.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+
+## Technologies Used
+
+- HTML
+- CSS
+- Javascript
+- Mapbox.js
+
+  - URL: https://docs.mapbox.com/mapbox.js/api/v3.3.1/
+
+    - Mapbox Tiles
+
+      - URL: https://www.mapbox.com/maps/streets
+      - Used to implement base layers for the map (view.js line 328)
+
+    - Mapbox-directions.js
+
+      - URL: https://docs.mapbox.com/mapbox.js/example/v1.0.0/mapbox-directions/
+      - Used to implement directions control box (view.js line 297)
+
+    - Mapbox Geocoder
+
+      - Used for reverse geocoding to get taxis’ addresses and current user address (helper.js line 81 & 182)
+
+    - Mapbox Omnivore
+
+      - URL: https://docs.mapbox.com/mapbox.js/example/v1.0.0/markers-from-csv/
+      - Used to convert tourist attraction kml file to geojson (view.js line 164)
+
+    - Leaflet Mapbox Markercluster Plugin
+      - URL: https://docs.mapbox.com/mapbox.js/example/v1.0.0/leaflet-markercluster/
+      - Used to create taxi availability marker cluster group (script.js line 5)
+
+- Four square API
+
+  - URL: https://developer.foursquare.com/docs/places-api/
+  - Used to get food recommendations (data.js line 2)
+
+- Real Time Taxi Availability API
+  - URL: https://data.gov.sg/dataset/taxi-availability
+  - Used to get live latitude longitude locations of taxis in Singapore (data.js line 24)
+- Markdown Table generator
+  - URL: https://www.tablesgenerator.com/markdown_tables
+  - Used in readme file to generate use cases and testing table
+- Font Awesome Icons
+  - URL: https://fontawesome.com/v5.15/icons?d=gallery&p=1
+  - Used for all the icons in the application
+
+## Credits
+
+- Data Sets
+
+  - https://data.gov.sg/dataset/heritage-trees
+  - https://data.gov.sg/dataset/museums
+  - https://data.gov.sg/dataset/tourist-attractions
+  - https://data.gov.sg/dataset/historic-sites
+
+- Function to generate dark colours
+  - URL: https://gist.github.com/Chak10/dc24c61c9bf2f651cb6d290eeef864c1
+  - Used to generate random dark colours for popup content (helpers.js line 69)
+- jQuery usage to click inside popup and do javascript
+  - URL: https://stackoverflow.com/questions/13698975/click-link-inside-leaflet-popup-and-do-javascript
+  - Idea for how to implement functionality of buttons inside popups
+- To register input content programmatically
+  - https://stackoverflow.com/questions/35659430/how-do-i-programmatically-trigger-an-input-event-without-jquery
+  - Used because directions control did not register the lat lng programmatically inputted into input box with Javascript (script.js line 106, helpers.js line 202)
