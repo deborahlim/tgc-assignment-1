@@ -2,7 +2,6 @@
 async function getTaxiLayer() {
   let response = await updateTaxiAvail();
   taxiResultLayer.clearLayers();
-
   /// ADD MARKERS TO TAXI LAYER /////
   L.geoJSON(response.data, {
     pointToLayer: function (geoJsonPoint, latlng) {
@@ -15,7 +14,6 @@ async function getTaxiLayer() {
       return test;
     },
   }).addTo(taxiResultLayer);
-  mouseOverOrOut(taxiResultLayer);
   // To get updated taxi data every minute
   // setTimeout(getTaxiLayer, 6000);
 }
@@ -93,14 +91,14 @@ async function getHeritageLayer(heritageLayer) {
   }).addTo(heritageLayer);
 }
 
-// TOURIST ATTRACTION LAYERa
+// TOURIST ATTRACTION LAYER
 async function getTouristAttractionLayer(touristAttractionLayer) {
   let custom = L.geoJSON(null, {
     pointToLayer: function (geoJsonPoint, latlng) {
       return L.marker(latlng, {
         icon: L.mapbox.marker.icon({
           "marker-symbol": "attraction",
-          "marker-color": "#C45bc4",
+          "marker-color": "#FFA500",
         }),
       });
     },
@@ -178,7 +176,7 @@ async function getMuseumLayer(museumLayer) {
       return L.marker(latlng, {
         icon: L.mapbox.marker.icon({
           "marker-symbol": "museum",
-          "marker-color": "#ff4500 ",
+          "marker-color": "#808080",
         }),
       });
     },

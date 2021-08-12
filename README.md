@@ -9,8 +9,8 @@ This project is a web application based on an interactive map of Singapore’s A
 It provides to the user:
 
 1. Information about Singapore’s heritage sites and tourist attractions, including museums, historic sites and heritage trees.
-2. Routing services and taxi transport information to get around Singapore
-3. Directions to get to places
+2. Routing services and directions to locations
+3. Taxi transport information as a transport option
 4. Search and sorting functionality, allowing the user to display specific map markers.
 5. Food recommendations based on user location, map view and map markers, and user input
 
@@ -45,18 +45,19 @@ Identifying External Users:
 
 Identifying External Users’ Goals:
 
-1. To search for / find / get information about heritage sites in Singapore
-2. To search for / find / get information attractions / interesting spots to visit
-3. To explore food near their location or near attractions / heritage sites
+1. To search for heritage sites / tourist attractions in Singapore
+2. To get information about heritage sites / tourist attractions in SG
+3. To get directions to reach heritage sites / tourist attractions in SG
+4. To explore food options near their location or near attractions / heritage sites
 
 User goals/ Stories:
 
-1. As a tourist / Singaporean / history enthusiast, I want to find out more information about heritage site / attractions so that I can decide when to visit / get more knowledge
-2. As a tourist / Singaporean / history enthusiast, I want to see the heritage sites/ attractions near my location so that I do not make detours
-3. As a tourist / Singaporean / history enthusiast, I want to filter the heritage site / attractions according to a keyword so that I can see only those that I am interested in
-4. As a tourist / Singaporean / history enthusiast, I want to find directions to my desired location so I don’t get lost
-5. As a tourist / Singaporean / history enthusiast, I want to find tourist attractions / historical sites / food near me so that I can visit them conveniently without making detours.
-6. As a tourist / Singaporean / history enthusiast, I want to find a taxi, so that I can get to my desired location.
+1. As a tourist / Singaporean / history enthusiast, I want to find out more information about heritage site / attractions so that I can decide when to visit / get more knowledge.
+2. As a tourist / Singaporean / history enthusiast, I want to find tourist attractions / historical sites / food near my current location so that I can visit them conveniently without making detours.
+3. As a tourist / Singaporean / history enthusiast, I want to filter the heritage site / attractions according to a keyword so that I can see only those that I am interested in.
+4. As a tourist / Singaporean / history enthusiast, I want to find directions to my desired location so I don’t get lost.
+5. As a tourist / Singaporean / history enthusiast, I want to find a taxi, so that I can get to my desired location.
+6. As a tourist / Singaporean / history enthusiast, I want to find food options near my current location or near location I will be visiting, so I can satisfy my hunger / food cravings as efficiently as possible.
 
 B) Scope
 
@@ -120,21 +121,21 @@ Projection Complexity:
 
 - Type of custom marker
 
-  - Each Layer group has a different coloured marker and unique icon
+  1. Each Layer group has a different coloured marker and unique icon
 
 - Directions Functionality (Mapbox.js Directions Plugin)
 
 - Food Recommendations Search Functionality (Foursquare Places API)
 
-- Tourist Attraction Details Box
+- Tourist Attraction Details Box (Data from tourist attraction kml file)
 
-- Marker Pop Up Information from external data
+- Marker Pop Up Information from (Data from respective geojson, kml file)
 
 - Use of model view controller
-  - Data file: Functions to get external data
-  - View file: To build the map layers
-  - Helper file: Single purpose functions to help with event listeners and manipulating DOM
-  - Script: high level functions e.g. Initialise Map
+  - Data file: Functions to load and manipulate external data
+  - View file: Function build the permanent map layers, and add them to the map
+  - Helper file: Single purpose functions to help with manipulating DOM and CSS and adding and removing layers from the map
+  - Script file: Manager file, Uses functions from all the files to render the overall application
 
 UX / UI ( Structure, Skeleton, Features)
 
@@ -143,13 +144,16 @@ C) Structure
 1. The main part of the web application is the interactive map
 
 2. The side panel will allow the user access additional features based on the map
-   - Directions Panel
-     - Origin and Destination Inputs
-   - Search Results Panel
-     - Map Markers Search Input
-     - Food Search Input
-     - Tourist Attraction Info
-     - Food Recommendations Results
+   a) Logo and Description
+   b) Search Input Box
+   - Map Markers Search Input
+   - Nearby Food Search Input
+     c) Directions Panel
+   - Origin and Destination Inputs
+   - Directions Details
+     d) Search Results Panel
+   - Tourist Attraction Info
+   - Food Recommendations Results
 
 D) Skeleton
 
@@ -169,7 +173,8 @@ Choice of Colours:
 
      - Historic Sites: Dark Blue which symbolises depth and expertise
      - Heritage Trees: Green to fit the nature theme of this layer
-     - Tourist Attractions: Purple
+     - Tourist Attractions: Orange as it communicates fun and playfulness
+     - Musuems: Grey as it is the colour of formality and sophistication
      - Taxis: Yellow as it is very bright and stands out easily like taxis tend to do
      - Food: Red is known to evoke the tastebuds and stimulate appetite
 
@@ -181,4 +186,4 @@ Choice of Fonts:
 
 - San Serif fonts are chosen are they enhance readability and look clean.
 - This is important as the information stands out more to the user
-- Specifically Open Sans, Verdana
+- Specifically Helvetica Neue, Arial, Helvetica

@@ -1,5 +1,50 @@
-// HELPER FUNCTIONS
+/////////////////// TO RE-RENDER INITIAL MAP LAYERS / MAP MARKERS ////////////////////
 
+// RESET MARKERS ON MAP MARKER SEARCH, MAKE ALL MAP LAYERS ACTIVE AND MAKE MAP FIT BOUNDS OF MARKERS
+async function resetMarkers(mymap) {
+  heritageLayer.clearLayers();
+  museumLayer.clearLayers();
+  treesLayer.clearLayers();
+  touristAttractionLayer.clearLayers();
+  mymap.addLayer(heritageLayer);
+  mymap.addLayer(museumLayer);
+  mymap.addLayer(treesLayer);
+  mymap.addLayer(touristAttractionLayer);
+  markersGroup.addLayer(heritageLayer);
+  markersGroup.addLayer(museumLayer);
+  markersGroup.addLayer(treesLayer);
+  markersGroup.addLayer(touristAttractionLayer);
+
+  await getTouristAttractionLayer(touristAttractionLayer);
+  await getHeritageLayer(heritageLayer);
+  await getMuseumLayer(museumLayer);
+  await getTreesLayer(treesLayer);
+  // check if keyword is valid
+  let bounds = markersGroup.getBounds();
+  if (bounds.isValid()) {
+    mymap.fitBounds(markersGroup.getBounds());
+    markersGroup.addTo(mymap);
+  }
+}
+
+// CLEAR MAP MARKERS AND MAKE ALL MAP LAYERS NOT ACTIVE
+function clearMarkers(mymap) {
+  let keyWordInput = document.getElementById("keyWord");
+  keyWordInput.value = "";
+  searchResult.innerHTML = "";
+  mymap.removeLayer(heritageLayer);
+  mymap.removeLayer(museumLayer);
+  mymap.removeLayer(treesLayer);
+  mymap.removeLayer(touristAttractionLayer);
+  getTouristAttractionLayer(touristAttractionLayer);
+  getHeritageLayer(heritageLayer);
+  getMuseumLayer(museumLayer);
+  getTreesLayer(treesLayer);
+
+  addControlHeader();
+}
+
+////////////////////////////////// POPUPS USER INTERACTION //////////////////////////////////
 // OPEN POP OP ON MOUSE OVER AND CLOSE ON MOUSE OUT
 function mouseOverOrOut(layer) {
   layer.on("mouseover", function () {
@@ -11,6 +56,36 @@ function mouseOverOrOut(layer) {
   });
 }
 
+// REVERSE GEOCODING GET POP UP ADDRESS
+function popUpAddress(layer) {
+  let bind = (err, data) => {
+    let t = data.features[0].place_name;
+    layer.bindPopup(`<h1 style="text-align: center">${t}</h1>`);
+  };
+  return bind;
+}
+
+// RANDOM DARK COLOUR FOR POP UP DESCRIPTION
+// https://gist.github.com/Chak10/dc24c61c9bf2f651cb6d290eeef864c1
+function randDarkColor() {
+  var lum = -0.25;
+  var hex = String(
+    "#" + Math.random().toString(16).slice(2, 8).toUpperCase()
+  ).replace(/[^0-9a-f]/gi, "");
+  if (hex.length < 6) {
+    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+  }
+  var rgb = "#",
+    c,
+    i;
+  for (i = 0; i < 3; i++) {
+    c = parseInt(hex.substr(i * 2, 2), 16);
+    c = Math.round(Math.min(Math.max(0, c + c * lum), 255)).toString(16);
+    rgb += ("00" + c).substr(c.length);
+  }
+  return rgb;
+}
+/////////////////////////// SIDE PANEL USER INTERACTION ////////////////////////////
 // TOGGLE SIDE PANEL OPEN AND CLOSE
 function toggleSidePanel(sidePanelToggleBtn) {
   let desiredWidth = getDesiredSidePanelWidth();
@@ -115,61 +190,27 @@ function showSearchPanel() {
     directionsContainerHidden.classList.remove("directions-container");
   }
 }
-// RANDOM DARK COLOUR
-//
-// https://gist.github.com/Chak10/dc24c61c9bf2f651cb6d290eeef864c1
-function randDarkColor() {
-  var lum = -0.25;
-  var hex = String(
-    "#" + Math.random().toString(16).slice(2, 8).toUpperCase()
-  ).replace(/[^0-9a-f]/gi, "");
-  if (hex.length < 6) {
-    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-  }
-  var rgb = "#",
-    c,
-    i;
-  for (i = 0; i < 3; i++) {
-    c = parseInt(hex.substr(i * 2, 2), 16);
-    c = Math.round(Math.min(Math.max(0, c + c * lum), 255)).toString(16);
-    rgb += ("00" + c).substr(c.length);
-  }
-  return rgb;
+
+// TO INPUT LATLNG WHEN USER CLICK DIRECTIONS BUTTON IN MARKER POP UP / TOURIST ATTRACTION DETAILS
+function inputLatLng(feature, container, latlng) {
+  container.on("click", ".directionsPopupBtn", function () {
+    let directionInput = document.querySelector(
+      "#mapbox-directions-destination-input"
+    );
+
+    showDirectionsPanel();
+
+    // https://stackoverflow.com/questions/35659430/how-do-i-programmatically-trigger-an-input-event-without-jquery
+    directionInput.dispatchEvent(new Event("input", { bubbles: true }));
+    directionInput.value = latlng;
+    directionInput.focus();
+  });
 }
 
-// RESET MARKERS ON MAP MARKER SEARCH AND FIT BOUNDS OF MARKERS
-
-async function resetMarkers(mymap) {
-  heritageLayer.clearLayers();
-  museumLayer.clearLayers();
-  treesLayer.clearLayers();
-  touristAttractionLayer.clearLayers();
-  mymap.addLayer(heritageLayer);
-  mymap.addLayer(museumLayer);
-  mymap.addLayer(treesLayer);
-  mymap.addLayer(touristAttractionLayer);
-  markersGroup.addLayer(heritageLayer);
-  markersGroup.addLayer(museumLayer);
-  markersGroup.addLayer(treesLayer);
-  markersGroup.addLayer(touristAttractionLayer);
-
-  await getTouristAttractionLayer(touristAttractionLayer);
-  await getHeritageLayer(heritageLayer);
-  await getMuseumLayer(museumLayer);
-  await getTreesLayer(treesLayer);
-  // check if keyword is valid
-  let bounds = markersGroup.getBounds();
-  if (bounds.isValid()) {
-    mymap.fitBounds(markersGroup.getBounds());
-    markersGroup.addTo(mymap);
-  }
-}
-
-// MODIFY LEAFLET LAYER CONTROL BOX
+////////////////////  MODIFYING CONTENT OF LEAFLET LAYER CONTROL BOX /////////////
+// ADD HEADERS TO LEAFLET LAYER CONTROL BOX
 function addControlHeader() {
-  // STYLE CONTROL BOX
   let baseLayerControl = document.querySelector(".leaflet-control-layers-base");
-
   let overlaysControl = document.querySelector(
     ".leaflet-control-layers-overlays "
   );
@@ -186,24 +227,8 @@ function addControlHeader() {
   }
 }
 
-// TO INPUT LATLNG WHEN USER CLICK DIRECTIONS BUTTON IN MARKER POP UP / SEARCH RESULT
-function inputLatLng(feature, container, latlng) {
-  container.on("click", ".directionsPopupBtn", function () {
-    let directionInput = document.querySelector(
-      "#mapbox-directions-destination-input"
-    );
-
-    showDirectionsPanel();
-
-    // https://stackoverflow.com/questions/35659430/how-do-i-programmatically-trigger-an-input-event-without-jquery
-    directionInput.dispatchEvent(new Event("input", { bubbles: true }));
-    directionInput.value = latlng;
-    directionInput.focus();
-    // console.log(directionInput.value);
-  });
-}
-
-// SHOW SEARCH QUERY LAYER / FOOD MARKERS
+///////////////// ADDING SEARCH QUERY LAYER / FOOD MARKERS TO MAP /////////////////
+// ADD FOOD MARKERS NEAR A SPECIFIC MAP MARKER
 function getFoodNearMarker(container, latlng) {
   let [lng, lat] = latlng.split(",");
 
@@ -229,7 +254,7 @@ function getFoodNearMarker(container, latlng) {
   });
 }
 
-// ADD FOOD MARKERS TO MAP
+// ADD SEARCH QUERY LAYER TO MAP
 function addFoodMarkertoMap(mymap) {
   let searchResultBox = document.querySelector(".search-results");
   if (searchResultBox.innerHTML !== "" || searchQueryLayer) {
@@ -237,7 +262,7 @@ function addFoodMarkertoMap(mymap) {
   }
 }
 
-// DISPLAY FOOD RESULT/MARKERS ON MAP DEPENDING ON MAP CENTER
+// DISPLAY FOOD RESULT/MARKERS ON MAP DEPENDING ON CURRENT MAP CENTER
 async function getNearbyFood(query, mymap) {
   document.querySelector(".sort-by").style.visibility = "hidden";
   let { lat, lng } = mymap.getCenter();
@@ -256,16 +281,7 @@ async function getNearbyFood(query, mymap) {
   openFoodPopUp();
 }
 
-// REVERSE GEOCODING
-function popUpAddress(layer) {
-  let bind = (err, data) => {
-    let t = data.features[0].place_name;
-    layer.bindPopup(`<h1 style="text-align: center">${t}</h1>`);
-  };
-  return bind;
-}
-
-// Open PopUP when hover over food search result
+// LINK FOOD MARKER POP UP TO SEARCH RESULT
 function openFoodPopUp() {
   let foodSearchResults = document.querySelector(".search-results");
   foodSearchResults.addEventListener("mouseover", function (e) {
@@ -374,7 +390,7 @@ function addMarkertoSearchQueryLayer(obj) {
   marker[id] = L.marker([obj.venue.location.lat, obj.venue.location.lng], {
     icon: L.mapbox.marker.icon({
       "marker-symbol": "restaurant",
-      "marker-color": "#800080",
+      "marker-color": "#ff4500",
     }),
   })
     .bindPopup(

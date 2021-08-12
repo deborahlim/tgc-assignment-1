@@ -324,7 +324,6 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: stretch;
-  padding: 0rem 1rem 0 2rem;
 }
 
 .tourist-attraction-box img {
@@ -343,7 +342,7 @@ body {
   align-items: center;
   margin: 1rem 1rem 1rem 0;
   font-size: 1.5rem;
-  padding: 1rem;
+  padding: 1rem 2rem 1rem 0;
   width: 100%;
 }
 
@@ -351,7 +350,7 @@ body {
   background-color: rgb(27, 27, 27);
   border-radius: 5px;
   margin-right: 1rem;
-  padding: 1rem;
+  padding: 1rem 2rem 1rem 0;
 }
 
 .tourist-attraction-box div:nth-child(5) i,

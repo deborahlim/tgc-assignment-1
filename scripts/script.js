@@ -35,21 +35,8 @@ async function main() {
 
       // CLEAR MARKERS BUTTON
       let clearMapMarkersBtn = document.getElementById("clearMapMarkersBtn");
-      clearMapMarkersBtn.addEventListener("click", async function () {
-        let keyWordInput = document.getElementById("keyWord");
-        keyWordInput.value = "";
-
-        mymap.removeLayer(heritageLayer);
-        mymap.removeLayer(museumLayer);
-        mymap.removeLayer(treesLayer);
-        mymap.removeLayer(touristAttractionLayer);
-        await getTouristAttractionLayer(touristAttractionLayer);
-        await getHeritageLayer(heritageLayer);
-        await getMuseumLayer(museumLayer);
-        await getTreesLayer(treesLayer);
-
-        addControlHeader();
-        searchResult.innerHTML = "";
+      clearMapMarkersBtn.addEventListener("click", function () {
+        clearMarkers(mymap);
       });
 
       // CLEAR FOOD RESULTS BUTTON
@@ -108,7 +95,7 @@ async function main() {
               },
             })
             .addTo(mymap);
-
+          showDirectionsPanel();
           geocoder.reverseQuery([lng, lat], address);
           mouseOverOrOut(userLocationLayer);
           //PUT CURRENT COORDINATES INTO DIRECTIONS ORIGIN INPUT
@@ -190,6 +177,7 @@ async function main() {
 
       // GET TAXI LOCATION USING MAPBOX API REVERSE GEOCODING
       taxiResultLayer.on("click", function (e) {
+        console.log(e);
         let { lat, lng } = e.latlng;
         let geocoder = L.mapbox.geocoder("mapbox.places");
         let address = popUpAddress(taxiResultLayer);
@@ -200,6 +188,7 @@ async function main() {
       touristAttractionLayer.on("click", async function (e) {
         openSidePanel(sidePanelToggleBtn);
         showSearchPanel();
+        // document.querySelector(".sort-by").style.visibility = "hidden";
         // variables for tourist attraction box
         let temp = document.createElement("div");
 
