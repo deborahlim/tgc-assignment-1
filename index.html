@@ -84,17 +84,22 @@
                   placeholder="Search Map Markers"
                 />
 
-                <button class="search-bar-icon" id="keyWordBtn">
+                <button class="search-bar-icon tooltip-si" id="keyWordBtn">
                   <i class="fas fa-search-location fa-2x"></i>
                 </button>
-                <button class="search-bar-icon" id="clearMapMarkersBtn">
+                <div class="tooltip-si-text">
+                  <span class="">Search</span>
+                </div>
+                <button
+                  class="search-bar-icon tooltip-si"
+                  id="clearMapMarkersBtn"
+                >
                   <i class="fas fa-times fa-2x"></i>
                 </button>
-                <div class="tooltip-si">
-                  <span class="tooltip-si-text">Search</span>
+                <div class="tooltip-si-text">
+                  <span class="">Clear</span>
                 </div>
               </div>
-
               <div class="input-box-div">
                 <input
                   type="text"
@@ -102,12 +107,18 @@
                   class="input-box"
                   id="selectedFood"
                 />
-                <button class="search-bar-icon" id="selectedFoodBtn">
+                <button class="search-bar-icon tooltip-fi" id="selectedFoodBtn">
                   <i class="fas fa-search-location fa-2x"></i>
                 </button>
-                <button class="search-bar-icon" id="clearFoodBtn">
+                <div class="tooltip-fi-text">
+                  <span class="">Search</span>
+                </div>
+                <button class="search-bar-icon tooltip-fi" id="clearFoodBtn">
                   <i class="fas fa-times fa-2x"></i>
                 </button>
+                <div class="tooltip-fi-text">
+                  <span class="">Clear</span>
+                </div>
               </div>
 
               <div class="search-result-div">

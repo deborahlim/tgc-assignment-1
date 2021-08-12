@@ -62,8 +62,14 @@ async function getHeritageLayer(heritageLayer) {
            Address: ${address}
       </p>
       <br>
-     <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right; cursor:pointer" ></i></div>
-     <div class="nearbyFoodBtn"><i class="fas fa-utensils fa-2x" style="float: right; margin-right:1rem; cursor:pointer" ></i></div>
+     <div class="directionsPopupBtn">
+      <i  class="fas fa-directions fa-2x cursor tooltip-pu" style="float: right" ></i>
+      <span class="tooltip-pu-text">Get Directions</span>
+    </div>
+     <div class="nearbyFoodBtn">
+      <i class="fas fa-utensils fa-2x cursor tooltip-pu" style="float: right; margin-right:1rem" ></i>
+      <span class="tooltip-pu-text">Explore Nearby Food</span>
+     </div>
      <br>
    </div>`);
 
@@ -126,14 +132,20 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
 
       container.html(
         `<div style=" color: ${randDarkColor()}; width:300px">
-                    <div style="width:100%"><img src="${photo}" onerror="this.style.display='none'" style="width:100%; height:100%"></div>
-                    <p style="font-weight:800">
-                         ${name}
-                    </p>
-                    <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right; cursor:pointer" ></i></div>
-                    <div class="nearbyFoodBtn"><i class="fas fa-utensils fa-2x" style="float: right; margin-right:1rem; cursor:pointer" ></i></div>
-                <br>
-                    </div>`
+            <div style="width:100%"><img src="${photo}" onerror="this.style.display='none'" style="width:100%; height:100%"></div>
+            <p style="font-weight:800">
+              ${name}
+            </p>
+            <div class="directionsPopupBtn cursor">
+              <i  class="fas fa-directions fa-2x tooltip-pu" style="float: right;" ></i>
+              <span class="tooltip-pu-text">Get Directions</span>
+            </div>
+            <div class="nearbyFoodBtn cursor">
+              <i class="fas fa-utensils fa-2x tooltip-pu" style="float: right; margin-right:1rem;" ></i>
+              <span class="tooltip-pu-text">Explore Nearby Food</span>
+            </div>
+            <br>
+          </div>`
       );
       layer.bindPopup(container[0]);
     },
@@ -211,8 +223,14 @@ async function getMuseumLayer(museumLayer) {
                          Address: ${address}
                     </p>
                     <br>
-                    <div class="directionsPopupBtn"><i  class="fas fa-directions fa-2x" style="float: right; cursor:pointer" ></i></div>
-                    <div class="nearbyFoodBtn"><i class="fas fa-utensils fa-2x" style="float: right; margin-right:1rem; cursor:pointer" ></i></div>
+                    <div class="directionsPopupBtn">
+                      <i  class="fas fa-directions fa-2x cursor tooltip-pu" style="float: right" ></i>
+                      <span class="tooltip-pu-text">Get Directions</span>
+                    </div>
+                    <div class="nearbyFoodBtn">
+                      <i class="fas fa-utensils fa-2x cursor tooltip-pu" style="float: right; margin-right:1rem" ></i>
+                      <span class="tooltip-pu-text">Explore Nearby Food</span>
+                    </div>
                     <br>
                  </div>`
       );

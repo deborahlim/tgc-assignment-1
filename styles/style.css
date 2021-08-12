@@ -205,7 +205,10 @@ body {
 }
 
 /* TOOLTIPS */
-.tooltip {
+.tooltip,
+.tooltip-si,
+.tooltip-fi,
+.tooltip-pu {
   position: relative;
 }
 
@@ -213,19 +216,15 @@ body {
   position: absolute;
 }
 
-/* .tooltip-si {
-  position: relative;
-  width: 0rem;
-  height: 5rem;
-} */
-
 .tooltip-text,
 .tooltip-sp-text,
-.tooltip-si-text {
+.tooltip-si-text,
+.tooltip-fi-text,
+.tooltip-pu-text {
   font-size: 1.2rem;
   transition: all 0.2s;
   visibility: hidden;
-  width: 12rem;
+  min-width: 12rem;
   background-color: black;
   color: #fff;
   text-align: center;
@@ -243,20 +242,37 @@ body {
   left: 3.5rem;
 }
 
-/* .tooltip-si-text {
-  right: 2rem;
-  top: 18rem;
-} */
+.tooltip-si-text {
+  right: 5rem;
+  top: 18.5rem;
+  width: 7rem;
+}
+
+.tooltip-fi-text {
+  right: 5rem;
+  top: 28rem;
+  width: 7rem;
+}
+
+.tooltip-pu-text {
+  right: 5rem;
+  bottom: 5rem;
+  width: fit-content;
+}
 
 .tooltip:hover .tooltip-text,
 .tooltip-sp:hover .tooltip-sp-text,
-.tooltip-si:hover .tooltip-si-text {
+.tooltip-si:hover + div,
+.tooltip-fi:hover + div,
+.tooltip-pu:hover + span {
   visibility: visible;
 }
 
 .tooltip:active .tooltip-text,
 .tooltip-sp:active .tooltip-sp-text,
-.tooltip:active .tooltip-si-text {
+.tooltip-si:active .tooltip-si-text,
+.tooltip-fi:active .tooltip-fi-text,
+.tooltip-pu:active .tooltip-pu-text {
   visibility: hidden;
 }
 
