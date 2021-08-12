@@ -307,7 +307,7 @@ function openFoodPopUp() {
   });
 }
 
-// SORT FOOD RESULTS BY DISTANCE OR RELEVANCE(DEFAULT)
+// SORT FOOD RESULTS BY DISTANCE OR relevance(DEFAULT)
 
 function sortFoodResultByDistance() {
   let sortByDistance = document.getElementById("food");

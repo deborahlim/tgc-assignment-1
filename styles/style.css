@@ -1,17 +1,6 @@
 /* Box sizing reset best practice according to https://css-tricks.com/box-sizing/ */
 /*  browser font-size set to 16px so 62.5% = 10px; 1 rem = 10px */
 
-/*  */
-:root {
-  --color-blue-dark: #3bb2d0;
-  --color-blue-light: ;
-  --xl-screens: 1368px;
-  --lg-screens: 1024px;
-  --md-screens: 768px;
-  --sm-screens: 540px;
-  --xs-screens: 375px;
-}
-
 html {
   box-sizing: border-box;
   font-size: 62.5%;

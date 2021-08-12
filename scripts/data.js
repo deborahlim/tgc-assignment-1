@@ -6,13 +6,14 @@ async function search(lat, lng, query) {
     "https://api.foursquare.com/v2/venues/explore",
     {
       params: {
+        // categoryId: "4d4b7105d754a06374d81259",
         ll: ll,
         client_id: "2DFI0KPAFWAW0NV4GMLMSXGMBINKZLFDOWBXUSA2FARDWXBO",
         client_secret: "GS001PHKSG4L4P3YFRNEV30SRENYSVJIAK02AKPO0XIZ3F3Q",
         v: "20210717",
         query: query,
-        categoryId: "4d4b7105d754a06374d81259",
-        // 4d4b7105d754a06376d81259,
+
+        // 4d4b7105d754a06376d81259 ,
       },
     }
   );
