@@ -242,6 +242,7 @@ The numbering in the test steps corresponds to the numbering in the expected res
 
     - Mapbox Geocoder
 
+      - URL: https://docs.mapbox.com/mapbox.js/api/v3.3.1/l-mapbox-geocoder/
       - Used for reverse geocoding to get taxis’ addresses and current user address (helper.js line 81 & 182)
 
     - Mapbox Omnivore
