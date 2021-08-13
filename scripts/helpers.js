@@ -44,6 +44,18 @@ function clearMarkers(mymap) {
   addControlHeader();
 }
 
+// CLEAR FOOD MARKERS AND FOOD RESULTS
+function clearFoodMarkers() {
+  let FoodInput = document.getElementById("selectedFood");
+  let sortBy = document.querySelector(".sort-by");
+  FoodInput.value = "";
+  searchQueryLayer.clearLayers();
+  searchResult.innerHTML = "";
+  if (sortBy) {
+    sortBy.style.visibility = "hidden";
+  }
+}
+
 ////////////////////////////////// POPUPS USER INTERACTION //////////////////////////////////
 // OPEN POP OP ON MOUSE OVER AND CLOSE ON MOUSE OUT
 function mouseOverOrOut(layer) {
@@ -237,12 +249,17 @@ function getFoodNearMarker(container, latlng) {
     marker = {};
     items = [...result.response.groups[0].items];
     let searchResultDiv = document.querySelector(".search-results");
+    searchResultDiv.innerHTML = "";
+
     showFoodSearchResults(items, searchResultDiv);
     document.querySelector(".sort-by").style.visibility = "visible";
-    // document.getElementById(
-    //   "relevance"
-    // ).innerHTML = `<option value="relevance" selected>Relevance</option>`;
+    let dropDown = document.getElementById("food");
+    if ((dropDown.value = "distance")) {
+      dropDown.value = "relevance";
+    }
+
     searchResultDiv.style.transform = "translateY(0px)";
+
     searchByDistanceArr = [...items];
     searchResultArr = [...items];
     foodMarkersArr = { ...marker };
@@ -312,6 +329,7 @@ function sortFoodResultByDistance() {
   sortByDistance.addEventListener("change", function (e) {
     let value = e.target.value;
     let searchResultDiv = document.querySelector(".search-results");
+
     // SORT BY DISTANCE
     if (value == "distance") {
       searchByDistanceArr.sort((a, b) =>
@@ -322,18 +340,15 @@ function sortFoodResultByDistance() {
     } else if (value == "relevance") {
       showFoodSearchResults(searchResultArr, searchResultDiv);
     }
-    // openFoodPopUp();
   });
 }
 
 // SHOW FOOD RESULTS IN SIDE PANEL
 function showFoodSearchResults(arr, searchResultDiv) {
-  let sortBy = document.querySelector(".sort-by");
   searchResults = document.createElement("div");
   searchResultDiv.innerHTML = "";
   searchResultDiv.appendChild(searchResults);
-  searchResults.innerHTML = "";
-  // searchQueryLayer.clearLayers();
+
   for (let i of arr) {
     let name = i.venue.name;
 
@@ -352,8 +367,9 @@ function showFoodSearchResults(arr, searchResultDiv) {
     } else {
       location = `${address}`;
     }
-
+    let sortBy = document.querySelector(".sort-by");
     let p = document.createElement("div");
+
     p.innerHTML =
       sortBy.style.visibility == "hidden"
         ? `
@@ -369,6 +385,7 @@ function showFoodSearchResults(arr, searchResultDiv) {
     <p>${location}</p>
     <p>Distance Away: ${distance}m</p>
     </div>`;
+
     p.classList.add("venue");
 
     searchResultDiv.appendChild(p);

@@ -42,10 +42,7 @@ async function main() {
       // CLEAR FOOD RESULTS BUTTON
       let clearFoodBtn = document.getElementById("clearFoodBtn");
       clearFoodBtn.addEventListener("click", function () {
-        let FoodInput = document.getElementById("selectedFood");
-        FoodInput.value = "";
-        searchQueryLayer.clearLayers();
-        searchResult.innerHTML = "";
+        clearFoodMarkers();
       });
 
       //  FILTER ALL MARKERS BY KEYWORD USING CLICK BUTTON
@@ -145,9 +142,7 @@ async function main() {
         addFoodMarkertoMap(mymap);
       });
 
-      touristAttractionLayer.on("click", function (ev) {
-        addFoodMarkertoMap(mymap);
-      });
+      touristAttractionLayer.on("click", function (ev) {});
 
       // INPUT LAT LNG ON FOOD MARKER CLICK
       searchQueryLayer.on("click", function (e) {
@@ -159,7 +154,6 @@ async function main() {
         );
         showDirectionsPanel();
 
-        // https://stackoverflow.com/questions/35659430/how-do-i-programmatically-trigger-an-input-event-without-jquery
         directionInput.dispatchEvent(new Event("input", { bubbles: true }));
         directionInput.value = latlng;
         directionInput.focus();
@@ -186,9 +180,10 @@ async function main() {
 
       // ADD TOURIST ATTRACTION DETAILS TO SIDEBAR ON CLICK
       touristAttractionLayer.on("click", async function (e) {
+        addFoodMarkertoMap(mymap);
         openSidePanel(sidePanelToggleBtn);
         showSearchPanel();
-        // document.querySelector(".sort-by").style.visibility = "hidden";
+        document.querySelector(".sort-by").style.visibility = "hidden";
         // variables for tourist attraction box
         let temp = document.createElement("div");
 

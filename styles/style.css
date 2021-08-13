@@ -82,6 +82,7 @@ body {
     red
   );
   -webkit-background-clip: text;
+  background-clip: text;
   color: transparent;
   transition: all 0.2s ease-in-out;
 }
