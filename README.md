@@ -287,3 +287,7 @@ The numbering in the test steps corresponds to the numbering in the expected res
 - To register input content programmatically
   - https://stackoverflow.com/questions/35659430/how-do-i-programmatically-trigger-an-input-event-without-jquery
   - Used because directions control did not register the lat lng programmatically inputted into input box with Javascript (script.js line 106, helpers.js line 202)
+- Box sizing reset best practice
+  - URL: https://css-tricks.com/box-sizing/
+
+## Deployment

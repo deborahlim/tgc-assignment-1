@@ -250,9 +250,9 @@ async function main() {
        <h1>
       ${name}
        </h1>
-       <div class="search-details">
+       <div>
        <a href="${link}" target="_blank" class="attraction-link cursor"><i class="fas fa-globe-americas fa-2x"></i></a>
-       <a href="${link}" target="_blank class="cursor"><span>${link}</span></a>
+       <a href="${link}" target="_blank class="cursor"><span class="truncate">${link}</span></a>
        </div>
        <div>
        <i class="fas fa-info-circle fa-2x"></i> ${description}
