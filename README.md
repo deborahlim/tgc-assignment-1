@@ -48,6 +48,12 @@ Screenshot
 3. To get directions to reach heritage sites / tourist attractions in SG
 4. To explore food options near their location or near attractions / heritage sites
 
+**Identifying Pain Points**
+
+1. Tourists only have a limited time in Singapore and want to visit as many tourist / interesting spots as possible
+2. Tourists are not familiar with Singapore and get lost easily
+3. Tourist / User do not want to travel far from their location for food
+
 **User goals/ Stories:**
 
 1. As a tourist / Singaporean / history enthusiast, I want to find out more information about heritage site / attractions so that I can decide when to visit / get more knowledge.
@@ -75,6 +81,7 @@ Screenshot
   1. On each tourist attraction marker click, update content of the tourist attraction in the side panel
   2. On each click of the nearby food icon in each marker popup, food results are updated
   3. On toggling the sort by dropdown from by relevance to by distance, food search results are reordered
+  4. Description of location in popup when user clicks the popup
 
 - Modifying CSS of DOM elements based on user action
 
@@ -87,7 +94,7 @@ Screenshot
   1. To add food markers to Search Query Layer
   2. To sort food search results
 
-- Use of filtering filter method
+- Use of filtering method
 
   1. To filter which map markers to be displayed
 
@@ -108,6 +115,8 @@ Screenshot
   3. External button to show user location with a marker and pop up
   4. Showing different markers with keyword search
   5. Showing directions when enter address into direction inputs
+  6. Zooming to marker and opening pop up when user click on food search result
+  7. Closing fod pop up when user move mouse out of search result
 
 - Each layer group
 
