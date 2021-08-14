@@ -21,7 +21,7 @@ To give Singapore a distinctive and favourable identity in the map of the world 
 ## Demo
 
 A live website can be found here <LINK> <br>
-Screenshot
+<img width="1438" alt="Screenshot 2021-08-14 at 11 43 51 PM" src="https://user-images.githubusercontent.com/84578312/129451669-020bb15c-2aab-4f59-bf31-8319903a8986.png">
 
 ## Defining the Project (Strategy, Scope)
 
@@ -143,45 +143,69 @@ Screenshot
 - Marker Pop Up Information from (Data from respective geojson, kml file)
 
 - Use of model view controller
+
   - Data file: Functions to load and manipulate external data
   - View file: Function build the permanent map layers, and add them to the map
   - Helper file: Single purpose functions to help with manipulating DOM and CSS and adding and removing layers from the map
   - Script file: Manager file, Uses functions from all the files to render the overall application
 
+- Strategy for Mobile Responsiveness (refer to testing cases for more details)
+  - Side Panel can be toggled closed or open
+  - Side Panel width will be different
+
 ## UX / UI ( Structure, Skeleton, Features)
 
-### C) Structure
+### C) Structure & Skeleton
 
-1. The main part of the web application is the interactive map
+**The application is made up of 2 main parts**
 
-2. The side panel will allow the user access additional features based on the map
+1. Interactive map
 
-- Logo and Description
-- Search Input Box
-  - Map Markers Search Input
-  - Nearby Food Search Input
-- Directions Panel
-  - Origin and Destination Inputs
-  - Directions Details
-- Search Results Panel
-  - Tourist Attraction Info
-  - Food Recommendations Results
+- Control Box on the top right of the map to toggle the base and overlay layers of the map
 
-### D) Skeleton
+2. Side panel (3 sections)
+1. Logo and Description
 
-- Screenshot
+   - Context of the Map
 
-### E) Surface
+1. Main Navigation Buttons
+
+   - Toggle Taxi Availability
+   - Get User Location
+   - Explore Nearby Food
+   - Toggle between search and directions views
+
+1. Input and Results Section (2 views which can be switched)
+
+   - Search View
+
+   * Search Input Box
+     - Map Markers Search Input (To search map markers by keyword)
+     - Nearby Food Search Input (To search for a specific food)
+   * Search Results
+
+   - Tourist Attraction Details (To see details about a tourist attraction marker)
+   - Food Recommendations Results (To see details about the food markers)
+
+   - Directions View
+
+   * Directions Input (To put in origin and detination loction)
+   * Route Options (Options of different mode of transport)
+   * Route Instructions (Step by Step instructions to get to destination)
+
+### D) Surface
 
 **Choice of Colours:**
 
 - The application is multicoloured, as a colourful interface is shown to symbolise fun and playfulness, and informality.
 
-  1. Navigation and control components
+  1. Logo is multicoloured on hover
+
+  2. Navigation and control components
 
      - Directions input, location buttons and layer control box are blue as it is associated with control, safety and stability.
 
-  2. Markers
+  3. Markers
 
      - Historic Sites: Dark Blue which symbolises depth and expertise
      - Heritage Trees: Green to fit the nature theme of this layer
@@ -190,7 +214,7 @@ Screenshot
      - Taxis: Yellow as it is very bright and stands out easily like taxis tend to do
      - Food: Red is known to evoke the tastebuds and stimulate appetite
 
-  3. PopUps Content
+  4. PopUps Content
      - Random dark colours to ensure their readability against the white popup background colour
      - The range of colours make reading the descriptions more interesting
 
