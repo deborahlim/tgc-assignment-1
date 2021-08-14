@@ -233,22 +233,22 @@ The numbering in the test steps corresponds to the numbering in the expected res
     - Mapbox Tiles
 
       - URL: https://www.mapbox.com/maps/streets
-      - Used to implement base layers for the map (view.js line 328)
+      - Used to implement base layers for the map (view.js line 345)
 
     - Mapbox-directions.js
 
       - URL: https://docs.mapbox.com/mapbox.js/example/v1.0.0/mapbox-directions/
-      - Used to implement directions control box (view.js line 297)
+      - Used to implement directions control box (view.js line 320)
 
     - Mapbox Geocoder
 
       - URL: https://docs.mapbox.com/mapbox.js/api/v3.3.1/l-mapbox-geocoder/
-      - Used for reverse geocoding to get taxis’ addresses and current user address (helper.js line 81 & 182)
+      - Used for reverse geocoding to get current user address and taxis’ addresses(script.js line 103 & 186)
 
     - Mapbox Omnivore
 
       - URL: https://docs.mapbox.com/mapbox.js/example/v1.0.0/markers-from-csv/
-      - Used to convert tourist attraction kml file to geojson (view.js line 164)
+      - Used to convert tourist attraction kml file to geojson (view.js line 175)
 
     - Leaflet Mapbox Markercluster Plugin
       - URL: https://docs.mapbox.com/mapbox.js/example/v1.0.0/leaflet-markercluster/
@@ -280,13 +280,13 @@ The numbering in the test steps corresponds to the numbering in the expected res
 
 - Function to generate dark colours
   - URL: https://gist.github.com/Chak10/dc24c61c9bf2f651cb6d290eeef864c1
-  - Used to generate random dark colours for popup content (helpers.js line 69)
+  - Used to generate random dark colours for popup content (helpers.js line 81)
 - jQuery usage to click inside popup and do javascript
   - URL: https://stackoverflow.com/questions/13698975/click-link-inside-leaflet-popup-and-do-javascript
-  - Idea for how to implement functionality of buttons inside popups
+  - Idea for how to implement functionality of buttons inside popups (helpers.js line 445)
 - To register input content programmatically
   - https://stackoverflow.com/questions/35659430/how-do-i-programmatically-trigger-an-input-event-without-jquery
-  - Used because directions control did not register the lat lng programmatically inputted into input box with Javascript (script.js line 106, helpers.js line 202)
+  - Used because directions control did not register the lat lng programmatically inputted into input box with Javascript (script.js line 111, helpers.js line 214)
 - Box sizing reset best practice
   - URL: https://css-tricks.com/box-sizing/
 

@@ -96,6 +96,7 @@ function randDarkColor() {
   }
   return rgb;
 }
+
 /////////////////////////// SIDE PANEL USER INTERACTION ////////////////////////////
 // TOGGLE SIDE PANEL OPEN AND CLOSE
 function toggleSidePanel(sidePanelToggleBtn) {
