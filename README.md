@@ -23,7 +23,7 @@ To give Singapore a distinctive and favourable identity in the map of the world 
 A live website can be found here <LINK>
 
 <br>
-<img width="1438" alt="Screenshot 2021-08-14 at 11 43 51 PM" src="https://user-images.githubusercontent.com/84578312/129451669-020bb15c-2aab-4f59-bf31-8319903a8986.png">
+<img width="1429" alt="Screenshot 2021-08-15 at 12 10 47 AM" src="https://user-images.githubusercontent.com/84578312/129452525-7bac2709-e8c2-4d88-8626-ff8d8c50db49.png">
 
 ## Defining the Project (Strategy, Scope)
 
@@ -159,6 +159,8 @@ A live website can be found here <LINK>
 
 ### C) Structure & Skeleton
 
+<img width="1438" alt="Screenshot 2021-08-14 at 11 43 51 PM" src="https://user-images.githubusercontent.com/84578312/129451669-020bb15c-2aab-4f59-bf31-8319903a8986.png">
+</br>
 **The application is made up of 2 main parts**
 
 1. Interactive map
