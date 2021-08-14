@@ -1,6 +1,6 @@
 async function main() {
   function init() {
-    let mymap = initMap();
+    mymap = initMap();
     let userLocationBtn = document.getElementById("userLocation");
     taxiResultLayer = L.markerClusterGroup();
     heritageLayer = L.mapbox.featureLayer();
@@ -20,8 +20,10 @@ async function main() {
     addControlHeader();
 
     window.addEventListener("DOMContentLoaded", () => {
+      // EVENT LISTENERS
       // TOGGLE BETWEEN SIDEBAR AND DIRECTIONS VIEW
       let directionsBtn = document.getElementById("directionsBtn");
+
       directionsBtn.addEventListener("click", toggleView);
 
       // TOGGLE SIDE PANEL DISPLAY OPEN AND CLOSE
@@ -33,19 +35,23 @@ async function main() {
         toggleSidePanel(sidePanelToggleBtn);
       });
 
-      // CLEAR MARKERS BUTTON
+      // CLEAR MAP MARKERS BUTTON
       let clearMapMarkersBtn = document.getElementById("clearMapMarkersBtn");
+
       clearMapMarkersBtn.addEventListener("click", function () {
         clearMarkers(mymap);
+        mymap.setView([1.3521, 103.8198], 12);
       });
 
       // CLEAR FOOD RESULTS BUTTON
       let clearFoodBtn = document.getElementById("clearFoodBtn");
+
       clearFoodBtn.addEventListener("click", function () {
         clearFoodMarkers();
+        mymap.setView([1.3521, 103.8198], 12);
       });
 
-      //  FILTER ALL MARKERS BY KEYWORD USING CLICK BUTTON
+      //  FILTER ALL MARKERS BY KEYWORD CLICK BUTTON
       let searchByKeywordBtn = document.getElementById("keyWordBtn");
 
       searchByKeywordBtn.addEventListener("click", function () {
@@ -53,7 +59,7 @@ async function main() {
         addControlHeader();
       });
 
-      // FILTER ALL MARKERS BY KEYWORD USING ENTER BUTTON
+      // FILTER ALL MARKERS BY KEYWORD ENTER BUTTON
       document
         .getElementById("keyWord")
         .addEventListener("keypress", function (e) {
@@ -63,7 +69,7 @@ async function main() {
           }
         });
 
-      // BUTTON TO GET USER LOCATION
+      // USER LOCATION BUTTON
       userLocationBtn.addEventListener("click", function (e) {
         if (!navigator.geolocation) {
           console.log("Please enable location");
@@ -92,10 +98,12 @@ async function main() {
               },
             })
             .addTo(mymap);
+
           showDirectionsPanel();
           geocoder.reverseQuery([lng, lat], address);
           mouseOverOrOut(userLocationLayer);
-          //PUT CURRENT COORDINATES INTO DIRECTIONS ORIGIN INPUT
+
+          // PUT CURRENT COORDINATES INTO DIRECTIONS ORIGIN INPUT
           let currentLocationInput = document.querySelector(
             "#mapbox-directions-origin-input"
           );
@@ -107,42 +115,42 @@ async function main() {
         });
       });
 
-      // BUTTON TO SEARCH FOR NEARBY FOOD
-
+      // EXPLORE NEARBY FOOD BUTTON
       let nearbyFoodBtn = document.getElementById("getNearbyFoodBtn");
 
       nearbyFoodBtn.addEventListener("click", async function () {
         marker = {};
         items = [];
         await getNearbyFood("food", mymap);
+        mymap.fitBounds(searchQueryLayer.getBounds());
       });
 
-      // SEARCH INPUT FOR SPECIFIC FOOD BY BUTTON CLICK OR PRESSING ENTER
+      // SPECIFIC FOOD SEARCH INPUT BUTTON / ENTER KEYPRESS
       let searchFoodInput = document.getElementById("selectedFood");
       let searchFoodButton = document.getElementById("selectedFoodBtn");
 
       searchFoodButton.addEventListener("click", async function () {
         marker = {};
         await getNearbyFood(searchFoodInput.value, mymap);
+        mymap.fitBounds(searchQueryLayer.getBounds());
       });
 
       searchFoodInput.addEventListener("keypress", async function (e) {
         marker = {};
         if (e.key == "Enter") {
           await getNearbyFood(searchFoodInput.value, mymap);
+          mymap.fitBounds(searchQueryLayer.getBounds());
         }
       });
 
       // ADD FOOD MARKERS ON TO MAP
-      heritageLayer.on("click", function (ev) {
+      heritageLayer.on("click", function () {
         addFoodMarkertoMap(mymap);
       });
 
-      museumLayer.on("click", function (ev) {
+      museumLayer.on("click", function () {
         addFoodMarkertoMap(mymap);
       });
-
-      touristAttractionLayer.on("click", function (ev) {});
 
       // INPUT LAT LNG ON FOOD MARKER CLICK
       searchQueryLayer.on("click", function (e) {
@@ -180,126 +188,43 @@ async function main() {
 
       // ADD TOURIST ATTRACTION DETAILS TO SIDEBAR ON CLICK
       touristAttractionLayer.on("click", async function (e) {
+        mymap.flyTo([e.latlng.lat, e.latlng.lng], 15);
         addFoodMarkertoMap(mymap);
         openSidePanel(sidePanelToggleBtn);
         showSearchPanel();
         document.querySelector(".sort-by").style.visibility = "hidden";
-        // variables for tourist attraction box
-        let temp = document.createElement("div");
-
-        temp.innerHTML = `${e.layer.feature.properties.description}`;
-        let tds = temp.querySelectorAll("td");
-
-        if (
-          tds[7].innerText.includes("Null") ||
-          tds[7].innerText.slice(17).includes("hajjah-fatimah-mosque")
-        ) {
-          photo = "";
-        } else photo = "https://www.visitsingapore" + tds[7].innerText.slice(17);
-        let name = tds[13].innerHTML;
-        let link = tds[27].innerText.includes("Null")
-          ? "Unavailable"
-          : tds[27].innerText;
-        let latlng = `${e.latlng.lng}, ${e.latlng.lat}`;
-        let description = tds[25].innerHTML;
-        let address = `${tds[21].innerHTML}, Singapore ${tds[23].innerHTML}`;
-        if (tds[21].innerHTML.includes("Null")) address = tds[23].innerHTML;
-        if (tds[23].innerHTML.includes("Null")) address = tds[21].innerHTML;
-        let openingHours = tds[31].innerHTML.includes("Null")
-          ? "Unavailable"
-          : tds[31].innerHTML;
-        // create tourist attraction box
-        let touristAttraction = $("<div />");
-        touristAttraction.addClass("tourist-attraction-box");
-        inputLatLng(e, touristAttraction, latlng);
-        getFoodNearMarker(touristAttraction, latlng, mymap);
-
-        touristAttraction.html(
-          link === "Unavailable"
-            ? `
-              <img src="${photo}" onerror="this.style.display='none'">
-      <h1>
-      ${name}
-      </h1>
-      <div>
-      <i class="fas fa-globe-americas fa-2x"></i>
-      <span>${link}</span>
-      </div>
-      <div>
-      <i class="fas fa-info-circle fa-2x"></i> ${description}
-      </div>
-      <div class="">
-      <i class="fas fa-map-marker-alt fa-2x"></i> ${address}
-      </div>
-      <div>
-      <i id="attraction-icon-3" class="fas fa-clock fa-2x"></i> ${openingHours}
-      </div>
-      <div class="directionsPopupBtn cursor">
-      <i class="fas fa-directions fa-2x"></i>Get Directions
-      </div>
-      <div class="nearbyFoodBtn cursor">
-      <i class="fas fa-utensils fa-2x"></i>Find Nearby Food
-      </div>`
-            : `
-              <img src="${photo}" onerror="this.style.display='none'">
-       <h1>
-      ${name}
-       </h1>
-       <div>
-       <a href="${link}" target="_blank" class="attraction-link cursor"><i class="fas fa-globe-americas fa-2x"></i></a>
-       <a href="${link}" target="_blank class="cursor"><span class="truncate">${link}</span></a>
-       </div>
-       <div>
-       <i class="fas fa-info-circle fa-2x"></i> ${description}
-       </div>
-       <div class="">
-       <i class="fas fa-map-marker-alt fa-2x"></i> ${address}
-       </div>
-       <div>
-       <i id="attraction-icon-3" class="fas fa-clock fa-2x"></i> ${openingHours}
-       </div>
-       <div class="directionsPopupBtn cursor">
-       <i class="fas fa-directions fa-2x "></i>Get Directions
-       </div>
-       <div class="nearbyFoodBtn cursor">
-       <i class="fas fa-utensils fa-2x"></i>Explore Nearby Food
-       </div>
-       `
-        );
-
+        // CREATE TOURIST ATTRACTION BOX AND INSERT INTO DOM
+        let touristAttractionBox = createTouristAttractionBox(e);
         searchResult.innerHTML = "";
         if (!searchResult.innerHTML.includes("tourist-attraction-box")) {
           searchResult.style.margin = "0rem";
           searchResult.style.transform = "translateY(-38px)";
         }
-        searchResult.insertAdjacentElement("beforeend", touristAttraction[0]);
+        searchResult.insertAdjacentElement(
+          "beforeend",
+          touristAttractionBox[0]
+        );
       });
     });
   }
   init();
 }
 
-// INIIALISE MAP //
+// INIIALISE MAP
 function initMap() {
   L.mapbox.accessToken =
     "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q";
   let mymap = L.mapbox
-    .map("map", null, {
-      minZoom: 12,
-    })
+    .map("map", null, {})
     .setView([1.3521, 103.8198], 12)
     .addLayer(L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11"));
 
-  // mymap.setMaxBounds(mymap.getBounds());
-
-  // BUTTON TO TOGGLE FULL SCREEN
-  // mymap.addControl(new L.Control.Fullscreen());
-
-  // WHEN CLICK ON MAP TOGGLE SIDE PANEL
-  mymap.on("click", toggleView);
+  // WHEN CLICK ON MAP SHOW DIRECTIONS PANEL
+  mymap.on("click", showDirectionsPanel);
 
   return mymap;
 }
 
 // CALL MAIN FUNCTION
+let mymap;
 main();

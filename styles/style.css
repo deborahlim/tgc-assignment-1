@@ -19,7 +19,8 @@ html {
 .side-panel-box,
 .side-panel,
 .sidebar-container,
-.search-query-div {
+.search-query-div,
+.search-result-div {
   overflow: hidden;
 }
 
@@ -198,6 +199,7 @@ body {
 .btn:hover {
   background-color: #3bb2d0;
   color: white;
+  transition: all 0.2s;
 }
 
 .btn:active {
@@ -218,6 +220,10 @@ body {
 }
 
 /* TOOLTIPS */
+.tooltip {
+  transition: all 0.2s;
+}
+
 .tooltip,
 .tooltip-si,
 .tooltip-fi,
@@ -235,9 +241,9 @@ body {
 .tooltip-fi-text,
 .tooltip-pu-text {
   font-size: 1.2rem;
-  transition: all 0.2s;
   visibility: hidden;
-  width: 12rem;
+  min-width: fit-content;
+  white-space: nowrap;
   background-color: black;
   color: #fff;
   text-align: center;
@@ -250,6 +256,7 @@ body {
 .tooltip-text {
   right: -2.8rem;
   bottom: -3.5rem;
+  transition: all 0.2s;
 }
 
 .tooltip-sp-text {
@@ -258,20 +265,17 @@ body {
 
 .tooltip-si-text {
   right: 6.5rem;
-  top: 18.5rem;
-  width: 5rem;
+  top: 24rem;
 }
 
 .tooltip-fi-text {
   right: 6.5rem;
-  top: 28rem;
-  width: 5rem;
+  top: 34rem;
 }
 
 .tooltip-pu-text {
-  right: 5rem;
-  bottom: 5rem;
-  width: fit-content;
+  right: -3rem;
+  bottom: 6rem;
 }
 
 .tooltip:hover .tooltip-text,
@@ -282,6 +286,10 @@ body {
   visibility: visible;
 }
 
+.tooltip:hover .tooltip-text {
+  transition: all 0.2s;
+}
+
 .tooltip:active .tooltip-text,
 .tooltip-sp:active .tooltip-sp-text,
 .tooltip-si:active .tooltip-si-text,
@@ -290,20 +298,30 @@ body {
   visibility: hidden;
 }
 
-/* PLACES API GEOCODER QUERY STYLING */
+/* DROPDOWN */
+#food {
+  outline: none;
+  border-radius: 3px;
+}
+
+/* FOOD SEARCH RESULTS */
 .search-result-div {
+  display: flex;
+  flex-direction: column;
+
   margin-top: 1rem;
   color: rgba(255, 255, 255, 0.8);
   font-size: 1.3rem;
   line-height: 1.8rem;
-  overflow-y: scroll;
-  overflow-x: hidden;
 }
 
 .search-results {
   margin: 2rem;
   color: inherit;
   font-size: inherit;
+
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .venue {
@@ -392,12 +410,12 @@ body {
 
 /* SCROLLBAR STYLING */
 
-.search-result-div::-webkit-scrollbar,
+.search-results::-webkit-scrollbar,
 #directions::-webkit-scrollbar {
   width: 1rem;
 }
 
-.search-result-div::-webkit-scrollbar-thumb,
+.search-results::-webkit-scrollbar-thumb,
 #directions::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.8);
 }

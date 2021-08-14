@@ -19,7 +19,7 @@ async function resetMarkers(mymap) {
   await getHeritageLayer(heritageLayer);
   await getMuseumLayer(museumLayer);
   await getTreesLayer(treesLayer);
-  // check if keyword is valid
+
   let bounds = markersGroup.getBounds();
   if (bounds.isValid()) {
     mymap.fitBounds(markersGroup.getBounds());
@@ -56,7 +56,7 @@ function clearFoodMarkers() {
   }
 }
 
-////////////////////////////////// POPUPS USER INTERACTION //////////////////////////////////
+////////////////////////////// POPUPS USER INTERACTION ///////////////////////////////
 // OPEN POP OP ON MOUSE OVER AND CLOSE ON MOUSE OUT
 function mouseOverOrOut(layer) {
   layer.on("mouseover", function () {
@@ -102,7 +102,6 @@ function toggleSidePanel(sidePanelToggleBtn) {
   let desiredWidth = getDesiredSidePanelWidth();
   let sidePanel = document.querySelector(".side-panel-container");
 
-  console.log(window.innerWidth);
   if (sidePanel.style.width !== "0%") {
     sidePanel.style.width = "0%";
     sidePanelToggleBtn.style.left = "0%";
@@ -217,7 +216,7 @@ function inputLatLng(feature, container, latlng) {
   });
 }
 
-////////////////////  MODIFYING CONTENT OF LEAFLET LAYER CONTROL BOX /////////////
+////////////////////  MODIFYING CONTENT OF LEAFLET LAYER CONTROL BOX /////////////////
 // ADD HEADERS TO LEAFLET LAYER CONTROL BOX
 function addControlHeader() {
   let baseLayerControl = document.querySelector(".leaflet-control-layers-base");
@@ -237,7 +236,7 @@ function addControlHeader() {
   }
 }
 
-///////////////// ADDING SEARCH QUERY LAYER / FOOD MARKERS TO MAP /////////////////
+//////////// ADDING SEARCH QUERY LAYER / FOOD MARKERS / FOOD RESULTS ////////////////
 // ADD FOOD MARKERS NEAR A SPECIFIC MAP MARKER
 function getFoodNearMarker(container, latlng) {
   let [lng, lat] = latlng.split(",");
@@ -265,7 +264,7 @@ function getFoodNearMarker(container, latlng) {
     foodMarkersArr = { ...marker };
 
     sortFoodResultByDistance();
-    openFoodPopUp();
+    openFoodPopUp(mymap);
   });
 }
 
@@ -296,15 +295,18 @@ async function getNearbyFood(query, mymap) {
   openFoodPopUp();
 }
 
-// LINK FOOD MARKER POP UP TO SEARCH RESULT
+// LINK FOOD MARKER POP UP TO FOOD SEARCH RESULT
 function openFoodPopUp() {
   let foodSearchResults = document.querySelector(".search-results");
-  foodSearchResults.addEventListener("mouseover", function (e) {
+  foodSearchResults.addEventListener("click", function (e) {
     if (e.target && e.target.nodeName == "P") {
       let foodResultName = e.target.innerHTML.slice(0, 9);
       for (i of searchResultArr) {
         if (i.venue.name.includes(foodResultName)) {
+          console.log(i.venue.location.lat, i.venue.location.lng);
+          mymap.setZoom(14);
           foodMarkersArr[i.venue.id].openPopup();
+          mymap.flyTo([i.venue.location.lat, i.venue.location.lng]);
         }
       }
     }
@@ -322,8 +324,7 @@ function openFoodPopUp() {
   });
 }
 
-// SORT FOOD RESULTS BY DISTANCE OR relevance(DEFAULT)
-
+// SORT FOOD RESULTS BY DISTANCE OR RELEVANCE (DEFAULT)
 function sortFoodResultByDistance() {
   let sortByDistance = document.getElementById("food");
   sortByDistance.addEventListener("change", function (e) {
@@ -345,9 +346,7 @@ function sortFoodResultByDistance() {
 
 // SHOW FOOD RESULTS IN SIDE PANEL
 function showFoodSearchResults(arr, searchResultDiv) {
-  searchResults = document.createElement("div");
   searchResultDiv.innerHTML = "";
-  searchResultDiv.appendChild(searchResults);
 
   for (let i of arr) {
     let name = i.venue.name;
@@ -413,4 +412,91 @@ function addMarkertoSearchQueryLayer(obj) {
     )
     .addTo(searchQueryLayer);
   mouseOverOrOut(marker[id]);
+}
+
+//////////////////////////// CREATE TOURIST ATTRACTION BOX //////////////////////////
+function createTouristAttractionBox(e) {
+  // variables for tourist attraction box
+  let temp = document.createElement("div");
+
+  temp.innerHTML = `${e.layer.feature.properties.description}`;
+  let tds = temp.querySelectorAll("td");
+
+  if (
+    tds[7].innerText.includes("Null") ||
+    tds[7].innerText.slice(17).includes("hajjah-fatimah-mosque")
+  ) {
+    photo = "";
+  } else photo = "https://www.visitsingapore" + tds[7].innerText.slice(17);
+  let name = tds[13].innerHTML;
+  let link = tds[27].innerText.includes("Null")
+    ? "Unavailable"
+    : tds[27].innerText;
+  let latlng = `${e.latlng.lng}, ${e.latlng.lat}`;
+  let description = tds[25].innerHTML;
+  let address = `${tds[21].innerHTML}, Singapore ${tds[23].innerHTML}`;
+  if (tds[21].innerHTML.includes("Null")) address = tds[23].innerHTML;
+  if (tds[23].innerHTML.includes("Null")) address = tds[21].innerHTML;
+  let openingHours = tds[31].innerHTML.includes("Null")
+    ? "Unavailable"
+    : tds[31].innerHTML;
+  // create tourist attraction box
+  let touristAttraction = $("<div />");
+  touristAttraction.addClass("tourist-attraction-box");
+  inputLatLng(e, touristAttraction, latlng);
+  getFoodNearMarker(touristAttraction, latlng);
+
+  touristAttraction.html(
+    link === "Unavailable"
+      ? `
+        <img src="${photo}" onerror="this.style.display='none'">
+<h1>
+${name}
+</h1>
+<div>
+<i class="fas fa-globe-americas fa-2x"></i>
+<span>${link}</span>
+</div>
+<div>
+<i class="fas fa-info-circle fa-2x"></i> ${description}
+</div>
+<div class="">
+<i class="fas fa-map-marker-alt fa-2x"></i> ${address}
+</div>
+<div>
+<i id="attraction-icon-3" class="fas fa-clock fa-2x"></i> ${openingHours}
+</div>
+<div class="directionsPopupBtn cursor">
+<i class="fas fa-directions fa-2x"></i>Get Directions
+</div>
+<div class="nearbyFoodBtn cursor">
+<i class="fas fa-utensils fa-2x"></i>Find Nearby Food
+</div>`
+      : `
+        <img src="${photo}" onerror="this.style.display='none'">
+ <h1>
+${name}
+ </h1>
+ <div>
+ <a href="${link}" target="_blank" class="attraction-link cursor"><i class="fas fa-globe-americas fa-2x"></i></a>
+ <a href="${link}" target="_blank class="cursor"><span class="truncate">${link}</span></a>
+ </div>
+ <div>
+ <i class="fas fa-info-circle fa-2x"></i> ${description}
+ </div>
+ <div class="">
+ <i class="fas fa-map-marker-alt fa-2x"></i> ${address}
+ </div>
+ <div>
+ <i id="attraction-icon-3" class="fas fa-clock fa-2x"></i> ${openingHours}
+ </div>
+ <div class="directionsPopupBtn cursor">
+ <i class="fas fa-directions fa-2x "></i>Get Directions
+ </div>
+ <div class="nearbyFoodBtn cursor">
+ <i class="fas fa-utensils fa-2x"></i>Explore Nearby Food
+ </div>
+ `
+  );
+  return touristAttraction;
 }

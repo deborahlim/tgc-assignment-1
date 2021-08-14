@@ -136,12 +136,12 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
             <p style="font-weight:800">
               ${name}
             </p>
-            <div class="directionsPopupBtn cursor">
-              <i  class="fas fa-directions fa-2x tooltip-pu" style="float: right;" ></i>
+            <div class="directionsPopupBtn">
+              <i  class="fas fa-directions fa-2x  cursor tooltip-pu" style="float: right;" ></i>
               <span class="tooltip-pu-text">Get Directions</span>
             </div>
-            <div class="nearbyFoodBtn cursor">
-              <i class="fas fa-utensils fa-2x tooltip-pu" style="float: right; margin-right:1rem;" ></i>
+            <div class="nearbyFoodBtn">
+              <i class="fas fa-utensils fa-2x cursor tooltip-pu" style="float: right; margin-right:1rem;" ></i>
               <span class="tooltip-pu-text">Explore Nearby Food</span>
             </div>
             <br>
