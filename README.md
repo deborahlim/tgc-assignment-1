@@ -20,7 +20,9 @@ To give Singapore a distinctive and favourable identity in the map of the world 
 
 ## Demo
 
-A live website can be found here <LINK> <br>
+A live website can be found here <LINK>
+
+<br>
 <img width="1438" alt="Screenshot 2021-08-14 at 11 43 51 PM" src="https://user-images.githubusercontent.com/84578312/129451669-020bb15c-2aab-4f59-bf31-8319903a8986.png">
 
 ## Defining the Project (Strategy, Scope)
@@ -164,34 +166,32 @@ A live website can be found here <LINK> <br>
 - Control Box on the top right of the map to toggle the base and overlay layers of the map
 
 2. Side panel (3 sections)
-1. Logo and Description
 
-   - Context of the Map
+- Logo and Description
 
-1. Main Navigation Buttons
+  - Context of the Map
 
-   - Toggle Taxi Availability
-   - Get User Location
-   - Explore Nearby Food
-   - Toggle between search and directions views
+- Main Navigation Buttons
+  - Toggle Taxi Availability
+  - Get User Location
+  - Explore Nearby Food
+  - Toggle between search and directions views
+- Input and Results Section (2 views which can be switched)
 
-1. Input and Results Section (2 views which can be switched)
+  - Search View
 
-   - Search View
+    - Search Input Box
+      - Map Markers Search Input (To search map markers by keyword)
+      - Nearby Food Search Input (To search for a specific food)
+    - Search Results
 
-   * Search Input Box
-     - Map Markers Search Input (To search map markers by keyword)
-     - Nearby Food Search Input (To search for a specific food)
-   * Search Results
+    * Tourist Attraction Details (To see details about a tourist attraction marker)
+    * Food Recommendations Results (To see details about the food markers)
 
-   - Tourist Attraction Details (To see details about a tourist attraction marker)
-   - Food Recommendations Results (To see details about the food markers)
-
-   - Directions View
-
-   * Directions Input (To put in origin and detination loction)
-   * Route Options (Options of different mode of transport)
-   * Route Instructions (Step by Step instructions to get to destination)
+  - Directions View
+    - Directions Input (To put in origin and detination loction)
+    - Route Options (Options of different mode of transport)
+    - Route Instructions (Step by Step instructions to get to destination)
 
 ### D) Surface
 
