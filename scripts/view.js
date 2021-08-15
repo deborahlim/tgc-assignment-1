@@ -62,7 +62,6 @@ async function getHeritageLayer(heritageLayer) {
             );
       inputLatLng(feature, container, latlng);
       getFoodNearMarker(container, latlng);
-      isValidSite(link);
       container.html(`<div style="color: ${randDarkColor()}" class="popup-description"'>
       <div><img src="${photo}" onerror="this.style.display='none'""></div>
       <p>
