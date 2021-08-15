@@ -186,9 +186,8 @@ A live website can be found here <LINK>
       - Map Markers Search Input (To search map markers by keyword)
       - Nearby Food Search Input (To search for a specific food)
     - Search Results
-
-    * Tourist Attraction Details (To see details about a tourist attraction marker)
-    * Food Recommendations Results (To see details about the food markers)
+      - Tourist Attraction Details (To see details about a tourist attraction marker)
+      - Food Recommendations Results (To see details about the food markers)
 
   - Directions View
     - Directions Input (To put in origin and detination loction)
@@ -324,5 +323,7 @@ The numbering in the test steps corresponds to the numbering in the expected res
   - Used because directions control did not register the lat lng programmatically inputted into input box with Javascript (script.js line 111, helpers.js line 214)
 - Box sizing reset best practice
   - URL: https://css-tricks.com/box-sizing/
+- Responsiveness screenshot for readme file
+  - http://ami.responsivedesign.is/#
 
 ## Deployment

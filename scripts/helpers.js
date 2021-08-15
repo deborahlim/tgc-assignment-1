@@ -142,9 +142,9 @@ function getDesiredSidePanelWidth() {
   } else if (window.innerWidth < "541") {
     desiredWidth = "90%";
   } else if (window.innerWidth < "769") {
-    desiredWidth = "45%";
+    desiredWidth = "60%";
   } else if (window.innerWidth < "1025") {
-    desiredWidth = "40%";
+    desiredWidth = "45%";
   } else if (window.innerWidth < "1367") {
     desiredWidth = "35%";
   } else {
@@ -430,14 +430,19 @@ function createTouristAttractionBox(e) {
     photo = "";
   } else photo = "https://www.visitsingapore" + tds[7].innerText.slice(17);
   let name = tds[13].innerHTML;
-  let link = tds[27].innerText.includes("Null")
-    ? "Unavailable"
-    : tds[27].innerText;
+  let link =
+    tds[27].innerText.includes("http://www.marina-bay.sg") ||
+    tds[27].innerText.includes("http://bit.ly") ||
+    tds[27].innerText.includes("Null")
+      ? "Unavailable"
+      : new URL("/", tds[27].innerText);
+  console.log(link);
   let latlng = `${e.latlng.lng}, ${e.latlng.lat}`;
   let description = tds[25].innerHTML;
   let address = `${tds[21].innerHTML}, Singapore ${tds[23].innerHTML}`;
   if (tds[21].innerHTML.includes("Null")) address = tds[23].innerHTML;
   if (tds[23].innerHTML.includes("Null")) address = tds[21].innerHTML;
+
   let openingHours = tds[31].innerHTML.includes("Null")
     ? "Unavailable"
     : tds[31].innerHTML;

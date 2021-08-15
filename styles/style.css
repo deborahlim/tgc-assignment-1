@@ -3,6 +3,7 @@
 html {
   box-sizing: border-box;
   font-size: 62.5%;
+  height: 100%;
 }
 
 *,
@@ -13,7 +14,7 @@ html {
   margin: 0;
   padding: 0;
 }
-
+.html,
 .body,
 .side-panel-container,
 .side-panel-box,
@@ -28,6 +29,7 @@ body {
   font-weight: 400;
   font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
   position: relative;
+  height: 100%;
 }
 
 /* MAIN MAP */
@@ -425,7 +427,6 @@ body {
   display: flex;
   flex-direction: column;
 
-  padding-right: 1rem;
   transition: all 0.2;
   display: none;
 }
@@ -508,6 +509,10 @@ body {
 
 /* MEDIA QUERIES  */
 @media only screen and (max-width: 375px) {
+  .tooltip-sp-text {
+    display: none;
+  }
+
   .logo-content {
     font-size: 1.5rem;
   }
@@ -567,6 +572,10 @@ body {
 }
 
 @media only screen and (min-width: 376px) and (max-width: 540px) {
+  .tooltip-sp-text {
+    display: none;
+  }
+
   .side-panel-container {
     width: 90%;
   }
@@ -599,11 +608,11 @@ body {
 
 @media only screen and (min-width: 541px) and (max-width: 768px) {
   .side-panel-container {
-    width: 45%;
+    width: 60%;
   }
 
   .side-panel-toggle-btn {
-    left: 45%;
+    left: 60%;
   }
 
   .logo,
@@ -622,11 +631,11 @@ body {
 
 @media only screen and (min-width: 769px) and (max-width: 1024px) {
   .side-panel-container {
-    width: 40%;
+    width: 45%;
   }
 
   .side-panel-toggle-btn {
-    left: 40%;
+    left: 45%;
   }
 
   .logo,
@@ -636,6 +645,11 @@ body {
 }
 
 @media only screen and (min-width: 1025px) and (max-width: 1366px) {
+  .html,
+  .body {
+    overflow: hidden;
+  }
+
   .side-panel-container {
     width: 35%;
   }
