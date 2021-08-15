@@ -519,14 +519,3 @@ ${name}
   );
   return touristAttraction;
 }
-
-function isValidSite(url) {
-  var img = new Image();
-
-  img.onerror = function () {
-    console.log(img.src);
-  };
-  img.onload = function () {};
-
-  img.src = url;
-}

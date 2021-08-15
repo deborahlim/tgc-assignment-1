@@ -15,7 +15,7 @@ async function getTaxiLayer() {
     },
   }).addTo(taxiResultLayer);
   // To get updated taxi data every minute
-  // setTimeout(getTaxiLayer, 6000);
+  setTimeout(getTaxiLayer, 6000);
 }
 
 // HISTORIC SITE LAYER
