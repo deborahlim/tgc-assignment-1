@@ -20,7 +20,7 @@ To give Singapore a distinctive and favourable identity in the map of the world 
 
 ## Demo
 
-A live website can be found here <LINK>
+A live website can be found here: https://deborahlim.github.io/tgc-assignment-1/
 
 <br>
 <img width="1427" alt="Screenshot 2021-08-15 at 3 42 00 PM" src="https://user-images.githubusercontent.com/84578312/129470977-9a190315-a4f8-4730-a2b3-c032906c22b9.png">
@@ -327,3 +327,9 @@ The numbering in the test steps corresponds to the numbering in the expected res
   - http://ami.responsivedesign.is/#
 
 ## Deployment
+
+- Website deployed on Github pages
+- From the settings of the Github repo page, click on the Pages tab
+- Under Source, select Main branch and root folder
+- Click save
+- Website URL: https://deborahlim.github.io/tgc-assignment-1/
