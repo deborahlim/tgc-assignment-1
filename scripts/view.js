@@ -2,7 +2,7 @@
 async function getTaxiLayer() {
   let response = await updateTaxiAvail();
   taxiResultLayer.clearLayers();
-  /// ADD MARKERS TO TAXI LAYER /////
+  // ADD MARKERS TO TAXI LAYER
   L.geoJSON(response.data, {
     pointToLayer: function (geoJsonPoint, latlng) {
       let test = L.marker(latlng, {
@@ -21,7 +21,6 @@ async function getTaxiLayer() {
 // HISTORIC SITE LAYER
 async function getHeritageLayer(heritageLayer) {
   let response = await getData("data/historic-sites-geojson.geojson");
-  // console.log(response);
 
   L.geoJSON(response.data, {
     pointToLayer: function (geoJsonPoint, latlng) {
@@ -47,13 +46,17 @@ async function getHeritageLayer(heritageLayer) {
       let latlng = `${feature.geometry.coordinates[0]}, ${feature.geometry.coordinates[1]}`;
       let container = $("<div />");
 
+      let link = new URL(
+        `places/places-landing/${tds[5].innerText.slice(30)}`,
+        `https://www.roots.gov.sg/`
+      );
       inputLatLng(feature, container, latlng);
       getFoodNearMarker(container, latlng);
 
-      container.html(`<div style=" color: ${randDarkColor()}; width:300px"'>
-      <div style="width:100%"><img src="${photo}" onerror="this.style.display='none'" style="width:100%"></div>
-      <p style="font-weight:900">
-           ${name}
+      container.html(`<div style="color: ${randDarkColor()}" class="popup-description"'>
+      <div><img src="${photo}" onerror="this.style.display='none'""></div>
+      <p>
+           <a href="${link}" target="_blank">${name}</a>
       </p>
       <p>
            ${description}
@@ -72,7 +75,6 @@ async function getHeritageLayer(heritageLayer) {
      </div>
      <br>
    </div>`);
-
       layer.bindPopup(container[0]);
     },
     filter: function (feature) {
@@ -108,11 +110,9 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
       });
     },
     onEachFeature: function (feature, layer) {
-      // console.log(layer);
       let e = document.createElement("div");
       e.innerHTML = feature.properties.description;
       let tds = e.querySelectorAll("td");
-      // console.log(tds);
       let photo;
 
       if (
@@ -124,16 +124,15 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
         photo = "https://www.visitsingapore" + tds[7].innerText.slice(17);
       }
       let latlng = `${feature.geometry.coordinates[0]}, ${feature.geometry.coordinates[1]}`;
-      // console.log(photo);
       let name = tds[13].innerText;
       let container = $("<div />");
       inputLatLng(feature, container, latlng);
       getFoodNearMarker(container, latlng);
 
       container.html(
-        `<div style=" color: ${randDarkColor()}; width:300px">
-            <div style="width:100%"><img src="${photo}" onerror="this.style.display='none'" style="width:100%; height:100%"></div>
-            <p style="font-weight:800">
+        `<div style=" color: ${randDarkColor()}" class="popup-description">
+            <div><img src="${photo}" onerror="this.style.display='none'"></div>
+            <p>
               ${name}
             </p>
             <div class="directionsPopupBtn">
@@ -165,10 +164,8 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
       if (lowercaseDescription.search(searchByKeywordInput) !== -1) {
         return true;
       }
-      // console.log(lowercaseDescription);
     },
     popupOptions: {
-      //className: "touristAttractionPopup",
       keepInView: true,
     },
   });
@@ -180,7 +177,6 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
 // MUSUEM LAYER
 async function getMuseumLayer(museumLayer) {
   let response = await getData("data/museums-geojson.geojson");
-  // console.log(response.data);
 
   L.geoJSON(response.data, {
     pointToLayer: function (geoJsonPoint, latlng) {
@@ -207,14 +203,17 @@ async function getMuseumLayer(museumLayer) {
         address = `${tds[1].innerHTML}, , Singapore ${tds[2].innerHTML}`;
       let latlng = `${feature.geometry.coordinates[0]}, ${feature.geometry.coordinates[1]}`;
       let container = $("<div />");
-
+      let link = new URL(
+        `places/places-landing/${tds[6].innerText.slice(30)}`,
+        `https://www.roots.gov.sg/`
+      );
       inputLatLng(feature, container, latlng);
       getFoodNearMarker(container, latlng);
       container.html(
-        `<div style=" color: ${randDarkColor()}; width:300px">
-                    <div style="width:100%"><img src="${photo}" onerror="this.style.display='none'" style="width:100%"></div>
-                    <p style="font-weight:800">
-                         ${name}
+        `<div style=" color: ${randDarkColor()}" class="popup-description">
+                    <div><img src="${photo}" onerror="this.style.display='none'"></div>
+                    <p>
+                         <a href="${link}" target="_blank">${name}</a>
                     </p>
                     <p>
                          ${description}
@@ -250,7 +249,6 @@ async function getMuseumLayer(museumLayer) {
       }
     },
     popupOptions: {
-      //className: "museumPopup",
       keepInView: true,
     },
   }).addTo(museumLayer);
@@ -259,7 +257,6 @@ async function getMuseumLayer(museumLayer) {
 // HERITAGE TREES LAYER
 async function getTreesLayer(treesLayer) {
   let response = await getData("data/heritage-trees-geojson.geojson");
-  // console.log(response.data);
 
   L.geoJSON(response.data, {
     pointToLayer: function (geoJsonPoint, latlng) {
@@ -300,12 +297,10 @@ async function getTreesLayer(treesLayer) {
       let lowercaseDescription = feature.properties.Description.toLowerCase();
 
       if (lowercaseDescription.search(searchByKeywordInput) !== -1) {
-        // console.log(feature);
         return true;
       }
     },
     popupOptions: {
-      //className: "heritagePopup",
       keepInView: true,
     },
   }).addTo(treesLayer);
@@ -313,7 +308,6 @@ async function getTreesLayer(treesLayer) {
 
 function getDirections(mymap) {
   // move the attribution control out of the way
-  mymap.attributionControl.setPosition("bottomright");
 
   //create the initial directions object, from which the layer
   //and inputs will pull data.

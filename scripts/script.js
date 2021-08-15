@@ -21,6 +21,13 @@ async function main() {
 
     window.addEventListener("DOMContentLoaded", () => {
       // EVENT LISTENERS
+
+      // WHEN CLICK ON MAP SHOW DIRECTIONS PANEL
+      mymap.on("click", function () {
+        openSidePanel(sidePanelToggleBtn);
+        showDirectionsPanel();
+      });
+
       // TOGGLE BETWEEN SIDEBAR AND DIRECTIONS VIEW
       let directionsBtn = document.getElementById("directionsBtn");
 
@@ -215,13 +222,11 @@ function initMap() {
   L.mapbox.accessToken =
     "pk.eyJ1IjoiZGVib3JhaGxpbWh5IiwiYSI6ImNrcjIzeTduMjFhbTQyeXM2Ync0czRyOWkifQ.k75OvVZniQOHYuxc0QQS0Q";
   let mymap = L.mapbox
-    .map("map", null, {})
+    .map("map", null, { zoomControl: false })
     .setView([1.3521, 103.8198], 12)
     .addLayer(L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11"));
-
-  // WHEN CLICK ON MAP SHOW DIRECTIONS PANEL
-  mymap.on("click", showDirectionsPanel);
-
+  mymap.attributionControl.setPosition("bottomright");
+  mymap.addControl(L.control.zoom({ position: "bottomright" }));
   return mymap;
 }
 
