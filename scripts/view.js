@@ -352,8 +352,5 @@ function getMapLayers(mymap) {
     "Heritage Trees": treesLayer,
   };
 
-  let c = L.control.layers(baseLayers, overlays, {
-    // collapsed: false,
-  });
-  c.addTo(mymap);
+  L.control.layers(baseLayers, overlays).addTo(mymap);
 }

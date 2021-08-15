@@ -136,7 +136,7 @@ function openSidePanel(sidePanelToggleBtn) {
 
 // DIFFERENT SIDE PANEL WIDTH FOR DIFFERENT DEVICE SIZES
 function getDesiredSidePanelWidth() {
-  let desiredWidth = "25%";
+  let desiredWidth;
   if (window.innerWidth < "376") {
     desiredWidth = "85%";
   } else if (window.innerWidth < "541") {

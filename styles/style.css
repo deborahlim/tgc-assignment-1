@@ -151,7 +151,7 @@ body {
 }
 
 .input-box-div {
-  margin: 1rem;
+  margin: 1rem 1.5rem;
   font-size: 2rem;
   width: 110%;
   display: flex;
@@ -165,8 +165,6 @@ body {
 }
 
 /* RESUABLE COMPONENTS */
-a {
-}
 
 .cursor {
   cursor: pointer;
@@ -556,11 +554,6 @@ a {
     padding: 1.2rem;
   }
 
-  .input-box-div {
-    width: 110%;
-    margin: 1rem 1.5rem;
-  }
-
   .input-box {
     margin: 0;
     padding: 1rem 0.5rem;
@@ -599,6 +592,10 @@ a {
 }
 
 @media only screen and (min-width: 376px) and (max-width: 540px) {
+  .input-box-div {
+    width: 109%;
+  }
+
   .tooltip-sp-text {
     display: none;
   }
@@ -672,9 +669,8 @@ a {
 }
 
 @media only screen and (min-width: 1025px) and (max-width: 1366px) {
-  .html,
-  .body {
-    overflow: hidden;
+  .input-box-div {
+    width: 108%;
   }
 
   .side-panel-container {
@@ -683,5 +679,11 @@ a {
 
   .side-panel-toggle-btn {
     left: 35%;
+  }
+}
+
+@media only screen and (min-width: 1367px) {
+  .input-box-div {
+    width: 107%;
   }
 }
