@@ -229,7 +229,8 @@ body {
 .tooltip,
 .tooltip-si,
 .tooltip-fi,
-.tooltip-pu {
+.tooltip-pu,
+.tooltip-sp {
   position: relative;
 }
 
@@ -265,14 +266,9 @@ body {
   left: 3.5rem;
 }
 
-.tooltip-si-text {
-  right: 6.5rem;
-  top: 24rem;
-}
-
+.tooltip-si-text,
 .tooltip-fi-text {
   right: 6.5rem;
-  top: 34rem;
 }
 
 .tooltip-pu-text {
@@ -524,6 +520,10 @@ body {
 .popup-description a {
   text-decoration: none;
   color: inherit;
+  font-weight: 900;
+}
+
+.popup-description h1 {
   font-weight: 900;
 }
 

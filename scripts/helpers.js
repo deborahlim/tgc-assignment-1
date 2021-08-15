@@ -416,7 +416,7 @@ function addMarkertoSearchQueryLayer(obj) {
 }
 
 //////////////////////////// CREATE TOURIST ATTRACTION BOX //////////////////////////
-function createTouristAttractionBox(e) {
+async function createTouristAttractionBox(e) {
   // variables for tourist attraction box
   let temp = document.createElement("div");
 
@@ -432,11 +432,25 @@ function createTouristAttractionBox(e) {
   let name = tds[13].innerHTML;
   let link =
     tds[27].innerText.includes("http://www.marina-bay.sg") ||
+    tds[27].innerText.includes("http://www.singaporecoinsandnotesmuseum.com") ||
     tds[27].innerText.includes("http://bit.ly") ||
+    tds[27].innerText.includes("http://www.littleindia.com.sg") ||
+    tds[27].innerText.includes("http://www.sriveeramakaliamman.com") ||
+    tds[27].innerText.includes("http://www.shba.org.sg") ||
+    tds[27].innerText.includes("http://www.mountfaber.com.sg") ||
+    tds[27].innerText.includes("http://www.sultanmosque.org.sg") ||
+    tds[27].innerText.includes("http://heb.gov.sg/") ||
+    tds[27].innerText.includes("http://app.supremecourt.gov.sg") ||
+    tds[27].innerText.includes("http://www.theinterlace.com") ||
+    tds[27].innerText.includes("http://www.sbg.org.sg") ||
+    tds[27].innerText.includes("http://www.singaporechinatown.com.sg") ||
+    tds[27].innerText.includes(
+      "https://www.ntu.edu.sg/error/work-in-progress"
+    ) ||
     tds[27].innerText.includes("Null")
       ? "Unavailable"
       : new URL("/", tds[27].innerText);
-  console.log(link);
+
   let latlng = `${e.latlng.lng}, ${e.latlng.lat}`;
   let description = tds[25].innerHTML;
   let address = `${tds[21].innerHTML}, Singapore ${tds[23].innerHTML}`;
@@ -451,7 +465,6 @@ function createTouristAttractionBox(e) {
   touristAttraction.addClass("tourist-attraction-box");
   inputLatLng(e, touristAttraction, latlng);
   getFoodNearMarker(touristAttraction, latlng);
-
   touristAttraction.html(
     link === "Unavailable"
       ? `
@@ -505,4 +518,15 @@ ${name}
  `
   );
   return touristAttraction;
+}
+
+function isValidSite(url) {
+  var img = new Image();
+
+  img.onerror = function () {
+    console.log(img.src);
+  };
+  img.onload = function () {};
+
+  img.src = url;
 }

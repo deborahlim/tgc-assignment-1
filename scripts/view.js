@@ -46,13 +46,23 @@ async function getHeritageLayer(heritageLayer) {
       let latlng = `${feature.geometry.coordinates[0]}, ${feature.geometry.coordinates[1]}`;
       let container = $("<div />");
 
-      let link = new URL(
-        `places/places-landing/${tds[5].innerText.slice(30)}`,
-        `https://www.roots.gov.sg/`
-      );
+      let link =
+        tds[5].innerText.slice(30).includes("phoenix-park") ||
+        tds[5].innerText.slice(30).includes("pasir-panjang-battle") ||
+        tds[5].innerText.slice(30).includes("kranji-beach-battle") ||
+        tds[5].innerText
+          .slice(30)
+          .includes("oversea-chinese-banking-coporation") ||
+        tds[5].innerText.slice(30).includes("farrer-park") ||
+        tds[5].innerText.slice(30).includes("adam-park-battle")
+          ? new URL("/", "https://www.roots.gov.sg/")
+          : new URL(
+              `places/places-landing/${tds[5].innerText.slice(30)}`,
+              `https://www.roots.gov.sg/`
+            );
       inputLatLng(feature, container, latlng);
       getFoodNearMarker(container, latlng);
-
+      isValidSite(link);
       container.html(`<div style="color: ${randDarkColor()}" class="popup-description"'>
       <div><img src="${photo}" onerror="this.style.display='none'""></div>
       <p>
@@ -132,9 +142,9 @@ async function getTouristAttractionLayer(touristAttractionLayer) {
       container.html(
         `<div style=" color: ${randDarkColor()}" class="popup-description">
             <div><img src="${photo}" onerror="this.style.display='none'"></div>
-            <p>
+            <h1>
               ${name}
-            </p>
+            </h1>
             <div class="directionsPopupBtn">
               <i  class="fas fa-directions fa-2x  cursor tooltip-pu" style="float: right;" ></i>
               <span class="tooltip-pu-text">Get Directions</span>
@@ -192,7 +202,7 @@ async function getMuseumLayer(museumLayer) {
       let e = document.createElement("div");
       e.innerHTML = feature.properties.Description;
       let tds = e.querySelectorAll("td");
-      //console.log(tds);
+
       let photo = tds[10].innerHTML;
       let name = tds[9].innerHTML;
       let description = tds[5].innerHTML;
@@ -203,12 +213,19 @@ async function getMuseumLayer(museumLayer) {
         address = `${tds[1].innerHTML}, , Singapore ${tds[2].innerHTML}`;
       let latlng = `${feature.geometry.coordinates[0]}, ${feature.geometry.coordinates[1]}`;
       let container = $("<div />");
-      let link = new URL(
-        `places/places-landing/${tds[6].innerText.slice(30)}`,
-        `https://www.roots.gov.sg/`
-      );
+      let link =
+        tds[6].innerText.slice(30).includes("the-changi-museum") ||
+        tds[6].innerText.slice(30).includes("eurasian-heritage-centre") ||
+        tds[6].innerText.slice(30).includes("land-transport-gallery") ||
+        tds[6].innerText.slice(30).includes("hdb-gallery")
+          ? new URL("/", "https://www.nhb.gov.sg/")
+          : new URL(
+              `places/places-landing${tds[6].innerText.slice(30)}`,
+              `https://www.roots.gov.sg/`
+            );
       inputLatLng(feature, container, latlng);
       getFoodNearMarker(container, latlng);
+
       container.html(
         `<div style=" color: ${randDarkColor()}" class="popup-description">
                     <div><img src="${photo}" onerror="this.style.display='none'"></div>
@@ -274,7 +291,6 @@ async function getTreesLayer(treesLayer) {
       let tds = e.querySelectorAll("td");
       //console.log(tds);
       let name = tds[4].innerHTML;
-      // let link = tds[5].innerHTML;
       let description = tds[6].innerHTML;
 
       layer.bindPopup(`<div style=" color: ${randDarkColor()}; width:300px">
