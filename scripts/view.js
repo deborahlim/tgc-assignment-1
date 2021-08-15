@@ -224,7 +224,6 @@ async function getMuseumLayer(museumLayer) {
             );
       inputLatLng(feature, container, latlng);
       getFoodNearMarker(container, latlng);
-
       container.html(
         `<div style=" color: ${randDarkColor()}" class="popup-description">
                     <div><img src="${photo}" onerror="this.style.display='none'"></div>

@@ -136,7 +136,7 @@ function openSidePanel(sidePanelToggleBtn) {
 
 // DIFFERENT SIDE PANEL WIDTH FOR DIFFERENT DEVICE SIZES
 function getDesiredSidePanelWidth() {
-  let desiredWidth;
+  let desiredWidth = "25%";
   if (window.innerWidth < "376") {
     desiredWidth = "85%";
   } else if (window.innerWidth < "541") {
@@ -518,4 +518,13 @@ ${name}
  `
   );
   return touristAttraction;
+}
+
+function isValidSite(url, div) {
+  var img = new Image();
+  img.onerror = function () {
+    console.log(img.src);
+  };
+  img.onload = function () {};
+  img.src = url;
 }
