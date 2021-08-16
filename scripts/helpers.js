@@ -263,7 +263,7 @@ function getFoodNearMarker(container, latlng) {
     searchByDistanceArr = [...items];
     searchResultArr = [...items];
     foodMarkersArr = { ...marker };
-    mymap.setZoom(16);
+    mymap.fitBounds(searchQueryLayer.getBounds());
     sortFoodResultByDistance();
     openFoodPopUp(mymap);
   });
@@ -288,7 +288,7 @@ async function getNearbyFood(query, mymap) {
   let searchResultDiv = document.querySelector(".search-results");
 
   showFoodSearchResults(items, searchResultDiv);
-  mymap.setZoom(16);
+  mymap.fitBounds(searchQueryLayer.getBounds());
   addFoodMarkertoMap(mymap);
   searchResultDiv.style.marginBottom = "-38px";
   searchResultDiv.style.transform = "translateY(-38px)";
