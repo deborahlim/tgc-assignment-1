@@ -15,7 +15,7 @@ async function getTaxiLayer() {
     },
   }).addTo(taxiResultLayer);
   // To get updated taxi data every minute
-  setTimeout(getTaxiLayer, 6000);
+  setTimeout(getTaxiLayer, 60000);
 }
 
 // HISTORIC SITE LAYER
@@ -27,7 +27,7 @@ async function getHeritageLayer(heritageLayer) {
       return L.marker(latlng, {
         icon: L.mapbox.marker.icon({
           "marker-symbol": "town-hall",
-          "marker-color": "0044FF",
+          "marker-color": "#0044FF",
         }),
       });
     },
@@ -192,7 +192,7 @@ async function getMuseumLayer(museumLayer) {
       return L.marker(latlng, {
         icon: L.mapbox.marker.icon({
           "marker-symbol": "museum",
-          "marker-color": "#808080",
+          "marker-color": "#f2cea2",
         }),
       });
     },

@@ -263,7 +263,7 @@ function getFoodNearMarker(container, latlng) {
     searchByDistanceArr = [...items];
     searchResultArr = [...items];
     foodMarkersArr = { ...marker };
-
+    mymap.setZoom(16);
     sortFoodResultByDistance();
     openFoodPopUp(mymap);
   });
@@ -288,6 +288,7 @@ async function getNearbyFood(query, mymap) {
   let searchResultDiv = document.querySelector(".search-results");
 
   showFoodSearchResults(items, searchResultDiv);
+  mymap.setZoom(16);
   addFoodMarkertoMap(mymap);
   searchResultDiv.style.marginBottom = "-38px";
   searchResultDiv.style.transform = "translateY(-38px)";
@@ -304,21 +305,8 @@ function openFoodPopUp() {
       let foodResultName = e.target.innerHTML.slice(0, 9);
       for (i of searchResultArr) {
         if (i.venue.name.includes(foodResultName)) {
-          console.log(i.venue.location.lat, i.venue.location.lng);
-          mymap.setZoom(14);
           foodMarkersArr[i.venue.id].openPopup();
           mymap.flyTo([i.venue.location.lat, i.venue.location.lng]);
-        }
-      }
-    }
-  });
-
-  foodSearchResults.addEventListener("mouseout", function (e) {
-    if (e.target && e.target.nodeName == "P") {
-      let foodResultName = e.target.innerHTML.slice(0, 9);
-      for (i of searchResultArr) {
-        if (i.venue.name.includes(foodResultName)) {
-          foodMarkersArr[i.venue.id].closePopup();
         }
       }
     }
@@ -415,7 +403,7 @@ function addMarkertoSearchQueryLayer(obj) {
   mouseOverOrOut(marker[id]);
 }
 
-//////////////////////////// CREATE TOURIST ATTRACTION BOX //////////////////////////
+//////////////////////////// TOURIST ATTRACTION BOX //////////////////////////
 async function createTouristAttractionBox(e) {
   // variables for tourist attraction box
   let temp = document.createElement("div");
@@ -520,11 +508,8 @@ ${name}
   return touristAttraction;
 }
 
-function isValidSite(url, div) {
-  var img = new Image();
-  img.onerror = function () {
-    console.log(img.src);
-  };
-  img.onload = function () {};
-  img.src = url;
+// CLEAR TOURIST ATTRACTION BOX
+function clearTouristAttractionBox() {
+  let touristAttractionBox = document.querySelector(".tourist-attraction-box");
+  if (touristAttractionBox) touristAttractionBox.innerHTML = "";
 }

@@ -21,7 +21,6 @@ async function main() {
 
     window.addEventListener("DOMContentLoaded", () => {
       // EVENT LISTENERS
-
       // WHEN CLICK ON MAP SHOW DIRECTIONS PANEL
       mymap.on("click", function () {
         openSidePanel(sidePanelToggleBtn);
@@ -153,10 +152,12 @@ async function main() {
       // ADD FOOD MARKERS ON TO MAP
       heritageLayer.on("click", function () {
         addFoodMarkertoMap(mymap);
+        clearTouristAttractionBox();
       });
 
       museumLayer.on("click", function () {
         addFoodMarkertoMap(mymap);
+        clearTouristAttractionBox();
       });
 
       // INPUT LAT LNG ON FOOD MARKER CLICK
@@ -186,7 +187,6 @@ async function main() {
 
       // GET TAXI LOCATION USING MAPBOX API REVERSE GEOCODING
       taxiResultLayer.on("click", function (e) {
-        console.log(e);
         let { lat, lng } = e.latlng;
         let geocoder = L.mapbox.geocoder("mapbox.places");
         let address = popUpAddress(taxiResultLayer);

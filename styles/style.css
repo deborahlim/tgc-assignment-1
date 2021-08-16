@@ -56,7 +56,7 @@ body {
   height: 100%;
   flex-direction: column;
   box-shadow: 0 10px 5px 1px 1px rgba(0, 0, 0, 0.6);
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.95);
 }
 
 /* LOGO */
@@ -463,6 +463,7 @@ body {
   z-index: 99;
   background: rgba(0, 0, 0, 0.8);
   overflow-y: scroll;
+  visibility: visible;
 }
 
 #errors {
@@ -488,7 +489,7 @@ body {
 
 /* POP UP BOX */
 .leaflet-popup-content-wrapper {
-  background-color: rgba(255, 255, 255, 0.863);
+  background-color: rgba(255, 255, 255, 0.95);
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.794);
   border-radius: 10px;
 }
