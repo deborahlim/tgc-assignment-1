@@ -404,7 +404,7 @@ function addMarkertoSearchQueryLayer(obj) {
 }
 
 //////////////////////////// TOURIST ATTRACTION BOX //////////////////////////
-async function createTouristAttractionBox(e) {
+function createTouristAttractionBox(e) {
   // variables for tourist attraction box
   let temp = document.createElement("div");
 

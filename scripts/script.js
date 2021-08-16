@@ -194,14 +194,14 @@ async function main() {
       });
 
       // ADD TOURIST ATTRACTION DETAILS TO SIDEBAR ON CLICK
-      touristAttractionLayer.on("click", async function (e) {
+      touristAttractionLayer.on("click", function (e) {
         mymap.flyTo([e.latlng.lat, e.latlng.lng]);
         addFoodMarkertoMap(mymap);
         openSidePanel(sidePanelToggleBtn);
         showSearchPanel();
         document.querySelector(".sort-by").style.visibility = "hidden";
         // CREATE TOURIST ATTRACTION BOX AND INSERT INTO DOM
-        let touristAttractionBox = await createTouristAttractionBox(e);
+        let touristAttractionBox = createTouristAttractionBox(e);
         searchResult.innerHTML = "";
         if (!searchResult.innerHTML.includes("tourist-attraction-box")) {
           searchResult.style.margin = "0rem";
