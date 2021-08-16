@@ -27,17 +27,20 @@
     ></script>
 
     <link rel="stylesheet" href="styles/style.css" />
+
     <title>Document</title>
   </head>
 
   <body>
     <main><div id="map"></div></main>
+
     <section class="side-panel-container">
       <div class="side-panel-box">
         <header class="logo">
           <i class="fas fa-map-marked-alt fa-5x"></i>
           <p class="logo-content">Discover Singapore</p>
         </header>
+
         <div class="control-box">
           <div class="tooltip">
             <button class="btn" id="toggleTaxiBtn">
@@ -64,6 +67,7 @@
             </button>
           </div>
         </div>
+
         <div class="side-panel">
           <div class="directions-container-hidden">
             <div id="inputs"></div>
@@ -83,7 +87,6 @@
                   id="keyWord"
                   placeholder="Search Map Markers"
                 />
-
                 <button class="search-bar-icon tooltip-si" id="keyWordBtn">
                   <i class="fas fa-search-location fa-2x"></i>
                 </button>
@@ -100,6 +103,7 @@
                   <span>Clear</span>
                 </div>
               </div>
+
               <div class="input-box-div">
                 <input
                   type="text"
@@ -136,18 +140,21 @@
         </div>
       </div>
     </section>
-    <div class="side-panel-toggle-btn tooltip-sp">
+
+    <aside class="side-panel-toggle-btn tooltip-sp">
       <button class="">
         <i class="fas fa-caret-left fa"></i>
       </button>
       <span class="tooltip-sp-text">Collapse Side Panel</span>
-    </div>
+    </aside>
+
     <script src="https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.js"></script>
     <link
       href="https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.css"
       rel="stylesheet"
       type="text/css"
     />
+
     <script
       src="https://code.jquery.com/jquery-3.6.0.min.js"
       integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
@@ -155,7 +162,9 @@
     ></script>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js"></script>
+
     <script src="scripts/data.js"></script>
     <script src="scripts/view.js"></script>
     <script src="scripts/helpers.js"></script>
